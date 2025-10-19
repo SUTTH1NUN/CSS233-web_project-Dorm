@@ -65,10 +65,11 @@ body{
     width: 100%;
     height: auto;
     display: block;
-    margin: 0 auto;
+    
+    margin-top: -8px;
 }
 
-hr{
+.hr-main{
     border: none;
     border-top: 2px dashed #C4A808;
     width: 100%;
