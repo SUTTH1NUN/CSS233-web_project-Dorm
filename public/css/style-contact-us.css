@@ -1,0 +1,124 @@
+body{
+    background: white;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-bar{
+    background: white;
+    height: 150px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+.left-menu, .right-menu{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    justify-content: space-evenly; 
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 60px;
+}
+
+.logo img{
+    height: 135px;
+    width: 90px;
+}
+
+.left-menu a{
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 24px;
+    font-family: 'Noto Serif TC', Times, serif;
+    display: inline-block;
+    white-space: nowrap; 
+}
+
+.right-menu a{
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 24px;
+    font-family: 'Noto Serif TC', Times, serif;
+    display: inline-block;
+    white-space: nowrap; 
+}
+
+.right-menu a.line{
+    border-bottom: 3px solid #C4A808;
+}
+
+.hr-main{
+    border: none;
+    border-top: 2px dashed #C4A808;
+    width: 100%;
+    margin: 80px auto 40px;
+}
+
+.main-content{
+    font-size: 64px;
+    font-family: 'Noto Serif TC', Times, serif;
+    font-weight: bold;
+    color: #BEA413;
+    text-align: center;
+    margin: 40px 0 60px;
+}
+
+.content{
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* แบ่ง 2 คอลัมน์เท่าๆ กัน */
+    gap: 40px 80px; /* ระยะห่างระหว่างแถวและคอลัมน์ */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.content-section{
+    display: flex;
+    flex-direction: column;
+}
+
+.content p.main, .content a.main{
+    font-size: 28px;
+    font-family:'Oswald', sans-serif;
+    color:#BEA413;
+    font-weight: 300;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.content p{
+    font-size: 20px;
+    font-family:'Oswald', sans-serif;
+    color:#747474;
+    font-weight: 300;
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.content a{
+    font-size: 20px;
+    font-family:'Oswald', sans-serif;
+    color:#747474;
+    font-weight: 300;
+    text-decoration: none;
+    margin: 8px 0;
+    line-height: 1.6;
+    display: block;
+}
+
+.content a:hover{
+    color: #BEA413;
+    transition: color 0.3s ease;
+}
