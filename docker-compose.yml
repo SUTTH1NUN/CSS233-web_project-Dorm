@@ -1,0 +1,52 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+# --- Backend services (express.js) ---
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: express_backend
+    ports:
+      - "3030:3030"
+    environment:
+      NODE_ENV: development
+      PGHOST: db
+      PGUSER: myuser
+      PGDATABASE: mydatabase
+      PGPASSWORD: mypassword
+      PGPORT: 5432
+
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+
+  # --- Frontend service ---
+  frontend:
+    image: nginx:stable-alpine
+    container_name: frontend
+
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+  
+  # --- Database service ---
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    
+    volumes:
+      - pgdata:/var/lib/postgresql/Database
+
+volumes:
+  pgdata:
