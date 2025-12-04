@@ -3,35 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Hatyai Condominium - All In One</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/style-home.css">
+    
+    <link rel="stylesheet" href="css/style-home.css">
+    <link rel="stylesheet" href="css/style-about-us.css">
+    <link rel="stylesheet" href="css/style-contact-us.css">
+    <link rel="stylesheet" href="css/style-login.css">
+
+    <link rel="stylesheet" href="css/style-home.css">
+     <script src="js/script.js"></script>
 </head>
 <body>
-    <div class="menu-bar">
+
+    <div class="menu-bar" id="mainNav">
         <div class="left-menu">
-            <a href="index.html" class="line">HOME</a>
-            <a href="">ABOUT US</a>
-            <a href="">ROOMS</a>
+            <a href="#home" class="nav-link">HOME</a>
+            <a href="#about" class="nav-link">ABOUT US</a>
+            <a href="#rooms" class="nav-link">ROOMS</a>
         </div>
-        <div class ="logo"><img src = "logo_hatyai.png"></div>
+        <div class ="logo"><img src="picture/logo_hatyai.png" alt="Logo"></div>
         <div class="right-menu">
-            <a href="">SERVICES</a>
-            <a href="">CONTACT US</a>
-            <a href="./pages/login.html">RENTER LOGIN</a>
+            <a href="#services" class="nav-link">SERVICES</a>
+            <a href="#contact" class="nav-link">CONTACT US</a>
+            <a href="#login" class="nav-link">RENTER LOGIN</a>
         </div>
     </div>
-    <div class="content">
-        <div class="salogan"><img src="Rectangle 51.png" class = "main-image">
+
+    <section id="home">
+        <div class="content">
+            <div class="full-width-image-container">
+                <img src="picture/Rectangle 51.png" class="main-image" alt="Home Banner">
+            </div>
+        </div>
+        <div class="box">
+            <hr>
+            <p class="main">Welcome to HATAYAI Collection</p>
+            <p class="sec">Serviced Condominium</p>
+            <p class="des">Experience the essence of modern urban living at Hatyai Apartments, where comfort and convenience come together seamlessly. With beautifully designed rooms, a serene swimming pool, and a fully equipped fitness center, every element is crafted to enhance your daily life. Here, you’ll find more than just a place to stay you’ll find a place to belong.</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="content">
+            <div class="full-width-image-container">
+                <img src="picture/about.png" class="main-image" alt="About Us Banner">
+            </div>
+        </div>
+        <div class="box">
+            <hr class="hr-main">
+            <p class="main">A Place of Comfort and Contemporary Living</p>
+            <div class="content-container">
+                <p class="left-content">Hatyai Apartments is a modern residential development established with a vision to redefine urban living in the heart of Hat Yai. Founded in 2015, the property was created to offer residents a harmonious blend of comfort, convenience, and contemporary design — an ideal retreat for those who appreciate a balanced lifestyle. Proudly standing as a symbol of quality living in southern Thailand, Hatyai Apartments provides well-designed accommodations complemented by essential amenities that enhance daily life. Within its calm and welcoming environment, residents enjoy a full-service fitness center overlooking the pool, featuring a range of modern equipment from cardio and resistance machines to free weights and dumbbells. The residence also features a serene swimming pool surrounded by lush greenery, creating a peaceful atmosphere perfect for relaxation and recreation after a long day.</p>
+                <p class="right-content">More than just a place to live, Hatyai Apartments is a community where comfort meets simplicity. Every detail from thoughtful design to attentive management reflects our commitment to creating a space that feels like home. At Hatyai Apartments, we believe that true luxury lies in everyday comfort and care. Welcome to your new way of living — where modern living, convenience, and tranquility come together seamlessly.</p>
+            </div>               
+        </div>
+    </section>
+
+    <section id="rooms" style="min-height: 400px; background-color: #f9f9f9; text-align: center; padding-top: 100px;">
+        <h2 style="color: #C4A808;">ROOMS SECTION</h2>
+        <p>Content coming soon...</p>
+    </section>
+
+    <section id="services" style="min-height: 400px; background-color: #f0f0f0; text-align: center; padding-top: 100px;">
+        <h2 style="color: #C4A808;">SERVICES SECTION</h2>
+        <p>Content coming soon...</p>
+    </section>
+
+    <section id="contact">
+        <div class="main-content">
+            <hr class="hr-main">
+            <span class="main-text">Contact Hatyai Condominium</span>
+        </div>
+        <div class="content">
+            <div class="content-section">
+                <p class="main">Address</p>
+                <p>Hatyai Apartments</p>
+                <p>88 Soi Thammanoonvithi 5,</p>
+                <p>Hat Yai District, Songkhla 90110, Thailand</p>
+            </div>
+            <div class="content-section">
+                <p class="main">Office Hours</p>
+                <p>Monday – Friday: 9:00 AM – 6:00 PM</p>
+                <p>Saturday: 9:00 AM – 1:00 PM</p>
+                <p>Sunday & Public Holidays: Closed</p>
+            </div>
+            <div class="content-section">
+                <p class="main">Phone</p>
+                <p>+66(0)123456789</p>
+            </div>
+            <div class="content-section">
+                <p class="main">Follow Us</p>
+                <a href="#">Facebook: facebook.com/HatyaiApartments</a>
+                <a href="#">Instagram: @hatyaiapartments</a>
+            </div>
+            <div class="content-section">
+                <p class="main">Email</p>
+                <p>info@hatyaiapartments.com</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="login">
+        <div class="login-container">
+            <div class="box-login">
+                <h2>LOGIN</h2>
+                <div class="content">
+                    <span class="username">Username</span><br>
+                    <input type="text" id="username" required placeholder="room number ex.3301"><br>
+
+                    <span class="password">Password</span><br>
+                    <input type="password" id="password" required placeholder="default room number ex.3301"><br>
+                    <span class="forgot"><u>Forgot Password? Please Contact Niti</u></span><br>
+                    <button>Login</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="picture/logo_hatyai.png" alt="Footer Logo">
+            </div>
+            <div class="footer-links">
+                <a href="#press"><u>PRESS</u></a>
+                <a href="#contact"><u>CONTACT</u></a>
+                <a href="#faq"><u>FAQ</u></a>
+                <a href="#sustainability"><u>SUSTAINABILITY POLICY</u></a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Instagram"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                <a href="#" aria-label="Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                <a href="#" aria-label="Twitter"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                <a href="#" aria-label="WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
+            </div>
+            <div class="footer-info">
+                © 2025 Hatyai Condominium. All rights reserved.
+            </div>
         </div>
     </div>
-    <div class="box">
-        <hr>
-        <p class="main">Welcome to HATAYAI Collection</p>
-        <p class="sec">Serviced Condominium</p>
-        <p class="des">Experience the essence of modern urban living at Hatyai Apartments, where comfort and convenience come together seamlessly. With beautifully designed rooms, a serene swimming pool, and a fully equipped fitness center, every element is crafted to enhance your daily life. Here, you’ll find more than just a place to stay  you’ll find a place to belong.</p>
-                       
-    </div>
+
+   
+
 </body>
 </html>

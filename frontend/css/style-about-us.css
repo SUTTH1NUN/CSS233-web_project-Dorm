@@ -79,7 +79,7 @@ body{
 .box p.main{
     font-size: 40px;
     font-family: 'Noto Serif TC', Times, serif;
-    font-weight: bold;
+    font-weight: 400;
     color: #BEA413;
     text-align: center;
     margin: 20px 0;
