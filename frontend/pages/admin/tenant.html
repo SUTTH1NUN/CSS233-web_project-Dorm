@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenants Management</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/admin-css/style-tenant.css">
+</head>
+<body>
+
+    <header>
+        <i class="fas fa-bars menu-icon"></i>
+        <h1>Tenants</h1>
+    </header>
+    
+    <section id="manage-bar">
+        <div class="search-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-tenant" placeholder="Search....">
+            </div>
+            
+            <select id="filter-status">
+                <option value="" disabled selected>Select Status</option>
+                <option value="all">All Statuses</option>
+                <option value="rented">Rented</option>
+                <option value="vacated">Vacated</option>
+            </select>
+        </div>
+
+        <button id="add-tenant-btn">Add Tenants</button>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="tenant-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Room</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>About</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+              </tbody>
+        </table>
+    </section>
+
+    
+</body>
+</html>
