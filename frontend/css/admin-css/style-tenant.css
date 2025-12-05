@@ -82,6 +82,8 @@ h1::after {
 }
 
 #search-tenant {
+    font-family: 'Oswald', sans-serif;
+    font-size: 300;
     border: none;
     border-bottom: 1px solid #ccc;
     padding: 8px 5px 8px 30px;
@@ -92,6 +94,8 @@ h1::after {
 }
 
 #filter-status {
+    font-family: 'Oswald', sans-serif;
+    font-size: 300;
     border: none;
     color: var(--text-grey);
     font-size: 16px;
