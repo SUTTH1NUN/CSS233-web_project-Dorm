@@ -25,10 +25,7 @@ html {
     transition: color 0.3s ease;
 }
 
-/* ลบเส้นใต้แบบเดิมออก */
-.left-menu a.line:not(.active), .right-menu a.line:not(.active) {
-    border-bottom: none;
-}
+
 
 /* Hover Effect: สีทอง + เส้นวิ่ง */
 .menu-bar a:hover, .menu-bar a.active {
@@ -78,7 +75,7 @@ html {
 
 /* ================= FULL WIDTH IMAGES ================= */
 .full-width-image-container {
-    width: 100vw;
+    width: 150vw;
     position: relative;
     left: 50%;
     right: 50%;
@@ -89,13 +86,17 @@ html {
 
 .full-width-image-container img.main-image {
     width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    margin-top: 0;
-    max-height: 600px; /* ปรับความสูงสูงสุดที่ต้องการตรงนี้ */
-}
+    
+    height: 80vh ; 
+    
 
+    display: block;
+    
+    object-fit: cover; 
+    object-position: center; /* จัดกึ่งกลางรูป */
+    
+    margin-top: 0;
+}
 /* ================= SECTION SPACINGS ================= */
 section {
     scroll-margin-top: 150px;
@@ -103,24 +104,8 @@ section {
     padding-bottom: 60px;
 }
 
-/* แก้ไข Grid สำหรับหน้า Contact */
-#contact .content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px 80px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 60px;
-}
 
-/* แก้ไข Block สำหรับหน้า Login */
-.box-login {
-    background: white;
-    padding: 60px 80px 70px 80px;
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
-    max-width: 620px;
-    width: 100%;
-}
+
 
 .box-login h2 {
     text-align: center;
@@ -192,3 +177,4 @@ section {
 }
 
 .footer { margin-top: 0; }
+
