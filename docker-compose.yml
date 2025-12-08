@@ -12,12 +12,13 @@ services:
     ports:
       - "3030:3030"
     environment:
-      NODE_ENV: development
-      PGHOST: db
-      PGUSER: myuser
-      PGDATABASE: mydatabase
-      PGPASSWORD: mypassword
-      PGPORT: 5432
+      NODE_ENV: ${NODE_ENV}
+      PGHOST: ${PGHOST}
+      PGUSER: ${PGUSER}
+      PGDATABASE: ${PGDATABASE}
+      PGPASSWORD: ${PGPASSWORD}
+      PGPORT: ${PGPORT}
+      JWT_SECRET: ${JWT_SECRET}
 
     volumes:
       - ./backend:/usr/src/app
@@ -41,12 +42,13 @@ services:
     container_name: postgres_db
 
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: ${postgres}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
     
     volumes:
-      - pgdata:/var/lib/postgresql/Database
+      - pgdata:/var/lib/postgresql/data
+      - ./db_init:/docker-entrypoint-initdb.d
 
 volumes:
   pgdata:
