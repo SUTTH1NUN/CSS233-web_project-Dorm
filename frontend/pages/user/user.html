@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Room | Hatyai Condominium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/user-css/style-user.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo"> <h3>MEMBER</h3>
+            </div>
+            
+            <ul class="menu-links">
+                <li class="active"><a href="#"><i class="fas fa-home"></i> Overview</a></li>
+                <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> My Bills</a></li>
+                <li><a href="#"><i class="fas fa-tools"></i> Repair Request</a></li>
+                <li><a href="#"><i class="fas fa-user-cog"></i> Profile</a></li>
+            </ul>
+
+            <div class="logout-section">
+                <a href="index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="user-welcome">
+                    <h1>Welcome, Khun Apichet</h1>
+                    <p>Room: <span class="highlight">A-3301</span> | Status: <span class="status-active">Active</span></p>
+                </div>
+                <div class="user-profile-img">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <section class="info-cards">
+                <div class="card gold-card">
+                    <div class="card-info">
+                        <h3>Total Due</h3>
+                        <p class="big-number">฿ 5,500</p>
+                        <p class="due-date">Due Date: 05 Dec 2025</p>
+                    </div>
+                    <button class="pay-btn">Pay Now</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-tint"></i></div>
+                    <div class="card-info">
+                        <h3>Water Usage</h3>
+                        <p class="big-number">12 Units</p>
+                        <p class="sub-text">Last month: 10 Units</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="card-info">
+                        <h3>Electricity</h3>
+                        <p class="big-number">145 Units</p>
+                        <p class="sub-text">Last month: 130 Units</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="recent-bills">
+                <h2>Billing History</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Month</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INV-2025-12</td>
+                                <td>December 2025</td>
+                                <td>฿ 5,500</td>
+                                <td><span class="badge pending">Unpaid</span></td>
+                                <td><button class="btn-view">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>INV-2025-11</td>
+                                <td>November 2025</td>
+                                <td>฿ 5,200</td>
+                                <td><span class="badge paid">Paid</span></td>
+                                <td><button class="btn-view">Receipt</button></td>
+                            </tr>
+                             <tr>
+                                <td>INV-2025-10</td>
+                                <td>October 2025</td>
+                                <td>฿ 5,800</td>
+                                <td><span class="badge paid">Paid</span></td>
+                                <td><button class="btn-view">Receipt</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
