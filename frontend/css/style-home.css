@@ -5,9 +5,6 @@ body {
     overflow-x: hidden;
 }
 
-html {
-    scroll-behavior: smooth;
-}
 
 /* ================= MENU BAR STYLES ================= */
 .menu-bar {
@@ -18,11 +15,64 @@ html {
     width: 100%;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
+    margin-bottom: 0;
 }
 
 .menu-bar a {
     position: relative;
     transition: color 0.3s ease;
+}
+
+
+.menu-bar{
+    background: white;
+    height: 150px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+.left-menu, .right-menu{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    justify-content: space-evenly; 
+}
+
+.logo{
+     display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+}
+
+.logo img{
+    height: 135px;
+    width: 90px;
+}
+
+.left-menu a{
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 24px;
+font-family: 'Times New Roman', Times, serif;
+    display: inline-block;
+    white-space: nowrap; 
+}
+
+.right-menu a{
+    color: black;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 24px;
+font-family: 'Times New Roman', Times, serif;
+    display: inline-block;
+    white-space: nowrap; 
 }
 
 
@@ -50,13 +100,24 @@ html {
     background: #C4A808;
 }
 
+#home {
+    padding-top: 0 ; 
+    margin-top: 0;
+}
+
+.box p.main{
+    text-align: center;
+    color: #C4A808;
+    font-size: 50px;
+    margin-bottom: 0px;
+    font-weight: 400;
+}
 .box p.sec{
-    font-size: clamp(20px, 2.2vw, 32px);
-    font-family: 'Noto Serif TC', Times, serif;
+    font-size: 40px;
     font-weight: 400;
     color: #BEA413;
     text-align: center;
-    margin-top: -10px;
+    margin-top: 0px;
 }
 
 .box p.des{
@@ -72,8 +133,39 @@ html {
     line-height: 1.6;
 }
 
+.image-text-overlay {
+    position: absolute; /* สั่งให้ลอย */
+    top: 48%;           /* กึ่งกลางแนวตั้ง */
+    left: 44%;          /* กึ่งกลางแนวนอน */
+    transform: translate(-50%, -50%); /* ขยับให้กลางเป๊ะๆ */
+    text-align: center;
+    width: 80%;         /* ความกว้างสูงสุดไม่เกิน 80% ของจอ */
+    z-index: 5;         /* ให้อยู่เหนือรูปภาพ แต่อยู่ใต้กล่องเนื้อหาสีขาว (ซึ่ง z-index: 10) */
+    
+}
 
-/* ================= FULL WIDTH IMAGES ================= */
+/* หัวข้อใหญ่บนรูป */
+.image-text-overlay a {
+   font-size: 64px; 
+   font-family: 'Times New Roman', Times, serif;  
+    color: white;     
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+}
+
+
+.image-text-overlay p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5em;
+    color: white;       
+    margin-top: 10px;
+    letter-spacing: 3px;
+    font-weight: 300;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5); 
+}
+
+
+
 .full-width-image-container {
     width: 150vw;
     position: relative;
@@ -82,12 +174,13 @@ html {
     margin-left: -50vw;
     margin-right: -50vw;
     overflow: hidden;
+    
+    margin-top: 0; 
 }
-
 .full-width-image-container img.main-image {
     width: 100%;
     
-    height: 80vh ; 
+    height: 70vh ; 
     
 
     display: block;
@@ -95,87 +188,527 @@ html {
     object-fit: cover; 
     object-position: center; /* จัดกึ่งกลางรูป */
     
-    margin-top: 0;
 }
+
+/* ================= ROOM SECTION STYLES ================= */
+#rooms {
+    padding: 0;
+    background-color: #fff;
+}
+
+.room-layout {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px; /* ระยะห่างระหว่างห้อง */
+}
+
+/* การ์ดห้องพักแต่ละอัน */
+.room-card {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+/* สลับด้านรูปภาพ (Zig-Zag) */
+.room-card.reverse {
+    flex-direction: row-reverse;
+}
+
+/* ส่วนรูปภาพห้อง */
+.room-image {
+    flex: 1.2; /* ให้รูปใหญ่กว่าเนื้อหานิดหน่อย */
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    height: 400px;
+}
+
+.room-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.room-card:hover .room-image img {
+    transform: scale(1.05); /* Zoom Effect */
+}
+
+/* ป้ายราคา */
+.price-tag {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #C4A808; /* สีทอง */
+    padding: 10px 20px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* ส่วนรายละเอียดห้อง */
+.room-details {
+    flex: 1;
+    text-align: left;
+}
+
+/* จัดกึ่งกลางถ้าอยู่บนมือถือ หรือถ้าต้องการ */
+.room-card.reverse .room-details {
+    text-align: right; 
+}
+/* แต่โดยทั่วไปจัดซ้ายอ่านง่ายกว่า ผมจะบังคับจัดซ้ายใน CSS หลัก */
+.room-details { text-align: left !important; } 
+
+
+.room-details h3 {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 36px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.room-size {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    color: #C4A808;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.room-details .desc {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* สิ่งอำนวยความสะดวก (Icons) */
+.amenities {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.amenities span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.amenities i {
+    color: #C4A808;
+}
+
+/*ดูรายละเอียด */
+.btn-book {
+    padding: 12px 30px;
+    background-color: transparent;
+    border: 1px solid #C4A808;
+    color: #C4A808;
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-book:hover {
+    background-color: #C4A808;
+    color: white;
+}
+
+/* ================= ROOM MODAL STYLES ================= */
+.room-modal-overlay {
+    display: none; /* ซ่อนไว้ก่อน */
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6); /* พื้นหลังดำจางๆ */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.room-modal-overlay.active {
+    display: flex; /* แสดงเมื่อมี class active */
+}
+
+.room-modal-content {
+    background-color: #fff;
+    width: 90%;
+    max-width: 1000px; /* ความกว้างสูงสุดตามรูป */
+    padding: 30px;
+    border-radius: 4px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* ปุ่มปิด (X) */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    z-index: 10;
+}
+.close-modal:hover { color: #333; }
+
+/* หัวข้อ Modal */
+.modal-room-title {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 25px;
+    border-bottom: 1px dotted #ddd;
+    padding-bottom: 15px;
+}
+
+/* แกลเลอรี่รูปภาพ */
+.modal-gallery {
+    margin-bottom: 20px;
+}
+
+.main-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #f0f0f0;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* รูป Thumbnail ด้านล่าง */
+.thumbnail-list {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.thumb {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    cursor: pointer;
+    opacity: 0.6;
+    border: 2px solid transparent;
+    transition: 0.3s;
+}
+
+.thumb:hover, .thumb.active {
+    opacity: 1;
+    border-color: #C4A808;
+}
+
+/* รายละเอียดห้อง (Grid) */
+.modal-details-grid {
+    font-family: 'Oswald', sans-serif;
+    color: #666;
+    
+    padding-top: 20px;
+    font-weight: 300;
+}
+
+.detail-text p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.detail-text strong {
+    color: #333;
+    font-weight: 500;
+    width: 120px;
+    display: inline-block;
+}
+
+.row-info {
+    display: flex;
+    justify-content: space-between;
+    max-width: 600px; /* จำกัดความกว้างไม่ให้ห่างกันเกินไป */
+}
+
+/* --- Responsive Modal --- */
+@media screen and (max-width: 768px) {
+    .modal-room-title { font-size: 24px; }
+    .main-image-wrapper { height: 250px; }
+    .row-info { flex-direction: column; }
+    .detail-text strong { width: 100px; }
+}
+
 /* ================= SECTION SPACINGS ================= */
 section {
-    scroll-margin-top: 150px;
-    padding-top: 40px;
-    padding-bottom: 60px;
+    scroll-margin-top: 80px; 
+    padding-top: 80px;
+    padding-bottom: 80px;
 }
 
-
-
-
-.box-login h2 {
-    text-align: center;
-    color: #C4A808;
-    font-size: 48px;
-    margin-bottom: 50px;
-    font-weight: 400;
-    letter-spacing: 3px;
+/* ================= SERVICES SECTION (NEW DESIGN) ================= */
+#services {
+    padding: 0; 
+    background-color: #fff;
 }
 
-.content {
+/* --- Service Layout Container --- */
+.service-layout {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 60px 20px;
+
+}
+
+/* --- แถวเนื้อหา (Row) --- */
+.service-row {
+    display: flex;
+    align-items: center; 
+    gap: 50px;
+    margin: 40px 0;
+}
+
+/* สลับด้านสำหรับแถวคู่ (Reverse) */
+.service-row.reverse {
+    flex-direction: row-reverse;
+}
+
+/* --- ส่วนรูปภาพ --- */
+.service-img {
+    flex: 1; 
+    height: 100%;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+}
+
+.service-img img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.5s ease;
 }
 
-.username, .password {
-    display: block;
-    font-size: 20px;
-    color: #333;
+
+.service-img:hover img {
+    transform: scale(1.05);
+}
+
+/* --- ส่วนข้อความ --- */
+.service-text {
+    flex: 1; 
+    text-align: center;
+    padding: 0 20px;
+}
+
+.service-text h2 {
+    font-family: 'Times New Roman', Times, serif; 
+    font-size: 56px;
+    color: #C4A808; 
     margin-bottom: 10px;
-    font-weight: light;
-    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
 }
 
-.content input {
-    width: 165%;
-    padding: 16px 20px;
-    font-size: 15px;
-    border: none;
-    background: #E0E0E0;
+.service-text .open-time {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
     color: #666;
-    margin-bottom: 18px;
-    font-family: 'Oswald', sans-serif;
-    font-weight: lighter;
-    border-radius: 5px;
-}
-
-.content input::placeholder {
-    color: #999;
-    font-size: 20px;
-}
-
-.content input:focus {
-    outline: 2px solid #C4A808;
-    background: #EBEBEB;
-}
-
-.content button {
-    width: 180%;
-    padding: 18px;
-    background: #C4A808;
-    color: white;
-    border: none;
-    font-size: 20px;
-    font-family: 'Noto Serif TC', serif;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-    font-weight: 500;
     letter-spacing: 1px;
-    border-radius: 5px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
 }
 
-.content button:hover {
-    background: #A68F07;
-    transform: translateY(-1px);
+.service-text p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    color: #999;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
-.content button:active {
-    transform: translateY(0);
+
+
+
+#login{
+     background-color: #f9f9f9; 
+    padding: 80px 20px;
 }
+
 
 .footer { margin-top: 0; }
 
+/* ==========================================================================
+   RESPONSIVE STYLES (วางต่อท้ายไฟล์ style-home.css)
+   ========================================================================== */
 
+/* --- Tablet & Mobile (หน้าจอเล็กกว่า 1024px) --- */
+@media screen and (max-width: 1024px) {
+    
+    /* 1. ปรับ Menu Bar ให้เรียงแนวตั้ง (เพราะไม่มีปุ่ม Hamburger) */
+    .menu-bar {
+        height: auto; /* ปล่อยความสูงอิสระ */
+        flex-direction: column; /* เรียงลงมาแนวตั้ง */
+        padding: 20px 10px;
+        gap: 15px;
+    }
+
+    .logo {
+        order: -1; /* ย้ายโลโก้ไปบนสุด */
+        margin-bottom: 10px;
+    }
+
+    .logo img {
+        height: 100px; /* ลดขนาดโลโก้ */
+        width: auto;
+    }
+
+    /* จัดลิงก์เมนูให้เรียงสวยๆ */
+    .left-menu, .right-menu {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; /* ถ้าจอเล็กมาก ให้ปัดบรรทัดใหม่ได้ */
+        gap: 15px;
+    }
+
+    .left-menu a, .right-menu a {
+        font-size: 16px; /* ลดขนาดตัวหนังสือเมนู */
+        padding: 5px 10px;
+    }
+
+    /* 2. แก้ไขรูปภาพ Banner ที่ล้นจอ (150vw) ให้กลับมาพอดี */
+    .full-width-image-container {
+        width: 100vw;
+        
+       
+    margin-right: 35vw;
+        
+        right: -50;
+       
+    }
+
+    .full-width-image-container img.main-image {
+        height: 50vh; /* ลดความสูง Banner ในมือถือ */
+    }
+
+    /* 3. ปรับขนาดตัวหนังสือบนรูปภาพ */
+    .image-text-overlay {
+        width: 95%; /* ขยายพื้นที่ข้อความ */
+    }
+
+    .image-text-overlay a {
+        font-size: 36px; /* ลดขนาดหัวข้อ */
+    }
+
+    .image-text-overlay p {
+        font-size: 16px; /* ลดขนาดคำโปรย */
+        letter-spacing: 1px;
+    }
+
+    /* 4. ปรับกล่องเนื้อหา (Box) */
+    .box {
+        width: 90%;
+        padding: 30px 15px;
+    }
+
+
+    
+    .box p.main { font-size: 32px; }
+    .box p.sec { font-size: 24px; }
+    
+
+    .room-card, .room-card.reverse {
+        flex-direction: column; /* เรียงลงมา */
+        gap: 30px;
+    }
+
+    .room-image {
+        width: 100%;
+        height: 250px; /* ลดความสูงรูป */
+    }
+
+    .room-details {
+        text-align: center !important; /* จัดกลางในมือถือ */
+        padding: 0 10px;
+    }
+    
+    .amenities {
+        justify-content: center;
+    }
+    /* 5. About Us: เรียงเนื้อหาลงมาแนวตั้ง */
+    .content-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+/* --- Mobile Only (หน้าจอเล็กกว่า 768px) --- */
+@media screen and (max-width: 768px) {
+    
+    /* 1. Services: เรียงรูปและข้อความลงมาแนวตั้ง */
+    .service-row, .service-row.reverse {
+        flex-direction: column; /* บังคับเรียงลงมาเสมอ */
+        gap: 20px;
+        margin: 40px 0;
+    }
+    
+    /* ให้รูปภาพอยู่ด้านบนเสมอ */
+    .service-img {
+        width: 100%;
+        height: 250px; /* ลดความสูงรูปลง */
+    }
+
+    .service-text {
+        padding: 0 10px;
+    }
+
+    .service-text h2 { font-size: 32px; }
+
+    /* 2. Contact Us: เรียงลงมา */
+    #contact .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0 20px;
+    }
+
+    /* 3. Login Box */
+    .box-login {
+        width: 90%;
+        padding: 40px 20px;
+    }
+    
+    .box-login h2 { font-size: 30px; }
+    
+    /* 4. Footer */
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+}

@@ -8,7 +8,7 @@
 
 body {
     margin: 0;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Sarabun', sans-serif;
     background-color: var(--bg-light);
     color: var(--primary-dark);
 }
@@ -35,10 +35,7 @@ body {
     margin-bottom: 40px;
 }
 
-.logo {
-    width: 80px;
-    margin-bottom: 10px;
-}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -80,15 +77,14 @@ body {
     font-weight: 500;
 }
 
-.logout-section a {
-    text-decoration: none;
-    color: #ff6b6b;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-top: auto;
-    font-weight: 500;
+.logout-section {
+    margin-top: 300px;
+    padding: 0 50px 20px;
 }
+
+.logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
+.logout-section a:hover { opacity: 0.7; }
+
 
 /* --- Main Content --- */
 .main-content {
