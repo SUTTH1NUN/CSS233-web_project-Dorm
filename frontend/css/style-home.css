@@ -1,107 +1,180 @@
-body{
-    background: white;
+
+body {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
 
-.menu-bar{
-    background: white;
-    height: 150px;
+html {
+    scroll-behavior: smooth;
+}
+
+/* ================= MENU BAR STYLES ================= */
+.menu-bar {
+    position: sticky;
+    top: 0;
+    background-color: white; 
+    z-index: 1000;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-.left-menu, .right-menu{
-    display: flex;
-    align-items: center;
-    height: 100%;
-    flex: 1;
-    justify-content: space-evenly; 
+.menu-bar a {
+    position: relative;
+    transition: color 0.3s ease;
 }
 
-.logo{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 60px;
-    
+
+
+/* Hover Effect: สีทอง + เส้นวิ่ง */
+.menu-bar a:hover, .menu-bar a.active {
+    color: #C4A808;
 }
 
-.logo img{
-    height: 135px;
-    width: 90px;
-}
-
-.left-menu a{
-    color: black;
-    text-decoration: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    font-family: 'Noto Serif TC', Times, serif;
-    display: inline-block;
-    white-space: nowrap; 
-}
-
-.right-menu a{
-    color: black;
-    text-decoration: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    font-family: 'Noto Serif TC', Times, serif;
-    display: inline-block;
-    white-space: nowrap; 
-}
-
-.left-menu a.line{
-    border-bottom: 3px solid #C4A808;
-    
-}
-
-.main-image{
-    width: 100%;
-    height: auto;
+.menu-bar a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
     display: block;
-    
-    margin-top: -8px;
+    margin-top: 5px;
+    right: 0;
+    background: #C4A808;
+    transition: width 0.3s ease;
 }
 
-.hr-main{
-    border: none;
-    border-top: 2px dashed #C4A808;
+.menu-bar a:hover::after, .menu-bar a.active::after {
     width: 100%;
-    margin: 80px auto;
-}
-
-.box p.main{
-    font-size: 40px;
-    font-family: 'Noto Serif TC', Times, serif;
-    font-weight: bold;
-    color: #BEA413;
-    text-align: center;
-    margin: 20px 0;
+    left: 0;
+    background: #C4A808;
 }
 
 .box p.sec{
-    font-size: 32px;
+    font-size: clamp(20px, 2.2vw, 32px);
     font-family: 'Noto Serif TC', Times, serif;
-    font-weight: bold;
+    font-weight: 400;
     color: #BEA413;
     text-align: center;
     margin-top: -10px;
 }
 
 .box p.des{
-    font-size: 16px;
+    font-size: clamp(13px, 1.1vw, 16px);
     font-family:'Oswald', sans-serif;
     color:#747474;
     font-weight: 300;
     text-align: center;
     max-width: 700px;
+    width: 90%;
     margin: 20px auto;
     word-wrap: break-word;
     line-height: 1.6;
 }
+
+
+/* ================= FULL WIDTH IMAGES ================= */
+.full-width-image-container {
+    width: 150vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    overflow: hidden;
+}
+
+.full-width-image-container img.main-image {
+    width: 100%;
+    
+    height: 80vh ; 
+    
+
+    display: block;
+    
+    object-fit: cover; 
+    object-position: center; /* จัดกึ่งกลางรูป */
+    
+    margin-top: 0;
+}
+/* ================= SECTION SPACINGS ================= */
+section {
+    scroll-margin-top: 150px;
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+
+
+
+.box-login h2 {
+    text-align: center;
+    color: #C4A808;
+    font-size: 48px;
+    margin-bottom: 50px;
+    font-weight: 400;
+    letter-spacing: 3px;
+}
+
+.content {
+    width: 100%;
+}
+
+.username, .password {
+    display: block;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: light;
+    font-family: 'Oswald', sans-serif;
+}
+
+.content input {
+    width: 165%;
+    padding: 16px 20px;
+    font-size: 15px;
+    border: none;
+    background: #E0E0E0;
+    color: #666;
+    margin-bottom: 18px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: lighter;
+    border-radius: 5px;
+}
+
+.content input::placeholder {
+    color: #999;
+    font-size: 20px;
+}
+
+.content input:focus {
+    outline: 2px solid #C4A808;
+    background: #EBEBEB;
+}
+
+.content button {
+    width: 180%;
+    padding: 18px;
+    background: #C4A808;
+    color: white;
+    border: none;
+    font-size: 20px;
+    font-family: 'Noto Serif TC', serif;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 5px;
+}
+
+.content button:hover {
+    background: #A68F07;
+    transform: translateY(-1px);
+}
+
+.content button:active {
+    transform: translateY(0);
+}
+
+.footer { margin-top: 0; }
+

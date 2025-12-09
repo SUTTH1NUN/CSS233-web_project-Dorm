@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenants Management</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/admin-css/style-tenant.css">
+    <script defer src="../../js/admin/script-tenant.js"></script> 
+</head>
+<body>
+
+    <header>
+        <i class="fas fa-bars menu-icon"></i>
+        <h1>Tenants</h1>
+    </header>
+    
+    <section id="manage-bar">
+        <div class="search-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-tenant" placeholder="Search Tenants....">
+            </div>
+            
+            <select id="filter-status">
+                <option value="" disabled selected>Select Status</option>
+                <option value="all">All Statuses</option>
+                <option value="rented">Rented</option>
+                <option value="vacated">Vacated</option>
+            </select>
+        </div>
+
+        <button id="add-tenant-btn">Add Tenants</button>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="tenant-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Room</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>About</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+              </tbody>
+        </table>
+    </section>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Tenants</h2>
+            
+            <form id="add-tenant-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Name :</label>
+                        <input type="text" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email :</label>
+                        <input type="email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone :</label>
+                        <input type="text" placeholder="Enter number">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Room :</label>
+                        <input type="text" placeholder="Enter room">
+                    </div>
+                    <div class="form-group">
+                        <label>Move-in Date :</label>
+                        <input type="date" class="date-input">
+                    </div>
+                    <div class="form-group"></div> <div class="form-group">
+                        <label>Building :</label>
+                        <input type="text" placeholder="Enter building">
+                    </div>
+                    <div class="form-group">
+                        <label>Move-out Date :</label>
+                        <input type="date" class="date-input">
+                    </div>
+                    <div class="form-group"></div> <div class="form-group">
+                        <label>Status :</label>
+                        <select class="status-select">
+                            <option value="rented">Rented</option>
+                            <option value="vacated">Vacated</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Deposit Amount :</label>
+                        <input type="text" placeholder="Enter amount">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="save-tenant-btn">Add Tenants</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

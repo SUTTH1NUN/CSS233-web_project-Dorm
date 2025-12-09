@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repairs Management</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/admin-css/style-repair.css">
+    <script defer src="../../js/admin/script-repair.js"></script> </body>
+</head>
+<body>
+
+    <header>
+        <i class="fas fa-bars menu-icon"></i>
+        <h1>Repair</h1>
+    </header>
+    
+    <section id="manage-bar">
+        <div class="search-group">
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-repair" placeholder="Search Repairs....">
+            </div>
+            
+            <select id="filter-status">
+                <option value="" disabled selected>Select Status</option>
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In_Progress</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+
+        <button id="add-repair-btn">Add Repair</button>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="repair-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Room</th>
+                    <th>Status</th>
+                    <th>Topic</th>
+                    <th>Description</th>
+                    <th>About</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+              </tbody>
+        </table>
+    </section>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Add Repair</h2>
+            
+            <form id="add-repair-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Topic :</label>
+                        <input type="text" placeholder="Enter topic">
+                    </div>
+                    <div class="form-group">
+                        <label>Description :</label>
+                        <input type="email" placeholder="Enter description ">
+                    </div>
+                    <div class="form-group"></div><div class="form-group">
+                        <label>Status :</label>
+                        <select class="status-select">
+                            <option value="rented">Pending</option>
+                            <option value="vacated">In_Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                   
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="save-repair-btn">Add Repair</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>
