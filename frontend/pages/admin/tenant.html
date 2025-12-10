@@ -3,114 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenants Management</title>
+    <title>Tenants Management | Hatyai Condominium</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link rel="stylesheet" href="../../css/admin-css/style-tenant.css">
-    <script defer src="../../js/admin/script-tenant.js"></script> 
+    <script dafer src="../../js/admin/script-tenant.js"></script> 
 </head>
 <body>
 
-    <header>
-        <i class="fas fa-bars menu-icon"></i>
-        <h1>Tenants</h1>
-    </header>
-    
-    <section id="manage-bar">
-        <div class="search-group">
-            <div class="search-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-tenant" placeholder="Search Tenants....">
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
+                <h3>ADMIN</h3>
             </div>
             
-            <select id="filter-status">
-                <option value="" disabled selected>Select Status</option>
-                <option value="all">All Statuses</option>
-                <option value="rented">Rented</option>
-                <option value="vacated">Vacated</option>
-            </select>
-        </div>
+            <ul class="menu-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li  class="active"><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
+                <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+            </ul>
 
-        <button id="add-tenant-btn">Add Tenants</button>
-    </section>
+            <div class="logout-section">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
 
-    <div class="divider"></div>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1>Tenants Management</h1>
+                    <p class="sub-text">Manage all your room residents here</p>
+                </div>
+                <div class="admin-profile">
+                    <span>Admin Officer</span>
+                    <div class="profile-pic"><i class="fas fa-user-shield"></i></div>
+                </div>
+            </header>
 
-    <section id="tenant-list">
-        <table>
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Name</th>
-                    <th>Room</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>About</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-              </tbody>
-        </table>
-    </section>
+            <section class="content-box control-bar">
+                <div class="search-group">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-tenant" placeholder="Search tenants...">
+                    </div>
+                    
+                    <select id="filter-status" class="custom-select">
+                        <option value="" disabled selected>Filter Status</option>
+                        <option value="all">All Statuses</option>
+                        <option value="rented">Rented</option>
+                        <option value="vacated">Vacated</option>
+                    </select>
+                </div>
+
+                <button id="add-tenant-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add New Tenant
+                </button>
+            </section>
+
+            <section class="content-box table-card">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Name</th>
+                            <th>Room</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>Hall Hongkong</td>
+                            <td>A-1104</td>
+                            <td>088-888-8888</td>
+                            <td><span class="badge rented">Rented</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Art Rordorthai</td>
+                            <td>B-1104</td>
+                            <td>088-888-8888</td>
+                            <td><span class="badge vacated">Vacated</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-file-alt"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
 
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">Add Tenants</h2>
+            <h2 class="modal-title">Add New Tenant</h2>
             
             <form id="add-tenant-form">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Name :</label>
-                        <input type="text" placeholder="Enter name">
+                        <label>Name</label>
+                        <input type="text" placeholder="Full Name">
                     </div>
                     <div class="form-group">
-                        <label>Email :</label>
-                        <input type="email" placeholder="Enter email">
+                        <label>Email</label>
+                        <input type="email" placeholder="example@mail.com">
                     </div>
                     <div class="form-group">
-                        <label>Phone :</label>
-                        <input type="text" placeholder="Enter number">
+                        <label>Phone</label>
+                        <input type="text" placeholder="08x-xxx-xxxx">
                     </div>
 
                     <div class="form-group">
-                        <label>Room :</label>
-                        <input type="text" placeholder="Enter room">
+                        <label>Room No.</label>
+                        <input type="text" placeholder="e.g. A-101">
                     </div>
                     <div class="form-group">
-                        <label>Move-in Date :</label>
-                        <input type="date" class="date-input">
+                        <label>Move-in Date</label>
+                        <input type="date">
                     </div>
-                    <div class="form-group"></div> <div class="form-group">
-                        <label>Building :</label>
-                        <input type="text" placeholder="Enter building">
+                    <div class="form-group"></div>
+
+                    <div class="form-group">
+                        <label>Building</label>
+                        <input type="text" placeholder="Building Name">
                     </div>
                     <div class="form-group">
-                        <label>Move-out Date :</label>
-                        <input type="date" class="date-input">
+                        <label>Move-out Date</label>
+                        <input type="date">
                     </div>
-                    <div class="form-group"></div> <div class="form-group">
-                        <label>Status :</label>
+                    <div class="form-group"></div>
+
+                    <div class="form-group">
+                        <label>Status</label>
                         <select class="status-select">
                             <option value="rented">Rented</option>
                             <option value="vacated">Vacated</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Deposit Amount :</label>
-                        <input type="text" placeholder="Enter amount">
+                        <label>Deposit (฿)</label>
+                        <input type="text" placeholder="0.00">
                     </div>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" id="save-tenant-btn">Add Tenants</button>
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('modal-overlay').classList.remove('active')">Cancel</button>
+                    <button type="button" id="save-tenant-btn" class="btn-primary">Save Tenant</button>
                 </div>
             </form>
         </div>
     </div>
-    
+
     
 </body>
 </html>

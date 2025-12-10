@@ -1,16 +1,33 @@
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 1. ประกาศตัวแปร (Refer elements) ---
+    const addBtn = document.getElementById('add-tenant-btn');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const cancelBtn = document.querySelector('.btn-cancel'); // ปุ่ม Cancel ในฟอร์ม
 
-// --- ส่วนจัดการ Popup Modal ---
-const addBtn = document.getElementById('add-tenant-btn');
-const modalOverlay = document.getElementById('modal-overlay');
-
-// 1. กดปุ่ม Add Tenants เพื่อเปิด Modal
-addBtn.addEventListener('click', () => {
-    modalOverlay.classList.add('active');
-});
-
-// 2. กดที่พื้นหลังสีดำ (Overlay) เพื่อปิด Modal
-modalOverlay.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) {
-        modalOverlay.classList.remove('active');
+    // --- 2. ฟังก์ชันเปิด Modal ---
+    if (addBtn && modalOverlay) {
+        addBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('active'); // เติม class active เพื่อแสดงผล
+        });
     }
+
+    // --- 3. ฟังก์ชันปิด Modal (เมื่อกดพื้นหลังสีดำ) ---
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            // เช็คว่ากดโดนพื้นหลังจริงๆ ไม่ใช่โดนกล่องขาวข้างใน
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+    }
+
+    // --- 4. ฟังก์ชันปิด Modal (เมื่อกดปุ่ม Cancel) ---
+    // (เผื่อกรณีคุณลบ onclick="..." ใน HTML ออก เพื่อให้จัดการใน JS ที่เดียว)
+    if (cancelBtn && modalOverlay) {
+        cancelBtn.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+        });
+    }
+
 });

@@ -3,87 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Announcements Management</title>
+    <title>Announcements | Hatyai Condominium</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link rel="stylesheet" href="../../css/admin-css/style-announcement.css">
-    <script defer src="../../js/admin/script-announcement.js"></script> </body>
+
+    <script defer src="../../js/admin/script-announcement.js"></script>
 </head>
 <body>
 
-    <header>
-        <i class="fas fa-bars menu-icon"></i>
-        <h1>Announcement</h1>
-    </header>
-    
-    <section id="manage-bar">
-        <div class="search-group">
-            <div class="search-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-announcement" placeholder="Search Announcements....">
+    <div class="admin-container">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
+                <h3>ADMIN</h3>
             </div>
             
-            <select id="filter-status">
-                <option value="" disabled selected>Select Status</option>
-                <option value="all">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="inactive">InActive</option>
-            </select>
-        </div>
+            <ul class="menu-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
+                <li   class="active"><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+            </ul>
 
-        <button id="add-announcement-btn">Add Announcement</button>
-    </section>
+            <div class="logout-section">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
 
-    <div class="divider"></div>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <section id="announcement-list">
-        <table>
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Room</th>
-                    <th>Status</th>
-                    <th>Topic</th>
-                    <th>Description</th>
-                    <th>About</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-              </tbody>
-        </table>
-    </section>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-left">
+                    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <div class="page-title">
+                        <h1>Announcements</h1>
+                        <p class="sub-text">Manage news and updates for residents</p>
+                    </div>
+                </div>
+                <div class="admin-profile">
+                    <span class="admin-name">Admin Officer</span>
+                    <div class="profile-pic"><i class="fas fa-user-shield"></i></div>
+                </div>
+            </header>
+
+            <section class="content-box control-bar">
+                <div class="filter-group">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-announcement" placeholder="Search Topic...">
+                    </div>
+                    <select id="filter-status" class="custom-select">
+                        <option value="" disabled selected>Filter Status</option>
+                        <option value="all">All Statuses</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <button id="add-announcement-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> <span>New Announcement</span>
+                </button>
+            </section>
+
+            <section class="content-box table-card">
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Topic</th>
+                                <th>Description</th> <th>Post Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr>
+                                <td>1</td>
+                                <td>Monthly Maintenance</td>
+                                <td class="text-truncate">Routine check-up of elevator systems and fire alarms in Building A.</td>
+                                <td>08 Dec 2025</td>
+                                <td><span class="badge active">Active</span></td>
+                                <td>
+                                    <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Pool Cleaning Schedule</td>
+                                <td class="text-truncate">Swimming pool will be closed for cleaning from 10:00 AM to 2:00 PM.</td>
+                                <td>01 Dec 2025</td>
+                                <td><span class="badge inactive">Inactive</span></td>
+                                <td>
+                                    <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">Add Announcement</h2>
-            
+            <h2 class="modal-title">Create Announcement</h2>
             <form id="add-announcement-form">
                 <div class="form-grid">
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label>Topic :</label>
-                        <input type="text" placeholder="Enter topic">
+                        <input type="text" placeholder="Enter announcement topic">
                     </div>
                     <div class="form-group">
+                        <label>Post Date :</label>
+                        <input type="date" class="date-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Status :</label>
+                        <select class="custom-select full-select">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
                         <label>Description :</label>
-                        <input type="email" placeholder="Enter description ">
+                        <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
                     </div>
-                    <div class="form-group"></div>
-                    <div class="form-group">
-                    <label>Out Date :</label>
-                    <input type="date" class="date-input">
-                    </div>
-                   
                 </div>
-
                 <div class="modal-actions">
-                    <button type="button" id="save-announcement-btn">Add Announcement</button>
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="button" id="save-announcement-btn" class="btn-primary">Post Now</button>
                 </div>
             </form>
         </div>
     </div>
+    
+  
     
 </body>
 </html>

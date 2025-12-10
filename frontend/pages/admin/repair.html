@@ -3,91 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repairs Management</title>
+    <title>Repairs Management | Hatyai Condominium</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link rel="stylesheet" href="../../css/admin-css/style-repair.css">
-    <script defer src="../../js/admin/script-repair.js"></script> </body>
+    <script defer src="../../js/admin/script-repair.js"></script>
 </head>
 <body>
 
-    <header>
-        <i class="fas fa-bars menu-icon"></i>
-        <h1>Repair</h1>
-    </header>
-    
-    <section id="manage-bar">
-        <div class="search-group">
-            <div class="search-wrapper">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search-repair" placeholder="Search Repairs....">
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
+                <h3>ADMIN</h3>
             </div>
             
-            <select id="filter-status">
-                <option value="" disabled selected>Select Status</option>
-                <option value="all">All Statuses</option>
-                <option value="pending">Pending</option>
-                <option value="in_progress">In_Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-        </div>
+            <ul class="menu-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li  class="active"><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
+                <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+            </ul>
 
-        <button id="add-repair-btn">Add Repair</button>
-    </section>
+            <div class="logout-section">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
 
-    <div class="divider"></div>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1>Repairs Management</h1>
+                    <p class="sub-text">Track and manage maintenance requests</p>
+                </div>
+                <div class="admin-profile">
+                    <span>Admin Officer</span>
+                    <div class="profile-pic"><i class="fas fa-user-shield"></i></div>
+                </div>
+            </header>
 
-    <section id="repair-list">
-        <table>
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>Room</th>
-                    <th>Status</th>
-                    <th>Topic</th>
-                    <th>Description</th>
-                    <th>About</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-              </tbody>
-        </table>
-    </section>
+            <section class="content-box control-bar">
+                <div class="search-group">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-repair" placeholder="Search repairs...">
+                    </div>
+                    
+                    <select id="filter-status" class="custom-select">
+                        <option value="" disabled selected>Filter Status</option>
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <button id="add-repair-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Add New Repair
+                </button>
+            </section>
+
+            <section class="content-box table-card">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Room</th>
+                            <th>Topic</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>A-201</td>
+                            <td>Air Conditioner</td>
+                            <td>Water leaking from unit</td>
+                            <td><span class="badge pending">Pending</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>B-405</td>
+                            <td>Light Bulb</td>
+                            <td>Bathroom light broken</td>
+                            <td><span class="badge process">In Progress</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>C-102</td>
+                            <td>Sink Clogged</td>
+                            <td>Kitchen sink not draining</td>
+                            <td><span class="badge completed">Completed</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
 
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">Add Repair</h2>
+            <h2 class="modal-title">Add Repair Request</h2>
             
             <form id="add-repair-form">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Topic :</label>
-                        <input type="text" placeholder="Enter topic">
+                        <input type="text" placeholder="e.g. Air Conditioner">
                     </div>
                     <div class="form-group">
-                        <label>Description :</label>
-                        <input type="email" placeholder="Enter description ">
+                        <label>Room :</label>
+                        <input type="text" placeholder="e.g. A-101">
                     </div>
-                    <div class="form-group"></div><div class="form-group">
+                    <div class="form-group">
+                        <label>Date :</label>
+                        <input type="date">
+                    </div>
+
+                   <div class="form-group full-width">
+                        <label>Description :</label>
+                        <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
+                    </div>
+
+                    <div class="form-group">
                         <label>Status :</label>
                         <select class="status-select">
-                            <option value="rented">Pending</option>
-                            <option value="vacated">In_Progress</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
                             <option value="completed">Completed</option>
                         </select>
                     </div>
-                   
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" id="save-repair-btn">Add Repair</button>
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="button" id="save-repair-btn" class="btn-primary">Save Repair</button>
                 </div>
             </form>
         </div>
     </div>
     
+   
 </body>
 </html>
