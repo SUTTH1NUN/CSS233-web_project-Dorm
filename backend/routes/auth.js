@@ -1,15 +1,12 @@
 // /backend/routes/auth.js
 
 const express = require("express");
-const router = express.Router(); // ⭐️ สร้าง Router
+const router = express.Router(); // create Router
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const pool = require("../config/db"); // ⭐️ ดึง Pool มาจากไฟล์ที่เราสร้าง
+const pool = require("../config/db"); // ดึง Pool มาจากไฟล์ที่เราสร้าง
 
 // --- ฟังก์ชัน Register Admin ---
-// ❗️ สังเกต: เราเปลี่ยนจาก app.post เป็น router.post
-// ❗️ สังเกต: Path เปลี่ยนจาก /api/register/admin เป็น /register/admin
-//           (เพราะเดี๋ยวเราจะเติม /api/auth ข้างนอก)
 
 router.post("/register/admin", async (req, res) => {
   const { first_name, last_name, username, password } = req.body;
