@@ -1,17 +1,22 @@
 const API_URL = 'http://localhost:3030/api/auth';
 
-const loginForm = document.getElementById('login-form');
+const identifierInput = document.getElementById('identifier');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('login-btn');
 
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+async function handleLogin() {
+    const identifier = identifierInput.value.trim();
+    const password = passwordInput.value.trim();
 
-    const identifier = document.getElementById('identifier');
-    const password = document.getElementById('password');
+    if (!identifier || !password) {
+        alert('กรุณากรอก Username และ Password');
+        return;
+    }
 
     try{
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
-            header: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ identifier, password })
         });
         
@@ -19,13 +24,36 @@ loginForm.addEventListener('submit', async (e) => {
 
         if(response.ok){
             const {token, user} = data; 
+
+            if(user.role === 'admin'){
+                sessionStorage.setItem('token', token);
+                sessionStorage.setItem('user', JSON.stringify(user));
+
+                window.location.href = '/pages/admin/dashboard.html';
+            }
+            else{
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(user));
+
+                window.location.href = '/pages/user/dash-board.html';
+            }
+
         }
-
-        if(user.role === 'admin'){
-            sessionStorage.setItem('token', token);
-            sessionStorage.setItem('user', JSON.stringify(user));
-
-            window.location.href('page/admin')
+        else{
+            alert(data.error || 'login fail');
         }
     }
+    catch (error){
+        console.log('Error', error);
+        alert('can not connect to server');
+    }
+}
+
+loginBtn.addEventListener('click', handleLogin);
+
+identifierInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') handleLogin();
+});
+passwordInput.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') handleLogin();
 });

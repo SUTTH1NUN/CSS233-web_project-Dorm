@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="css/style-home.css">
     <script defer src="js/script.js"></script>
+
 </head>
 <body>
 
@@ -288,12 +289,13 @@
                 <h2>Login</h2>
                 <div class="content">
                     <span class="username">Username</span><br>
-                    <input type="text" id="username" required placeholder="room number ex.3301"><br>
+                    <input type="text" id="identifier" required placeholder="room number ex.3301"><br>
 
                     <span class="password">Password</span><br>
                     <input type="password" id="password" required placeholder="default room number ex.3301"><br>
                     <span class="forgot"><u>Forgot Password? Please Contact Niti</u></span><br>
-                    <button>Login</button>
+
+                    <button type="submit" id="login-btn">Login</button>
                 </div>
             </div>
         </div>
@@ -323,6 +325,6 @@
     </div>
     
    
-
+        <script src="js/login.js"></script>
 </body>
 </html>

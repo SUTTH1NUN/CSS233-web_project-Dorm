@@ -1,24 +1,26 @@
-// /backend/routes/auth.js
-
 const express = require("express");
-const router = express.Router(); // create Router
+const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const pool = require("../config/db"); // ดึง Pool มาจากไฟล์ที่เราสร้าง
+const pool = require("../config/db"); // เรียกใช้ Pool จากไฟล์ config
 
-// --- ฟังก์ชัน Register Admin ---
-
+// ----------------------------------------------------------------------
+// Route: POST /api/auth/register/admin
+// Desc:  สร้างบัญชีผู้ดูแลระบบ (Admin) ใหม่
+// ----------------------------------------------------------------------
 router.post("/register/admin", async (req, res) => {
   const { first_name, last_name, username, password } = req.body;
+
   if (!first_name || !last_name || !username || !password) {
     return res.status(400).json({ error: "กรุณากรอกข้อมูลให้ครบถ้วน" });
   }
+
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newAdmin = await pool.query(
-      "INSERT INTO admin (first_name, last_name, username, password_hash) VALUES ($1, $2, $3, $4) RETURNING admin_id, username",
+      "INSERT INTO admins (first_name, last_name, username, password_hash) VALUES ($1, $2, $3, $4) RETURNING admin_id, username, first_name",
       [first_name, last_name, username, hashedPassword]
     );
 
@@ -35,11 +37,14 @@ router.post("/register/admin", async (req, res) => {
   }
 });
 
-// --- ฟังก์ชัน Login ---
-// ❗️ สังเกต: เปลี่ยนเป็น router.post และ Path เป็น /login
+// ----------------------------------------------------------------------
+// Route: POST /api/auth/login
+// Desc:  เข้าสู่ระบบ (รองรับทั้ง Admin และ Tenant)
+// ----------------------------------------------------------------------
 router.post("/login", async (req, res) => {
   try {
     const { identifier, password } = req.body;
+
     if (!identifier || !password) {
       return res
         .status(400)
@@ -50,53 +55,74 @@ router.post("/login", async (req, res) => {
     let role = null;
     let userId = null;
 
-    // (Logic การค้นหา admin และ tenant เหมือนเดิม... )
+    // ค้นหาในตาราง 'admin' ก่อน
     const adminQuery = await pool.query(
-      "SELECT * FROM admin WHERE username = $1",
+      "SELECT * FROM admins WHERE username = $1",
       [identifier]
     );
+
     if (adminQuery.rows.length > 0) {
       user = adminQuery.rows[0];
       role = "admin";
       userId = user.admin_id;
     } else {
+      // ถ้าไม่พบ, ค้นหาในตาราง tenants
       const tenantQuery = await pool.query(
         "SELECT * FROM tenants WHERE email = $1",
         [identifier]
       );
+      
       if (tenantQuery.rows.length > 0) {
         user = tenantQuery.rows[0];
         role = "tenant";
         userId = user.tenant_id;
       }
     }
+
+    // ถ้าไม่พบผู้ใช้เลย
     if (!user) {
       return res
         .status(401)
         .json({ error: "ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง" });
     }
+
+    // ตรวจสอบรหัสผ่าน
     const isMatch = await bcrypt.compare(password, user.password_hash);
+
     if (!isMatch) {
       return res
         .status(401)
         .json({ error: "ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง" });
     }
 
-    // (Logic การสร้าง JWT เหมือนเดิม... )
-    const payload = { id: userId, role: role, name: user.first_name };
+    // กำหนดอายุ Token ตาม Role (ตามโจทย์ที่คุยกัน)
+    // - Admin: 1 ชั่วโมง (ต้อง Login บ่อย)
+    // - Tenant: 30 วัน (จำ Session ไว้นานๆ)
+    let tokenExpiry = '1h'; 
+    if (role === 'tenant') {
+        tokenExpiry = '30d'; 
+    }
+
+    // สร้าง JWT Token
+    const payload = {
+      id: userId,
+      role: role,
+      name: user.first_name, // ส่งชื่อไปให้ Frontend แสดงผล
+    };
+
     const secretKey = process.env.JWT_SECRET;
-    const token = jwt.sign(payload, secretKey, { expiresIn: "1h" });
+    const token = jwt.sign(payload, secretKey, { expiresIn: tokenExpiry });
 
     res.json({
       message: "เข้าสู่ระบบสำเร็จ!",
       token: token,
-      user: payload,
+      user: payload, // ส่งข้อมูล user กลับไปด้วยเพื่อใช้เช็คฝั่ง Frontend
     });
+
   } catch (err) {
     console.error("Login Error:", err.message);
     res.status(500).json({ error: "Server Error" });
   }
 });
 
-// ⭐️ ส่งออก (export) router นี้เพื่อให้ server.js เรียกใช้
 module.exports = router;
