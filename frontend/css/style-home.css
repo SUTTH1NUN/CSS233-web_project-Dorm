@@ -99,6 +99,9 @@ font-family: 'Times New Roman', Times, serif;
     left: 0;
     background: #C4A808;
 }
+.hamburger-menu, .mobile-menu {
+    display: none;
+}
 
 /* ================= SECTION SPACINGS ================= */
 section {
@@ -577,35 +580,56 @@ section {
 /* --- Tablet & Mobile (หน้าจอเล็กกว่า 1024px) --- */
 @media screen and (max-width: 1024px) {
     
-    /* 1. ปรับ Menu Bar ให้เรียงแนวตั้ง  */
-    .menu-bar {
-        height: auto; /* ปล่อยความสูงอิสระ */
-        flex-direction: column; /* เรียงลงมาแนวตั้ง */
-        padding: 20px 10px;
-        gap: 15px;
+  
+
+    /* ซ่อนเมนู Desktop เดิม */
+    .desktop-only { display: none !important; }
+
+    /* แสดงปุ่ม Hamburger */
+    .hamburger-menu {
+        display: block;
+        font-size: 28px;
+        cursor: pointer;
+        color: #333;
+        z-index: 1002; /* ให้อยู่บนสุด */
     }
 
-    .logo {
-        order: -1; /* ย้ายโลโก้ไปบนสุด */
-        margin-bottom: 10px;
-    }
-
-    .logo img {
-        height: 100px; /* ลดขนาดโลโก้ */
-        width: auto;
-    }
-
-    /* จัดลิงก์เมนูให้เรียงสวยๆ */
-    .left-menu, .right-menu {
+    /* สไตล์กล่องเมนูมือถือ (Slide Down) */
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px; /* ต่อจาก Menu bar */
+        left: 0;
         width: 100%;
-        justify-content: center;
-        flex-wrap: wrap; /* ถ้าจอเล็กมาก ให้ปัดบรรทัดใหม่ได้ */
-        gap: 15px;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        
+        /* ซ่อนไว้ก่อน */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+        z-index: 1001;
     }
 
-    .left-menu a, .right-menu a {
-        font-size: 16px; /* ลดขนาดตัวหนังสือเมนู */
-        padding: 5px 10px;
+    /* คลาสนี้จะถูก JS เติมเข้ามาตอนกดปุ่ม */
+    .mobile-menu.active {
+        max-height: 500px; /* เปิดลงมา */
+    }
+
+    .mobile-menu a {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+        font-family: 'Oswald', sans-serif;
+        color: #333;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    
+    .mobile-menu a:hover {
+        background-color: #f9f9f9;
+        color: #C4A808;
     }
 
     /* 2. แก้ไขรูปภาพ Banner ที่ล้นจอ (150vw) ให้กลับมาพอดี */
@@ -712,6 +736,7 @@ section {
         display: flex;
         flex-direction: column;
         padding: 0 20px;
+        font-size: 10px;
     }
 
     /* 3. Login Box */
