@@ -1,34 +1,25 @@
-//server.js
+// /backend/server.js
 
-const express = require('express');
-const { Pool } = require('pg');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = 3030; // (ใช้พอร์ต 3030 ตาม docker-compose)
 
-//Middleware
+// --- Middlewares ---
+app.use(cors());
 app.use(express.json());
-const pool = new Pool({
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
-});
 
-pool.connect((err, client, release) => {
-    if(err){
-        return console.error("Error acquiring client", err.stack);
-    }
-    console.log("Successfully connect to PostgreSQL Database");
+// --- Import Routes ---
+const authRoutes = require("./routes/auth");
 
-    release();
-});
+app.use("/api/auth", authRoutes);
 
-app.get('/', (req, res) => {
-    res.status(200).send("Express Backend is running and connect to DB");
-});
 
+// --- Start Server ---
 app.listen(port, () => {
-    console.log("Express Backend listening at 127.0.0.1: ", port);
+  console.log(`Backend server running at http://localhost:${port}`);
 });

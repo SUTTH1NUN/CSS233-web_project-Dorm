@@ -1,0 +1,128 @@
+const express = require("express");
+const router = express.Router();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const pool = require("../config/db"); // เรียกใช้ Pool จากไฟล์ config
+
+// ----------------------------------------------------------------------
+// Route: POST /api/auth/register/admin
+// Desc:  สร้างบัญชีผู้ดูแลระบบ (Admin) ใหม่
+// ----------------------------------------------------------------------
+router.post("/register/admin", async (req, res) => {
+  const { first_name, last_name, username, password } = req.body;
+
+  if (!first_name || !last_name || !username || !password) {
+    return res.status(400).json({ error: "กรุณากรอกข้อมูลให้ครบถ้วน" });
+  }
+
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const newAdmin = await pool.query(
+      "INSERT INTO admins (first_name, last_name, username, password_hash) VALUES ($1, $2, $3, $4) RETURNING admin_id, username, first_name",
+      [first_name, last_name, username, hashedPassword]
+    );
+
+    res.status(201).json({
+      message: "สร้าง Admin ใหม่สำเร็จ!",
+      user: newAdmin.rows[0],
+    });
+  } catch (err) {
+    if (err.code === "23505") {
+      return res.status(409).json({ error: "Username นี้ถูกใช้งานแล้ว" });
+    }
+    console.error("Register Error:", err.message);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+// ----------------------------------------------------------------------
+// Route: POST /api/auth/login
+// Desc:  เข้าสู่ระบบ (รองรับทั้ง Admin และ Tenant)
+// ----------------------------------------------------------------------
+router.post("/login", async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+
+    if (!identifier || !password) {
+      return res
+        .status(400)
+        .json({ error: "กรุณากรอกชื่อผู้ใช้/อีเมล และรหัสผ่าน" });
+    }
+
+    let user = null;
+    let role = null;
+    let userId = null;
+
+    // ค้นหาในตาราง 'admin' ก่อน
+    const adminQuery = await pool.query(
+      "SELECT * FROM admins WHERE username = $1",
+      [identifier]
+    );
+
+    if (adminQuery.rows.length > 0) {
+      user = adminQuery.rows[0];
+      role = "admin";
+      userId = user.admin_id;
+    } else {
+      // ถ้าไม่พบ, ค้นหาในตาราง tenants
+      const tenantQuery = await pool.query(
+        "SELECT * FROM tenants WHERE email = $1",
+        [identifier]
+      );
+      
+      if (tenantQuery.rows.length > 0) {
+        user = tenantQuery.rows[0];
+        role = "tenant";
+        userId = user.tenant_id;
+      }
+    }
+
+    // ถ้าไม่พบผู้ใช้เลย
+    if (!user) {
+      return res
+        .status(401)
+        .json({ error: "ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง" });
+    }
+
+    // ตรวจสอบรหัสผ่าน
+    const isMatch = await bcrypt.compare(password, user.password_hash);
+
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ error: "ชื่อผู้ใช้ หรือ รหัสผ่านไม่ถูกต้อง" });
+    }
+
+    // กำหนดอายุ Token ตาม Role (ตามโจทย์ที่คุยกัน)
+    // - Admin: 1 ชั่วโมง (ต้อง Login บ่อย)
+    // - Tenant: 30 วัน (จำ Session ไว้นานๆ)
+    let tokenExpiry = '1h'; 
+    if (role === 'tenant') {
+        tokenExpiry = '30d'; 
+    }
+
+    // สร้าง JWT Token
+    const payload = {
+      id: userId,
+      role: role,
+      name: user.first_name, // ส่งชื่อไปให้ Frontend แสดงผล
+    };
+
+    const secretKey = process.env.JWT_SECRET;
+    const token = jwt.sign(payload, secretKey, { expiresIn: tokenExpiry });
+
+    res.json({
+      message: "เข้าสู่ระบบสำเร็จ!",
+      token: token,
+      user: payload, // ส่งข้อมูล user กลับไปด้วยเพื่อใช้เช็คฝั่ง Frontend
+    });
+
+  } catch (err) {
+    console.error("Login Error:", err.message);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+module.exports = router;

@@ -4,60 +4,6 @@ body{
     padding: 0;
 }
 
-.menu-bar{
-    background: white;
-    height: 150px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    box-sizing: border-box;
-}
-
-.left-menu, .right-menu{
-    display: flex;
-    align-items: center;
-    height: 100%;
-    flex: 1;
-    justify-content: space-evenly; 
-}
-
-.logo{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 60px;
-}
-
-.logo img{
-    height: 135px;
-    width: 90px;
-}
-
-.left-menu a{
-    color: black;
-    text-decoration: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    font-family: 'Noto Serif TC', Times, serif;
-    display: inline-block;
-    white-space: nowrap; 
-}
-
-.right-menu a{
-    color: black;
-    text-decoration: none;
-    padding: 10px 15px;
-    font-size: 24px;
-    font-family: 'Noto Serif TC', Times, serif;
-    display: inline-block;
-    white-space: nowrap; 
-}
-
-.right-menu a.line{
-    border-bottom: 3px solid #C4A808;
-}
 
 .login-container {
     display: flex;
@@ -69,9 +15,10 @@ body{
 .box-login {
     background: white;
     padding: 60px 80px 70px 80px;
-    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     max-width: 620px;
     width: 100%;
+    border-radius: 8px;
 }
 
 .box-login h2 {
@@ -80,7 +27,6 @@ body{
     font-size: 48px;
     margin-bottom: 50px;
     font-weight: 400;
-    letter-spacing: 3px;
 }
 
 .content {
@@ -97,13 +43,13 @@ body{
 }
 
 .content input {
-    width: 100%;
+    width: 165%;
     padding: 16px 20px;
     font-size: 15px;
     border: none;
     background: #E0E0E0;
     color: #666;
-    margin-bottom: 28px;
+    margin-bottom: 18px;
     font-family: 'Oswald', sans-serif;
     font-weight: lighter;
     border-radius: 5px;
@@ -119,18 +65,8 @@ body{
     background: #EBEBEB;
 }
 
-.forgot {
-    display: block;
-    font-size: 13px;
-    color: #666;
-    margin-top: -20px;
-    margin-bottom: 35px;
-    text-decoration: none;
-    font-family: 'Oswald', sans-serif;
-}
-
 .content button {
-    width: 100%;
+    width: 180%;
     padding: 18px;
     background: #C4A808;
     color: white;
@@ -152,6 +88,7 @@ body{
 .content button:active {
     transform: translateY(0);
 }
+
 .footer {
             background: white;
             color: #333;
@@ -171,7 +108,14 @@ body{
             flex-direction: column;
             align-items: center;
             margin-bottom: 25px;
+
         }
+        .footer-logo img{
+            
+        height: 135px;
+        width: 90px;
+        }
+        
 
         
 
