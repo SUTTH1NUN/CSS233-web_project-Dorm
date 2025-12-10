@@ -103,7 +103,7 @@
                     <p class="room-size">26 SQ.M. | 1-2 Guests</p>
                     <p class="desc">A compact yet luxurious space perfect for singles or couples. Features a king-size bed, work desk, and a modern bathroom with rain shower.</p>
                     <div class="amenities">
-                        <span><i class="fas fa-bed"></i> 1 Bedrooms</span>
+                        <span><i class="fas fa-bed"></i> 1 Bed</span>
                         <span><i class="fas fa-wifi"></i> Free WiFi</span>
                         <span><i class="fas fa-tv"></i> Smart TV</span>
                         <span><i class="fas fa-snowflake"></i> AC</span>
@@ -112,17 +112,17 @@
                 </div>
             </div>
 
-            <div class="room-card reverse">
+            <div class="room-card">
                 <div class="room-image">
-                    <img src="picture/2bedroom.png" alt="1 Bedroom Suite">
+                    <img src="picture/2bedroom.jpg" alt="1 Bedroom Suite">
                     <span class="price-tag">฿ 8,500 / Month</span>
                 </div>
                 <div class="room-details">
-                    <h3>1 Bedroom Suite</h3>
+                    <h3>Standard Suite</h3>
                     <p class="room-size">45 SQ.M. | 2-3 Guests</p>
                     <p class="desc">Enjoy extra privacy with a separate living area and bedroom. Includes a kitchenette, dining area, and a balcony with city views.</p>
                     <div class="amenities">
-                        <span><i class="fas fa-bed"></i> 1 Bedrooms</span>
+                        <span><i class="fas fa-bed"></i> 1 Bed</span>
                         <span><i class="fas fa-couch"></i> Living Area</span>
                         <span><i class="fas fa-utensils"></i> Kitchen</span>
                         <span><i class="fas fa-wifi"></i> Free WiFi</span>
@@ -139,11 +139,11 @@
                     <span class="price-tag">฿ 15,000 / Month</span>
                 </div>
                 <div class="room-details">
-                    <h3>2 Bedroom Family Suite</h3>
+                    <h3>Family Suite</h3>
                     <p class="room-size">75 SQ.M. | 4-5 Guests</p>
                     <p class="desc">The ultimate choice for families. Two spacious bedrooms, two bathrooms, a full kitchen, and a large living room for gathering.</p>
                     <div class="amenities">
-                        <span><i class="fas fa-bed"></i> 2 Bedrooms</span>
+                        <span><i class="fas fa-bed"></i> 2 Beds</span>
                         <span><i class="fas fa-couch"></i> Living Area</span>
                         <span><i class="fas fa-wifi"></i> Free WiFi</span>
                         <span><i class="fas fa-tv"></i> Smart TV</span>
@@ -163,34 +163,26 @@
         <div class="room-modal-content">
             <span class="close-modal">&times;</span>
             
-            <h2 class="modal-room-title">Room Information : <span id="modal-room-name">A-1101</span></h2>
+            <h2 class="modal-room-title">Room Information : <span id="modal-room-name">Room Name</span></h2>
             
             <div class="modal-gallery">
                 <div class="main-image-wrapper">
-                   
                     <img src="" alt="Main Room Image" id="modal-main-image">
-                    
                 </div>
                 
-                <div class="thumbnail-list">
-                    <img src="picture/studio.jpg" class="thumb active" onclick="changeImage(this)">
-                    <img src="picture/1bedroom.jpg" class="thumb" onclick="changeImage(this)">
-                    <img src="picture/2bedroom.jpg" class="thumb" onclick="changeImage(this)">
-                    <img src="picture/pool.jpg" class="thumb" onclick="changeImage(this)">
-                </div>
+                <div class="thumbnail-list"></div>
             </div>
-
+            <hr>
             <div class="modal-details-grid">
                 <div class="detail-text">
-                    <hr>
-                    <p><strong>Facilities :</strong> <span id="modal-facilities">Air conditioner, TV, Refrigerator, Water heater, Free Wi-Fi</span></p>
+                    <p><strong>Facilities :</strong> <span id="modal-facilities">-</span></p>
                     
                     <div class="row-info">
-                        <p><strong>Bed Type :</strong> <span id="modal-bed">2 Beds</span></p>
-                        <p><strong>Room Size :</strong> <span id="modal-size">35 sq.m.</span></p>
+                        <p><strong>Bed Type :</strong> <span id="modal-bed">-</span></p>
+                        <p><strong>Room Size :</strong> <span id="modal-size">-</span></p>
                     </div>
                     
-                    <p><strong>Monthly Rate :</strong> <span id="modal-price">10,500 THB / month</span></p>
+                    <p><strong>Monthly Rate :</strong> <span id="modal-price">-</span></p>
                 </div>
             </div>
         </div>
@@ -289,10 +281,10 @@
                 <h2>Login</h2>
                 <div class="content">
                     <span class="username">Username</span><br>
-                    <input type="text" id="identifier" required placeholder="room number ex.3301"><br>
+                    <input type="text" id="identifier" required placeholder="Enter Username"><br>
 
                     <span class="password">Password</span><br>
-                    <input type="password" id="password" required placeholder="default room number ex.3301"><br>
+                    <input type="password" id="password" required placeholder="Enter Password"><br>
                     <span class="forgot"><u>Forgot Password? Please Contact Niti</u></span><br>
 
                     <button type="submit" id="login-btn">Login</button>

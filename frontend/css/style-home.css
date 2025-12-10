@@ -100,6 +100,12 @@ font-family: 'Times New Roman', Times, serif;
     background: #C4A808;
 }
 
+/* ================= SECTION SPACINGS ================= */
+section {
+    scroll-margin-top: 80px; 
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
 #home {
     padding-top: 0 ; 
     margin-top: 0;
@@ -135,8 +141,8 @@ font-family: 'Times New Roman', Times, serif;
 
 .image-text-overlay {
     position: absolute; /* สั่งให้ลอย */
-    top: 48%;           /* กึ่งกลางแนวตั้ง */
-    left: 44%;          /* กึ่งกลางแนวนอน */
+    top: 50%;           /* กึ่งกลางแนวตั้ง */
+    left: 50%;          /* กึ่งกลางแนวนอน */
     transform: translate(-50%, -50%); /* ขยับให้กลางเป๊ะๆ */
     text-align: center;
     width: 80%;         /* ความกว้างสูงสุดไม่เกิน 80% ของจอ */
@@ -167,7 +173,6 @@ font-family: 'Times New Roman', Times, serif;
 
 
 .full-width-image-container {
-    width: 150vw;
     position: relative;
     left: 50%;
     right: 50%;
@@ -212,10 +217,6 @@ font-family: 'Times New Roman', Times, serif;
     gap: 50px;
 }
 
-/* สลับด้านรูปภาพ (Zig-Zag) */
-.room-card.reverse {
-    flex-direction: row-reverse;
-}
 
 /* ส่วนรูปภาพห้อง */
 .room-image {
@@ -458,20 +459,8 @@ font-family: 'Times New Roman', Times, serif;
     max-width: 600px; /* จำกัดความกว้างไม่ให้ห่างกันเกินไป */
 }
 
-/* --- Responsive Modal --- */
-@media screen and (max-width: 768px) {
-    .modal-room-title { font-size: 24px; }
-    .main-image-wrapper { height: 250px; }
-    .row-info { flex-direction: column; }
-    .detail-text strong { width: 100px; }
-}
 
-/* ================= SECTION SPACINGS ================= */
-section {
-    scroll-margin-top: 80px; 
-    padding-top: 80px;
-    padding-bottom: 80px;
-}
+
 
 /* ================= SERVICES SECTION (NEW DESIGN) ================= */
 #services {
@@ -553,6 +542,22 @@ section {
     max-width: 500px;
     margin: 0 auto;
 }
+#contact .content p.main{
+    font-size: 28px;
+    font-family:'Oswald', sans-serif;
+    color:#BEA413;
+    font-weight: 300;
+    margin-bottom: 15px;
+    display: block;
+}
+#contact .content p{
+    font-size: 20px;
+    font-family:'Oswald', sans-serif;
+    color:#747474;
+    font-weight: 300;
+    margin: 8px 0;
+    line-height: 1.6;
+}
 
 
 
@@ -566,13 +571,13 @@ section {
 .footer { margin-top: 0; }
 
 /* ==========================================================================
-   RESPONSIVE STYLES (วางต่อท้ายไฟล์ style-home.css)
+   RESPONSIVE STYLES 
    ========================================================================== */
 
 /* --- Tablet & Mobile (หน้าจอเล็กกว่า 1024px) --- */
 @media screen and (max-width: 1024px) {
     
-    /* 1. ปรับ Menu Bar ให้เรียงแนวตั้ง (เพราะไม่มีปุ่ม Hamburger) */
+    /* 1. ปรับ Menu Bar ให้เรียงแนวตั้ง  */
     .menu-bar {
         height: auto; /* ปล่อยความสูงอิสระ */
         flex-direction: column; /* เรียงลงมาแนวตั้ง */
@@ -608,14 +613,16 @@ section {
         width: 100vw;
         
        
-    margin-right: 35vw;
+    margin-right: 25vw;
         
-        right: -50;
+        
        
     }
 
     .full-width-image-container img.main-image {
         height: 50vh; /* ลดความสูง Banner ในมือถือ */
+        object-fit: cover;       /* เพิ่มบรรทัดนี้ เพื่อให้รูปไม่เบี้ยว */
+        object-position: center; /* เพิ่มบรรทัดนี้ เพื่อให้รูปอยู่กึ่งกลาง */
     }
 
     /* 3. ปรับขนาดตัวหนังสือบนรูปภาพ */
@@ -679,6 +686,11 @@ section {
         margin: 40px 0;
     }
     
+     .modal-room-title { font-size: 24px; }
+    .main-image-wrapper { height: 250px; }
+    .row-info { flex-direction: column; }
+    .detail-text strong { width: 100px; }
+    
     /* ให้รูปภาพอยู่ด้านบนเสมอ */
     .service-img {
         width: 100%;
@@ -692,6 +704,10 @@ section {
     .service-text h2 { font-size: 32px; }
 
     /* 2. Contact Us: เรียงลงมา */
+    #contact .main-content{
+        font-size: 35px;
+    }
+
     #contact .content {
         display: flex;
         flex-direction: column;
