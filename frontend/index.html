@@ -7,8 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="stylesheet" href="css/style-home.css">
     <link rel="stylesheet" href="css/style-about-us.css">
     <link rel="stylesheet" href="css/style-contact-us.css">
     <link rel="stylesheet" href="css/style-login.css">
@@ -20,7 +20,7 @@
 
     <div class="menu-bar" id="mainNav">
         <div class="left-menu">
-            <a href="#home" class="nav-link">HOME</a>
+            <a href="#home" class="nav-link ">HOME</a>
             <a href="#about" class="nav-link">ABOUT US</a>
             <a href="#rooms" class="nav-link">ROOMS</a>
         </div>
@@ -34,11 +34,17 @@
 
     <section id="home">
         <div class="content">
+            
             <div class="full-width-image-container">
-                <img src="picture/Rectangle 51.png" class="main-image" alt="Home Banner">
+                <img src="picture/main.jpg" class="main-image" alt="Home Banner">
+                <div class="image-text-overlay">
+                
+                <a>The Iconic Destination </a>
+                <p>Everything you need to stay in comfort and style.</p>
+            </div>
             </div>
         </div>
-        <div class="box">
+        <div class="box"><hr class="hr-main">
             <p class="main">Welcome to HATAYAI Collection</p>
             <p class="sec">Serviced Condominium</p>
             <p class="des">Experience the essence of modern urban living at Hatyai Apartments, where comfort and convenience come together seamlessly. With beautifully designed rooms, a serene swimming pool, and a fully equipped fitness center, every element is crafted to enhance your daily life. Here, you’ll find more than just a place to stay you’ll find a place to belong.</p>
@@ -48,7 +54,12 @@
     <section id="about">
         <div class="content">
             <div class="full-width-image-container">
-                <img src="picture/about.png" class="main-image" alt="About Us Banner">
+                <img src="picture/about.jpg" class="main-image" alt="About Us Banner">
+                <div class="image-text-overlay">
+                <p> Lifestyle Condominium</p>
+                <a>About Hatyai </a>
+                <p>Everything you need to stay in comfort and style.</p>
+            </div>
             </div>
         </div>
         <div class="box">
@@ -61,14 +72,178 @@
         </div>
     </section>
 
-    <section id="rooms" style="min-height: 400px; background-color: #f9f9f9; text-align: center; padding-top: 100px;">
-        <h2 style="color: #C4A808;">ROOMS SECTION</h2>
-        <p>Content coming soon...</p>
+    <section id="rooms">
+        <div class="content">
+        <div class="full-width-image-container room-banner">
+            <img src="picture/room_main.jpg" class="main-image" alt="Our Rooms">
+            <div class="image-text-overlay">
+                <p class="sub-head">Your Private Sanctuary</p>
+                <a>Our Rooms & Suites</a>
+                <p>Designed for comfort, styled for living.</p>
+            </div>
+        </div>
+        </div>
+
+        <div class="box">
+            <hr class="hr-main">
+            <p class="main">Accommodation</p>
+            <p class="des">Relax in our spacious, modern rooms equipped with everything you need for a perfect stay. Whether you are here for business or leisure, we have the right space for you.</p>
+        </div>
+
+        <div class="room-layout">
+            
+            <div class="room-card">
+                <div class="room-image">
+                    <img src="picture/studio.jpg" alt="Studio Room">
+                    <span class="price-tag">฿ 5,500 / Month</span>
+                </div>
+                <div class="room-details">
+                    <h3>Studio Suite</h3>
+                    <p class="room-size">26 SQ.M. | 1-2 Guests</p>
+                    <p class="desc">A compact yet luxurious space perfect for singles or couples. Features a king-size bed, work desk, and a modern bathroom with rain shower.</p>
+                    <div class="amenities">
+                        <span><i class="fas fa-bed"></i> 1 Bedrooms</span>
+                        <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                        <span><i class="fas fa-tv"></i> Smart TV</span>
+                        <span><i class="fas fa-snowflake"></i> AC</span>
+                    </div>
+                    <button class="btn-book">View Details</button>
+                </div>
+            </div>
+
+            <div class="room-card reverse">
+                <div class="room-image">
+                    <img src="picture/2bedroom.png" alt="1 Bedroom Suite">
+                    <span class="price-tag">฿ 8,500 / Month</span>
+                </div>
+                <div class="room-details">
+                    <h3>1 Bedroom Suite</h3>
+                    <p class="room-size">45 SQ.M. | 2-3 Guests</p>
+                    <p class="desc">Enjoy extra privacy with a separate living area and bedroom. Includes a kitchenette, dining area, and a balcony with city views.</p>
+                    <div class="amenities">
+                        <span><i class="fas fa-bed"></i> 1 Bedrooms</span>
+                        <span><i class="fas fa-couch"></i> Living Area</span>
+                        <span><i class="fas fa-utensils"></i> Kitchen</span>
+                        <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                        <span><i class="fas fa-tv"></i> Smart TV</span>
+                        <span><i class="fas fa-snowflake"></i> AC</span>
+                    </div>
+                    <button class="btn-book">View Details</button>
+                </div>
+            </div>
+
+            <div class="room-card">
+                <div class="room-image">
+                    <img src="picture/1bedroom.jpg" alt="2 Bedroom Suite">
+                    <span class="price-tag">฿ 15,000 / Month</span>
+                </div>
+                <div class="room-details">
+                    <h3>2 Bedroom Family Suite</h3>
+                    <p class="room-size">75 SQ.M. | 4-5 Guests</p>
+                    <p class="desc">The ultimate choice for families. Two spacious bedrooms, two bathrooms, a full kitchen, and a large living room for gathering.</p>
+                    <div class="amenities">
+                        <span><i class="fas fa-bed"></i> 2 Bedrooms</span>
+                        <span><i class="fas fa-couch"></i> Living Area</span>
+                        <span><i class="fas fa-wifi"></i> Free WiFi</span>
+                        <span><i class="fas fa-tv"></i> Smart TV</span>
+                        <span><i class="fas fa-snowflake"></i> AC</span>
+                        <span><i class="fas fa-blender"></i> Full Kitchen</span>
+                    </div>
+                    <button class="btn-book">View Details</button>
+                </div>
+            </div>
+            
+
+        </div>
+        <br>
     </section>
 
-    <section id="services" style="min-height: 400px; background-color: #f0f0f0; text-align: center; padding-top: 100px;">
-        <h2 style="color: #C4A808;">SERVICES SECTION</h2>
-        <p>Content coming soon...</p>
+    <div id="room-modal" class="room-modal-overlay">
+        <div class="room-modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <h2 class="modal-room-title">Room Information : <span id="modal-room-name">A-1101</span></h2>
+            
+            <div class="modal-gallery">
+                <div class="main-image-wrapper">
+                   
+                    <img src="" alt="Main Room Image" id="modal-main-image">
+                    
+                </div>
+                
+                <div class="thumbnail-list">
+                    <img src="picture/studio.jpg" class="thumb active" onclick="changeImage(this)">
+                    <img src="picture/1bedroom.jpg" class="thumb" onclick="changeImage(this)">
+                    <img src="picture/2bedroom.jpg" class="thumb" onclick="changeImage(this)">
+                    <img src="picture/pool.jpg" class="thumb" onclick="changeImage(this)">
+                </div>
+            </div>
+
+            <div class="modal-details-grid">
+                <div class="detail-text">
+                    <hr>
+                    <p><strong>Facilities :</strong> <span id="modal-facilities">Air conditioner, TV, Refrigerator, Water heater, Free Wi-Fi</span></p>
+                    
+                    <div class="row-info">
+                        <p><strong>Bed Type :</strong> <span id="modal-bed">2 Beds</span></p>
+                        <p><strong>Room Size :</strong> <span id="modal-size">35 sq.m.</span></p>
+                    </div>
+                    
+                    <p><strong>Monthly Rate :</strong> <span id="modal-price">10,500 THB / month</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="services">
+        <div class="content">
+        <div class="full-width-image-container ">
+            <img src="picture/service_main.jpg" class="main-image" alt="Service Amenities">
+            
+            <div class="image-text-overlay">
+                <p>Lifestyle Condominium</p>
+                <a>Service Amenities</a>
+                <p>Everything you need to stay in comfort and style.</p>
+            </div>
+        </div>
+        </div>
+            <hr class="hr-main">
+        <div class="service-layout">
+            
+            <div class="service-row">
+                <div class="service-img">
+                    <img src="picture/fitness.jpg" alt="Fitness Center">
+                </div>
+                <div class="service-text">
+                    <h2>Fitness Center</h2>
+                    <span class="open-time">OPEN : 6.00 - 20.00</span>
+                    <p>Overlooking the pool, Hatyai's fitness center offers a range of modern equipment, from cardiovascular and resistance machines to free weights and dumbbells.</p>
+                </div>
+            </div>
+
+            <hr class="hr-main"> <div class="service-row reverse">
+                <div class="service-img">
+                    <img src="picture/pool.jpg" alt="Swimming Pool">
+                </div>
+                <div class="service-text">
+                    <h2>Swimming Pool</h2>
+                    <span class="open-time">OPEN : 6.00 - 20.00</span>
+                    <p>Our open-air swimming pool is an oasis of calm. Relax and cool off after a day of sightseeing, or simply set up camp for the day.</p>
+                </div>
+            </div>
+
+            <hr class="hr-main"> <div class="service-row">
+                <div class="service-img">
+                    <img src="picture/repair.jpg" alt="Service & Repair">
+                </div>
+                <div class="service-text">
+                    <h2>Service & Repair</h2>
+                    <span class="open-time">OPEN : 9.00 - 18.00</span>
+                    <p>Professional maintenance team ready to assist with any in-room repairs or general service requests to ensure your stay is hassle-free.</p>
+                </div>
+            </div>
+
+        </div>
     </section>
 
     <section id="contact">
@@ -110,7 +285,7 @@
     <section id="login">
         <div class="login-container">
             <div class="box-login">
-                <h2>LOGIN</h2>
+                <h2>Login</h2>
                 <div class="content">
                     <span class="username">Username</span><br>
                     <input type="text" id="username" required placeholder="room number ex.3301"><br>
@@ -146,7 +321,7 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
    
 
 </body>
