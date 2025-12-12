@@ -9,43 +9,52 @@ async function handleLogin() {
     const password = passwordInput.value.trim();
 
     if (!identifier || !password) {
-        alert('กรุณากรอก Username และ Password');
+        alert('กรุณากรอก Username/Email และ Password');
         return;
     }
 
-    try{
+    const originalBtnText = loginBtn.innerText;
+    loginBtn.innerText = 'กำลังเข้าสู่ระบบ...';
+    loginBtn.disabled = true;
+
+    try {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ identifier, password })
         });
         
         const data = await response.json();
 
-        if(response.ok){
-            const {token, user} = data; 
+        if (response.ok) {
+            const { token, user } = data; 
 
-            if(user.role === 'admin'){
+            if (user.role === 'admin') {
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('user', JSON.stringify(user));
+                
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
 
                 window.location.href = '/pages/admin/dashboard.html';
-            }
-            else{
+            } else {
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
 
+                sessionStorage.removeItem('token');
+                sessionStorage.removeItem('user');
+
                 window.location.href = '/pages/user/dash-board.html';
             }
-
+        } else {
+            alert(data.error || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
         }
-        else{
-            alert(data.error || 'login fail');
-        }
-    }
-    catch (error){
-        console.log('Error', error);
-        alert('can not connect to server');
+    } catch (error) {
+        console.error('Login Error:', error);
+        alert('ไม่สามารถเชื่อมต่อ Server ได้ กรุณาลองใหม่ภายหลัง');
+    } finally {
+        loginBtn.innerText = originalBtnText;
+        loginBtn.disabled = false;
     }
 }
 
