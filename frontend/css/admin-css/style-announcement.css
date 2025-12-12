@@ -174,18 +174,25 @@ body {
     cursor: pointer;
 }
 
+
 .btn-primary {
     background-color: var(--primary-gold);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 25px;
     border-radius: 8px;
+    font-size: 15px;
     cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Sarabun';
+    display: flex;
+    align-items: center;
+    gap: 8px;
     transition: 0.3s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(196,168,8,0.2); }
+
+.btn-primary:hover {
+    background-color: #b09507;
+    transform: translateY(-2px);
+}
 
 .btn-cancel {
     background: #eee;
@@ -206,9 +213,24 @@ body {
 
 
 /* --- 5. Table Styles (Updated) --- */
-.modern-table { width: 100%; border-collapse: collapse; table-layout: fixed; /* บังคับความกว้างคอลัมน์ */ }
-.modern-table th { text-align: left; color: #888; font-weight: 500; padding: 15px; border-bottom: 1px solid #eee; }
-.modern-table td { padding: 15px; border-bottom: 1px solid #f9f9f9; color: #333; vertical-align: middle; }
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th {
+    text-align: left;
+    color: #888;
+    font-weight: 500;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.modern-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f9f9f9;
+    color: #333;
+}
 
 /* กำหนดความกว้างของแต่ละคอลัมน์ */
 .modern-table th:nth-child(1) { width: 5%; text-align: center; } /* No. */
