@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const pool = require("../config/db");
+const pool = require("../config/db"); // ใช้ pool ตัวเดิมที่มีอยู่แล้ว
 
 exports.registerTenant = async (req, res) => {
   const {first_name, last_name, phone_number, email, tenant_status,
@@ -9,7 +9,7 @@ exports.registerTenant = async (req, res) => {
 
   if(!first_name || !last_name || !phone_number || !email ||!tenant_status 
     || !building || !room_number || !floor 
-    || !start_date || !end_date || !deposit_amount){
+    || !start_date || !deposit_amount){ // เอา end_date ออกจาก validation เพราะอาจเป็น null ได้
     return res.status(400).json({error : "กรุณากรอกข้อมูลให้ครบถ้วน"});
   }
 
@@ -106,4 +106,75 @@ exports.getAllTenants = async (req, res) => {
     console.error(error.message);
     res.status(500).send('Server Error');
   }
+};
+
+// --- จุดที่แก้ไขใหม่ (ใช้ pool และ PostgreSQL Syntax) ---
+
+exports.getTenantById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        
+        // ต้อง Join ตารางเพื่อให้ได้ข้อมูลครบมาโชว์ใน Modal (ชื่อ, ห้อง, สัญญา)
+        const sql = `
+            SELECT 
+                t.tenant_id, t.first_name, t.last_name, t.email, t.phone_number, t.tenant_status,
+                r.building, r.floor, r.room_number,
+                l.start_date, l.end_date, l.deposit_amount
+            FROM tenants t
+            LEFT JOIN lease_contract l ON t.tenant_id = l.tenant_id
+            LEFT JOIN rooms r ON l.room_id = r.room_id
+            WHERE t.tenant_id = $1
+        `;
+
+        const { rows } = await pool.query(sql, [id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'ไม่พบข้อมูลผู้เช่า' });
+        }
+
+        res.json(rows[0]); 
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+exports.updateTenant = async (req, res, next) => {
+    const client = await pool.connect();
+    try {
+        const { id } = req.params;
+        const {
+            first_name, last_name, email, phone_number,
+            tenant_status, deposit_amount, start_date, end_date
+        } = req.body;
+
+        await client.query('BEGIN');
+
+        // 1. อัปเดตตาราง tenants
+        const updateTenantSql = `
+            UPDATE tenants 
+            SET first_name=$1, last_name=$2, email=$3, phone_number=$4, tenant_status=$5
+            WHERE tenant_id=$6
+        `;
+        await client.query(updateTenantSql, [first_name, last_name, email, phone_number, tenant_status, id]);
+
+        // 2. อัปเดตตาราง lease_contract (สัญญา)
+        // หมายเหตุ: การย้ายห้อง (เปลี่ยน room_number) จะซับซ้อนกว่านี้มาก ในที่นี้จะขอ update แค่ข้อมูลส่วนตัวและสัญญาไปก่อน
+        const updateContractSql = `
+            UPDATE lease_contract
+            SET deposit_amount=$1, start_date=$2, end_date=$3
+            WHERE tenant_id=$4
+        `;
+        await client.query(updateContractSql, [deposit_amount, start_date, end_date || null, id]);
+
+        await client.query('COMMIT');
+        res.json({ message: 'อัปเดตข้อมูลสำเร็จ' });
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error(err.message);
+        res.status(500).json({ message: "Server Error" });
+    } finally {
+        client.release();
+    }
 };
