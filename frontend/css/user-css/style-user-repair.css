@@ -1,0 +1,199 @@
+/* --- Grid Layout เฉพาะหน้า Repair --- */
+.repair-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* ซ้ายใหญ่กว่าขวา */
+    gap: 30px;
+}
+
+/* --- Form Card Styles --- */
+.repair-form-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-top: 4px solid #C4A808; /* Theme Gold */
+}
+
+.form-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+/* Input Styles */
+.form-group { margin-bottom: 20px; }
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #666;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: 'Sarabun', sans-serif;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.form-control:focus {
+    border-color: #C4A808;
+    outline: none;
+    background: #fffdf5;
+}
+
+.readonly-input {
+    background-color: #f9f9f9;
+    color: #888;
+    border-color: #eee;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Custom File Upload */
+.file-upload-wrapper {
+    position: relative;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.file-upload-wrapper:hover { border-color: #C4A808; background: #fafafa; }
+
+.file-upload-wrapper i { font-size: 24px; color: #aaa; margin-bottom: 5px; }
+.file-upload-wrapper p { margin: 0; font-size: 13px; color: #888; }
+
+#repair-image {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    background-color: #C4A808;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.btn-submit:hover {
+    background-color: #a38b06;
+    transform: translateY(-2px);
+}
+
+/* --- History Card Styles --- */
+.history-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+.history-item:last-child { border-bottom: none; }
+
+.job-info h4 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
+.job-info p { margin: 0; font-size: 12px; color: #999; }
+
+.job-info .cat-badge { 
+    display: inline-block; 
+    font-size: 11px; 
+    padding: 2px 8px; 
+    background: #f0f0f0; 
+    border-radius: 4px; 
+    margin-top: 5px; 
+    color: #666;
+}
+
+/* Status Badges */
+.job-status { text-align: right; }
+.status-badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.status-badge.pending { background: #fff3cd; color: #856404; }
+.status-badge.process { background: #cce5ff; color: #004085; }
+.status-badge.done { background: #d4edda; color: #155724; }
+
+
+
+/* Responsive Mobile */
+@media (max-width: 992px) {
+    .repair-grid {
+        grid-template-columns: 1fr; /* จอเล็กให้เรียงลงมา */
+    }
+
+    /* 2. สั่งให้ Sidebar ซ่อนไปทางซ้ายก่อน */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        left: 0; top: 0;
+    }
+    
+    /* 3. เมื่อมี class 'active' ให้เลื่อนกลับมา */
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    /* 4. ขยาย Main Content ให้เต็มจอ */
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    /* 5. *** สำคัญ: สั่งให้ปุ่ม Hamburger แสดงผล *** */
+    .menu-toggle {
+        display: block; /* ของเดิมไม่มีบรรทัดนี้ ปุ่มเลยไม่ขึ้น */
+        cursor: pointer;
+        font-size: 24px;
+        color: #333;
+    }
+    
+    /* ปรับ Layout Header */
+    .top-bar {
+        gap: 15px;
+    }
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+}

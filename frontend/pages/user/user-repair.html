@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repair Request | Hatyai Condominium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/user-css/style-user.css">
+    <link rel="stylesheet" href="../../css/user-css/style-user-repair.css">
+    <script defer src="../../js/user/repair.js"></script>
+    
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo"> <h3>MEMBER</h3>
+            </div>
+            
+            <ul class="menu-links">
+                <li><a href="user.html"><i class="fas fa-home"></i> Overview</a></li>
+                <li class="active"><a href="user-repair.html"><i class="fas fa-tools"></i> Repair Request</a></li>
+            </ul>
+
+            <div class="logout-section">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-left">
+                    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+                <div class="user-welcome">
+                    <h1>Repair Request</h1>
+                    <p>Report issues in your room easily.</p>
+                </div>
+                </div>
+                <div class="user-profile-img">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <div class="repair-grid">
+                
+                <section class="repair-form-card">
+                    <h2 class="form-title"><i class="fas fa-wrench"></i> Submit New Request</h2>
+                    <form action="#" method="POST">
+                        
+                        <div class="form-group">
+                            <label>Room No.</label>
+                            <input type="text" class="form-control readonly-input" value="A-3301" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Problem Category</label>
+                            <select class="form-control" required>
+                                <option value="" disabled selected>-- Select Issue --</option>
+                                <option value="electric">Electricity / Lights</option>
+                                <option value="water">Water / Plumbing</option>
+                                <option value="ac">Air Conditioner</option>
+                                <option value="furniture">Furniture / Appliance</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea class="form-control" placeholder="Please describe the issue in detail..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" class="form-control" placeholder="08x-xxx-xxxx" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Attach Photo (Optional)</label>
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="repair-image" accept="image/*">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click or Drag photo here</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Submit Request
+                        </button>
+
+                    </form>
+                </section>
+
+                <section class="history-card">
+                    <h2 class="form-title" style="font-size: 18px; border:none; margin-bottom: 10px;">Recent History</h2>
+                    
+                    <div class="history-item">
+                        <div class="job-info">
+                            <h4>Air conditioner leaking</h4>
+                            <p><i class="far fa-clock"></i> 13 Dec 2025</p>
+                            <span class="cat-badge">Air Conditioner</span>
+                        </div>
+                        <div class="job-status">
+                            <span class="status-badge pending">Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item">
+                        <div class="job-info">
+                            <h4>Sink clogged</h4>
+                            <p><i class="far fa-clock"></i> 10 Dec 2025</p>
+                            <span class="cat-badge">Water / Plumbing</span>
+                        </div>
+                        <div class="job-status">
+                            <span class="status-badge process">In Progress</span>
+                        </div>
+                    </div>
+
+                    <div class="history-item">
+                        <div class="job-info">
+                            <h4>Light bulb replacement</h4>
+                            <p><i class="far fa-clock"></i> 01 Nov 2025</p>
+                            <span class="cat-badge">Electricity</span>
+                        </div>
+                        <div class="job-status">
+                            <span class="status-badge done">Completed</span>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </main>
+    </div>
+
+
+
+</body>
+</html>

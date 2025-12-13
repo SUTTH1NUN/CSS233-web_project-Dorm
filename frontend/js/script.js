@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
             bed: "1 King Bed + Living Area", 
             facilities: "AC, TV, Fridge, Microwave, Balcony",
             images: [
-                "picture/2bedroom.jpg",    // รูปหลัก
+                "picture/1bedroom.jpg",    // รูปหลัก
                 "picture/bathroom_1bed.jpg",      // รูปประกอบ 1
                 "picture/kitchen_1bed.jpg"      // รูปประกอบ 2
             ]
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function() {
             bed: "2 King Beds", 
             facilities: "2 AC, 2 TV, Large Fridge, Full Kitchen, Bathtub, Living Room",
             images: [
-                "picture/1bedroom.jpg",    // รูปหลัก
+                "picture/2bedroom.jpg",    // รูปหลัก
                 "picture/bath_2bed.jpg",    // รูปประกอบ 1
                 "picture/kitchen_2bed.jpg",
                 "picture/living_2bed.jpg"      // รูปประกอบ 2
