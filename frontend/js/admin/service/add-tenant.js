@@ -163,9 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Listener: ช่องค้นหา (Search)
     if (searchInput) {
         searchInput.addEventListener('input', () => {
-            clearTimeout(searchTimer); // ล้าง Timer เก่า
+            clearTimeout(searchTimer);
             searchTimer = setTimeout(() => {
-                getAllTenants(); // รอ 0.5 วิ แล้วค่อยค้นหา
+                getAllTenants();
             }, 500);
         });
     }
