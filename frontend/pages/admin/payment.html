@@ -14,13 +14,11 @@
 <body>
 
     <div class="admin-container">
-        
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
                 <h3>ADMIN</h3>
             </div>
-            
             <ul class="menu-links">
                 <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
@@ -28,7 +26,6 @@
                 <li><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
                 <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
-
             <div class="logout-section">
                 <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
@@ -39,15 +36,12 @@
         <main class="main-content">
             <header class="top-bar">
                 <div class="header-left">
-                    <div class="menu-toggle" id="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </div>
+                    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
                     <div class="page-title">
                         <h1>Payments Management</h1>
                         <p class="sub-text">Monitor rental payments and invoices</p>
                     </div>
                 </div>
-                
                 <div class="admin-profile">
                     <span class="admin-name">Admin Officer</span>
                     <div class="profile-pic"><i class="fas fa-user-shield"></i></div>
@@ -58,21 +52,22 @@
                 <div class="filter-group">
                     <div class="search-wrapper">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="search-payment" placeholder="Search Room or Amount...">
+                        <input type="text" id="search-payment" placeholder="Search Room...">
                     </div>
-                    
                     <div class="date-wrapper">
                         <input type="date" class="date-input">
                     </div>
-
                     <select id="filter-status" class="custom-select">
-                        <option value="" disabled selected>Filter Status</option>
-                        <option value="all">All Statuses</option>
+                        <option value="" disabled selected>Status</option>
+                        <option value="all">All</option>
                         <option value="paid">Paid</option>
                         <option value="unpaid">Unpaid</option>
                     </select>
                 </div>
 
+                <button id="add-payment-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Create Invoice
+                </button>
             </section>
 
             <section class="content-box table-card">
@@ -96,29 +91,8 @@
                                 <td class="amount">฿ 5,500</td>
                                 <td><span class="badge paid">Paid</span></td>
                                 <td>
-                                    <button class="action-btn view"><i class="fas fa-file-invoice"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>B-1104</td>
-                                <td>05 Dec 2025</td>
-                                <td class="amount">฿ 4,800</td>
-                                <td><span class="badge unpaid">Unpaid</span></td>
-                                <td>
-                                    <button class="action-btn view"><i class="fas fa-file-invoice"></i></button>
-                                    <button class="action-btn notify"><i class="fas fa-bell"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>C-3104</td>
-                                <td>01 Dec 2025</td>
-                                <td class="amount">฿ 6,200</td>
-                                <td><span class="badge paid">Paid</span></td>
-                                <td>
-                                    <button class="action-btn view"><i class="fas fa-file-invoice"></i></button>
-                                </td>
+                                    <button class="action-btn look"><i class="fas fa-eye"></i></button><button class="action-btn view"><i class="fas fa-file-invoice"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -127,6 +101,103 @@
         </main>
     </div>
 
-    
+   <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Create New Invoice</h2>
+            <form id="add-payment-form">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room No.</label>
+                        <input type="text" name="contract_id" placeholder="e.g. A-101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Room Type</label>
+                        <select id="room_type_select" class="custom-select" style="width: 100%;">
+                            <option value="0">-- Select Type --</option>
+                            <option value="5500">Studio (5,500฿)</option>
+                            <option value="8500">1 Bedroom (8,500฿)</option>
+                            <option value="15000">2 Bedroom (15,000฿)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Billing Date</label>
+                        <input type="date" name="billing_date" required>
+                    </div>
+                </div>
+
+                <hr class="dashed-line">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room Fee (฿)</label>
+                        <input type="number" id="room_fee" name="room_fee" placeholder="0.00" readonly class="input-readonly">
+                    </div>
+                    <div class="form-group"></div> <div class="form-group"></div>
+
+                    <div class="form-group">
+                        <label>Elec Usage (Units)</label>
+                        <input type="number" id="elec_units" placeholder="Enter units">
+                    </div>
+                    <div class="form-group">
+                        <label class="rate-label">Rate: 8 THB/Unit</label>
+                        <input type="text" value="x 8" disabled class="input-disabled">
+                    </div>
+                    <div class="form-group">
+                        <label>Electricity Fee (฿)</label>
+                        <input type="number" id="electricity_fee" name="electricity_fee" placeholder="0.00" readonly class="input-readonly">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Water Usage (Units)</label>
+                        <input type="number" id="water_units" placeholder="Enter units">
+                    </div>
+                    <div class="form-group">
+                        <label class="rate-label">Rate: 15 THB/Unit</label>
+                        <input type="text" value="x 15" disabled class="input-disabled">
+                    </div>
+                    <div class="form-group">
+                        <label>Water Fee (฿)</label>
+                        <input type="number" id="water_fee" name="water_fee" placeholder="0.00" readonly class="input-readonly">
+                    </div>
+                </div>
+
+                <button type="button" id="btn-calc-total" class="btn-calculate">
+                    <i class="fas fa-calculator"></i> Calculate Total Amount
+                </button>
+                
+                <div id="calc-summary" class="calc-summary-box" style="display:none;">
+                    <p>Room: <span id="sum-room">0</span> + Elec: <span id="sum-elec">0</span> + Water: <span id="sum-water">0</span></p>
+                    <h3 class="grand-total">Total: ฿ <span id="sum-total">0.00</span></h3>
+                </div>
+
+                <hr class="solid-line">
+
+                <div class="form-grid bottom-row">
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <select name="payment_status" class="custom-select" style="width: 100%;">
+                            <option value="unpaid">Unpaid</option>
+                            <option value="paid">Paid</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Date</label>
+                        <input type="date" name="payment_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="total-label">TOTAL AMOUNT (฿)</label>
+                        <input type="number" id="total_amount" name="total_amount" placeholder="0.00" readonly class="input-total">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Invoice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

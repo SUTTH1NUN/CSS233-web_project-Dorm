@@ -265,8 +265,7 @@ section {
 .room-card.reverse .room-details {
     text-align: right; 
 }
-/* แต่โดยทั่วไปจัดซ้ายอ่านง่ายกว่า ผมจะบังคับจัดซ้ายใน CSS หลัก */
-.room-details { text-align: left !important; } 
+
 
 
 .room-details h3 {
@@ -331,6 +330,139 @@ section {
 .btn-book:hover {
     background-color: #C4A808;
     color: white;
+}
+
+/* ================= ROOM AVAILABILITY (ENHANCED DESIGN) ================= */
+
+/* กล่องครอบโซนห้องว่าง */
+.room-availability {
+    background-color: #ffffff; /* พื้นหลังขาว */
+    border: 1px solid #f0f0f0; /* เส้นขอบบางๆ */
+    border-left: 5px solid #C4A808; /* แถบสีทองด้านซ้ายหนาขึ้นให้เด่น */
+    padding: 20px 25px;
+    margin: 20px 0 30px 0; /* เว้นระยะบนล่างให้หายใจสะดวก */
+    border-radius: 8px; /* มุมมน */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* เงานุ่มๆ ให้ดูลอยมีมิติ */
+    transition: transform 0.3s ease;
+}
+
+/* หัวข้อ (Available Rooms) */
+.avail-label {
+    display: flex;
+    align-items: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.avail-label i {
+    color: #C4A808; /* ไอคอนสีทอง */
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* กล่องรวมป้ายห้อง */
+.avail-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.room-tag {
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #C4A808; /* ขอบทอง */
+    color: #333;
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    
+    padding: 6px 16px; /* เพิ่มพื้นที่ภายในให้อ่านง่าย */
+    border-radius: 30px; /* ทำเป็นทรงมน (Capsule) */
+    cursor: default;
+    min-width: 60px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.avail-contact-box {
+    margin-top: 10px;
+}
+
+.avail-contact-box p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 8px 0;
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ดีไซน์ปุ่มติดต่อ (Pill Shape) */
+.contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+/* ปุ่ม Line (สีเขียว) */
+.contact-pill.line {
+    background-color: #06c755;
+    color: white;
+    border: 1px solid #06c755;
+}
+.contact-pill.line:hover {
+    background-color: #05a546;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 199, 85, 0.2);
+}
+
+/* ปุ่มโทร (สีทอง) */
+.contact-pill.phone {
+    background-color: white;
+    color: #C4A808;
+    border: 1px solid #C4A808;
+}
+.contact-pill.phone:hover {
+    background-color: #C4A808;
+    color: white;
+    transform: translateY(-2px);
+}
+/* ---------------------------------------------------- */
+/* กรณีห้องเต็ม (Full / Empty) */
+/* ---------------------------------------------------- */
+
+.room-availability.full {
+    border-left-color: #e74c3c; /* แถบซ้ายเปลี่ยนเป็นสีแดง */
+    background-color: #fff5f5; /* พื้นหลังแดงจางๆ */
+}
+
+.room-availability.full .avail-label i {
+    color: #e74c3c; /* ไอคอนสีแดง */
+}
+
+.room-tag.empty {
+    border: 1px solid #e74c3c; /* ขอบเส้นประสีแดง */
+    color: #e74c3c;
+    background-color: transparent;
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: none;
 }
 
 /* ================= ROOM MODAL STYLES ================= */
@@ -714,6 +846,38 @@ section {
     .main-image-wrapper { height: 250px; }
     .row-info { flex-direction: column; }
     .detail-text strong { width: 100px; }
+
+    /* ปรับกล่องแจ้งเตือนให้กระชับขึ้น */
+    .room-availability.full {
+        padding: 15px; /* ลด padding ลงนิดหน่อย */
+    }
+    
+    /* ปรับข้อความเชิญชวน */
+    .avail-contact-box p {
+        font-size: 13px; /* ลดขนาดตัวหนังสือเล็กน้อย */
+        margin-bottom: 10px;
+    }
+
+    /* จัดกลุ่มปุ่มให้เรียงแนวตั้ง (Stack) */
+    .contact-buttons {
+        flex-direction: column; /* เรียงลงมา */
+        gap: 8px; /* ระยะห่างระหว่างปุ่ม */
+        width: 100%;
+    }
+
+    /* ปรับปุ่มให้กว้างเต็มจอ (Full Width) */
+    .contact-pill {
+        width: 100%; /* กว้างเต็มพื้นที่ */
+        justify-content: center; /* จัดตัวหนังสือและไอคอนให้อยู่กลางปุ่ม */
+        padding: 10px; /* เพิ่มพื้นที่กดให้ง่ายขึ้น (Touch Friendly) */
+        font-size: 15px; /* เพิ่มขนาดตัวอักษรให้ชัดเจน */
+        box-sizing: border-box; /* รวม padding ในความกว้าง */
+    }
+    
+    /* ปรับไอคอนในปุ่มให้ใหญ่ขึ้นนิดนึง */
+    .contact-pill i {
+        font-size: 18px;
+    }
     
     /* ให้รูปภาพอยู่ด้านบนเสมอ */
     .service-img {
