@@ -18,6 +18,7 @@ CREATE TYPE room_status_enum AS ENUM ('available', 'booked', 'occupied', 'under_
 CREATE TYPE contract_status_enum AS ENUM ('active', 'ended');
 CREATE TYPE payment_status_enum AS ENUM ('pending', 'paid', 'overdue', 'cancelled');
 CREATE TYPE repair_status_enum AS ENUM ('pending', 'in_progress', 'completed');
+CREATE TYPE announcements_status_enum AS ENUM ('active', 'inactive');
 
 CREATE TABLE IF NOT EXISTS admins(
     admin_id SERIAL PRIMARY KEY,
@@ -89,10 +90,13 @@ CREATE TABLE IF NOT EXISTS repairs(
     repair_id SERIAL PRIMARY KEY,
     tenant_id INT NOT NULL REFERENCES tenants(tenant_id),
     room_id INT NOT NULL REFERENCES rooms(room_id),
+    issue_title VARCHAR(50) NOT NULL,
     issue_description TEXT NOT NULL,
+    phone_number varchar(15),
     request_date DATE DEFAULT CURRENT_DATE,
     repair_status repair_status_enum DEFAULT 'pending',
-    resolved_date DATE
+    resolved_date DATE,
+    img_path varchar(255)
 );
 
 CREATE TABLE IF NOT EXISTS announcements(
@@ -100,6 +104,7 @@ CREATE TABLE IF NOT EXISTS announcements(
     admin_id INT NOT NULL REFERENCES admins(admin_id),
     title VARCHAR(100) NOT NULL,
     content TEXT NOT NULL,
+    announcements_status announcements_status_enum DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     visible_until DATE
 );

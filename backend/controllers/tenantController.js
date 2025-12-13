@@ -108,21 +108,19 @@ exports.getAllTenants = async (req, res) => {
   }
 };
 
-// --- จุดที่แก้ไขใหม่ (ใช้ pool และ PostgreSQL Syntax) ---
 
 exports.getTenantById = async (req, res, next) => {
     try {
         const { id } = req.params;
         
-        // ต้อง Join ตารางเพื่อให้ได้ข้อมูลครบมาโชว์ใน Modal (ชื่อ, ห้อง, สัญญา)
         const sql = `
             SELECT 
                 t.tenant_id, t.first_name, t.last_name, t.email, t.phone_number, t.tenant_status,
                 r.building, r.floor, r.room_number,
                 l.start_date, l.end_date, l.deposit_amount
             FROM tenants t
-            LEFT JOIN lease_contract l ON t.tenant_id = l.tenant_id
-            LEFT JOIN rooms r ON l.room_id = r.room_id
+            JOIN lease_contract l ON t.tenant_id = l.tenant_id
+            JOIN rooms r ON l.room_id = r.room_id
             WHERE t.tenant_id = $1
         `;
 
@@ -150,7 +148,6 @@ exports.updateTenant = async (req, res, next) => {
 
         await client.query('BEGIN');
 
-        // 1. อัปเดตตาราง tenants
         const updateTenantSql = `
             UPDATE tenants 
             SET first_name=$1, last_name=$2, email=$3, phone_number=$4, tenant_status=$5
@@ -158,8 +155,7 @@ exports.updateTenant = async (req, res, next) => {
         `;
         await client.query(updateTenantSql, [first_name, last_name, email, phone_number, tenant_status, id]);
 
-        // 2. อัปเดตตาราง lease_contract (สัญญา)
-        // หมายเหตุ: การย้ายห้อง (เปลี่ยน room_number) จะซับซ้อนกว่านี้มาก ในที่นี้จะขอ update แค่ข้อมูลส่วนตัวและสัญญาไปก่อน
+        //ค่อยมาทำย้ายห้อง
         const updateContractSql = `
             UPDATE lease_contract
             SET deposit_amount=$1, start_date=$2, end_date=$3
