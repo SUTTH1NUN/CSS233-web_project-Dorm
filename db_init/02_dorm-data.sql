@@ -33,7 +33,7 @@ INSERT INTO rooms (building, floor, room_number, room_status, room_type) VALUES
 ('A', 2, 'A203', 'available', '1 Bedroom Suite'),
 ('A', 3, 'A301', 'occupied', 'Studio Suite'),
 ('A', 3, 'A302', 'available', 'Studio Suite'),
-('A', 3, 'A303', 'available', 'Studio Suite'),
+('A', 3,  'A303', 'available', 'Studio Suite'),
 
 -- === Building B (เพิ่มใหม่) ===
 -- ชั้น 1: Family Suite

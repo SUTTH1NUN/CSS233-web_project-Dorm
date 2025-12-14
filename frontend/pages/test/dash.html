@@ -3,14 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Hatyai Condominium</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Repairs Management | Hatyai Condominium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="stylesheet" href="../../css/admin-css/style-dashboard.css">
-    <script defer src="../../js//admin/ui/script-dashboard.js"></script>
+    <link rel="stylesheet" href="../../css/admin-css/style-repair.css">
+
+    <style>
+        /* --- Modal Styling Update --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); /* พื้นหลังดำจางๆ */
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px); /* เบลอฉากหลังนิดๆ ให้ดู Modern */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex !important;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px 40px;
+            width: 700px; /* ขยายให้กว้างขึ้น */
+            max-width: 90%;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            max-height: 90vh; /* กันล้นจอ */
+            overflow-y: auto; /* ให้ scroll ได้ถ้าจอมือถือเล็ก */
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-family: 'Noto Serif TC', serif;
+            color: #333;
+            font-size: 24px;
+            border-bottom: 2px solid #f4f6f9;
+            padding-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* --- Grid Layout ใน Modal --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* แบ่ง 2 คอลัมน์ */
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2; /* ขยายเต็ม 2 ช่อง */
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Input Styling */
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #C4A808; /* สีทองตอนกด */
+        }
+
+        /* Readonly Input Style */
+        input:disabled, textarea:disabled {
+            background-color: #f8f9fa !important;
+            color: #555 !important;
+            border-color: #eee;
+            cursor: default;
+        }
+
+        .text-area { resize: vertical; min-height: 80px; }
+
+        /* Modal Actions */
+        .modal-actions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f4f6f9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-cancel {
+            background: #f1f3f5;
+            color: #666;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .btn-cancel:hover { background: #e9ecef; }
+
+        /* ปุ่ม View ในตาราง */
+        .action-btn.view {
+            background-color: #f8f9fa;
+            color: #666;
+            margin-right: 5px;
+        }
+        .action-btn.view:hover {
+            background-color: #333;
+            color: white;
+        }
+        
+        /* Highlight Resolved Date */
+        #resolved-group {
+            animation: fadeIn 0.3s ease-in-out;
+            background: #f0fff4; /* เขียวอ่อนจางๆ */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #2ecc71;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive Modal */
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; } /* จอเล็กเรียงเดี่ยว */
+            .form-group.full-width { grid-column: span 1; }
+        }
+    </style>
 </head>
 <body>
 
@@ -22,11 +173,11 @@
             </div>
             
             <ul class="menu-links">
-                <li  class="active"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
                 <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
+                <li  class="active"><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
                 <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
 
@@ -35,18 +186,16 @@
             </div>
         </aside>
 
-         <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
         <main class="main-content">
             <header class="top-bar">
-                 <div class="header-left">
-                    <div class="menu-toggle" id="menu-toggle">
-                        <i class="fas fa-bars"></i>
-                    </div>
-                <div class="page-title">
-                    <h1>Dashboard Overview</h1>
-                    <p class="date-today">Today, 08 Dec 2025</p>
-                </div>
+                <div class="header-left">
+                  <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+                  <div class="page-title">
+                      <h1>Repairs Management</h1>
+                      <p class="sub-text">Track and manage maintenance requests</p>
+                  </div>
                 </div>
                 <div class="admin-profile">
                     <span>Admin Officer</span>
@@ -54,137 +203,391 @@
                 </div>
             </header>
 
-          <section class="stats-grid">
-                <div class="stat-card">
-                    <div class="icon-box gold"><i class="fas fa-wallet"></i></div>
-                    <div class="stat-info">
-                        <h3>Total Revenue</h3>
-                        <p class="number">฿ 450,200</p>
-                        <span class="trend up"><i class="fas fa-arrow-up"></i> +5.2% from last month</span>
+            <section class="content-box control-bar">
+                <div class="search-group">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-repair" placeholder="Search by Room, Topic, or Name...">
                     </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon-box blue"><i class="fas fa-users"></i></div>
-                    <div class="stat-info">
-                        <h3>Occupancy Rate</h3>
-                        <p class="number">92%</p>
-                        <span class="text-muted">45/58 Rooms Occupied</span>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon-box red"><i class="fas fa-tools"></i></div>
-                    <div class="stat-info">
-                        <h3>Active Repairs</h3>
-                        <p class="number">2</p>
-                        <span class="text-danger">1 Pending / 1 In Progress</span>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon-box green"><i class="fas fa-door-open"></i></div>
-                    <div class="stat-info">
-                        <h3>Available Rooms</h3>
-                        <p class="number">13</p>
-                        <span class="text-muted">Ready for booking</span>
-                    </div>
+                    
+                    <select id="filter-status" class="custom-select">
+                        <option value="all" selected>All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
                 </div>
             </section>
-            <section class="content-split">
-                <div class="content-box">
-                    <div class="box-header">
-                        <h2>Room Status Overview</h2>
-                        <a href="room.html" class="view-all">View All</a>
-                    </div>
-                    <table class="simple-table">
-                        <thead>
-                            <tr>
-                                <th>Room No.</th>
-                                <th>Type</th>
-                                <th>Floor</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>A-101</td>
-                                <td>Studio</td>
-                                <td>1</td>
-                                <td><span class="badge occupied" style="background: #eaf2f8; color: #3498db;">Occupied</span></td>
-                            </tr>
-                            <tr>
-                                <td>A-102</td>
-                                <td>Studio</td>
-                                <td>1</td>
-                                <td><span class="badge occupied" style="background: #eaf2f8; color: #3498db;">Occupied</span></td>
-                            </tr>
-                            <tr>
-                                <td>B-205</td>
-                                <td>1 Bedroom</td>
-                                <td>2</td>
-                                <td><span class="badge available" style="background: #eafaf1; color: #2ecc71;">Available</span></td>
-                            </tr>
-                            <tr>
-                                <td>C-301</td>
-                                <td>2 Bedroom</td>
-                                <td>3</td>
-                                <td><span class="badge maintenance" style="background: #fff5e6; color: #f39c12;">Maintenance</span></td>
-                            </tr>
-                             <tr>
-                                <td>C-302</td>
-                                <td>2 Bedroom</td>
-                                <td>3</td>
-                                <td><span class="badge available" style="background: #eafaf1; color: #2ecc71;">Available</span></td>
-                            </tr>
+
+            <section class="content-box table-card">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Room</th>
+                            <th>Topic</th>
+                            <th>Reported By</th> <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
                         </tbody>
-                    </table>
-                </div>
-
-                <div class="content-box">
-                    <div class="box-header">
-                        <h2>Recent Payments</h2>
-                        <a href="#" class="view-all">View All</a>
-                    </div>
-                    <ul class="payment-list">
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room A-1104</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 5,500</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room B-1402</strong>
-                                <span>Paid Water Bill</span>
-                            </div>
-                            <div class="pay-amount">+฿ 120</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room C-4111</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 6,200</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room A-1205</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 5,500</div>
-                        </li>
-                    </ul>
-                </div>
+                </table>
             </section>
-
         </main>
     </div>
 
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-title">Repair Details</h2>
+            
+            <form id="repair-form">
+                <input type="hidden" id="repair-id">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room Number</label>
+                        <input type="text" id="repair-room" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Request Date</label>
+                        <input type="text" id="repair-date" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reported By</label>
+                        <input type="text" id="repair-name" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="repair-phone" disabled>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Topic</label> 
+                        <input type="text" id="repair-topic" disabled style="font-weight: 600; color: #333;">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Issue Description</label>
+                        <textarea id="repair-desc" rows="3" disabled></textarea>
+                    </div>
+
+                    <div style="border-top: 1px dashed #ddd; grid-column: span 2; margin: 10px 0;"></div>
+
+                    <div class="form-group full-width">
+                        <label>Admin Note / Technician Comment</label>
+                        <textarea id="repair-comment" rows="2" placeholder="Write internal note or progress update..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Status</label>
+                        <select id="repair-status" class="custom-select" style="width: 100%;">
+                            <option value="pending">Pending</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="resolved-group" style="display: none;">
+                        <label style="color: #155724; font-weight: bold;">Resolved Date</label>
+                        <input type="date" id="repair-resolved-date">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="btn-cancel">Close</button>
+                    <button type="submit" id="save-repair-btn" class="btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Mock Data ---
+        const mockRepairs = [
+            { 
+                id: 1, 
+                room: 'A101', 
+                tenant: 'John Doe',
+                phone: '081-234-5678',
+                topic: 'Air Conditioner Leaking', 
+                desc: 'Water is dripping from the AC unit onto the bed.', 
+                date: '2025-12-08', 
+                status: 'pending', 
+                resolved_date: '',
+                comment: '' 
+            },
+            { 
+                id: 2, 
+                room: 'B205', 
+                tenant: 'Sarah Smith',
+                phone: '099-888-7777',
+                topic: 'Light Bulb Broken', 
+                desc: 'The main light in the bathroom is flickering and won\'t turn on.', 
+                date: '2025-12-07', 
+                status: 'in_progress', 
+                resolved_date: '',
+                comment: 'Technician assigned, waiting for spare parts.' 
+            },
+            { 
+                id: 3, 
+                room: 'C301', 
+                tenant: 'Michael Brown',
+                phone: '085-555-1234',
+                topic: 'Sink Clogged', 
+                desc: 'Kitchen sink drains very slowly.', 
+                date: '2025-12-06', 
+                status: 'completed', 
+                resolved_date: '2025-12-07', 
+                comment: 'Cleared the pipe blockage.' 
+            },
+            { 
+                id: 4, 
+                room: 'A102', 
+                tenant: 'Emily White',
+                phone: '061-999-0000',
+                topic: 'No Internet', 
+                desc: 'Wifi signal is very weak in the bedroom.', 
+                date: '2025-12-05', 
+                status: 'cancelled', 
+                resolved_date: '',
+                comment: 'Tenant forgot to pay internet bill (User error).' 
+            },
+            { 
+                id: 5, 
+                room: 'A305', 
+                tenant: 'David Wilson',
+                phone: '089-111-2222',
+                topic: 'Door Lock Jammed', 
+                desc: 'Cannot lock the door from outside.', 
+                date: '2025-12-09', 
+                status: 'pending', 
+                resolved_date: '',
+                comment: '' 
+            }
+        ];
+
+        // Elements
+        const tableBody = document.getElementById('table-body');
+        const searchInput = document.getElementById('search-repair');
+        const filterSelect = document.getElementById('filter-status');
+        
+        const modal = document.getElementById('modal-overlay');
+        const btnCancel = document.getElementById('btn-cancel');
+        const repairForm = document.getElementById('repair-form');
+
+        // Modal Inputs
+        const mId = document.getElementById('repair-id');
+        const mName = document.getElementById('repair-name');
+        const mPhone = document.getElementById('repair-phone');
+        const mRoom = document.getElementById('repair-room');
+        const mDate = document.getElementById('repair-date');
+        const mTopic = document.getElementById('repair-topic');
+        const mDesc = document.getElementById('repair-desc');
+        const mComment = document.getElementById('repair-comment');
+        const mStatus = document.getElementById('repair-status');
+        const mResolvedDate = document.getElementById('repair-resolved-date');
+        const resolvedGroup = document.getElementById('resolved-group');
+
+        // --- 2. Render Table Function ---
+        function renderTable(data) {
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color:#999;">No repairs found.</td></tr>`;
+                return;
+            }
+
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                
+                // Badge Class
+                let badgeClass = '';
+                if(item.status === 'pending') badgeClass = 'pending';
+                else if(item.status === 'in_progress') badgeClass = 'process';
+                else if(item.status === 'completed') badgeClass = 'completed';
+                else badgeClass = 'inactive';
+
+                const statusText = item.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+                tr.innerHTML = `
+                    <td style="text-align: center;">${index + 1}</td>
+                    <td style="font-weight: 500;">${item.room}</td>
+                    <td>${item.topic}</td>
+                    <td>${item.tenant}</td>
+                    <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                    <td>
+                        <button class="action-btn view" data-id="${item.id}" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="action-btn edit" data-id="${item.id}" title="Edit"><i class="fas fa-pen"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // --- 3. Filter Function (Search & Select) ---
+        function filterRepairs() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusFilter = filterSelect.value;
+
+            const filteredData = mockRepairs.filter(item => {
+                // 1. Check Search Term (Match Room, Topic, or Tenant Name)
+                const matchesSearch = 
+                    item.room.toLowerCase().includes(searchTerm) ||
+                    item.topic.toLowerCase().includes(searchTerm) ||
+                    item.tenant.toLowerCase().includes(searchTerm);
+
+                // 2. Check Status (Match selected or 'all')
+                const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            renderTable(filteredData);
+        }
+
+        // Attach Event Listeners for Filtering
+        searchInput.addEventListener('input', filterRepairs); // พิมพ์ปุ๊บ กรองปั๊บ
+        filterSelect.addEventListener('change', filterRepairs); // เปลี่ยน select ปุ๊บ กรองปั๊บ
+
+        // --- 4. View/Edit Details (Open Modal) ---
+        tableBody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.action-btn');
+            if (btn) {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const data = mockRepairs.find(r => r.id === id);
+
+                if (data) {
+                    // Fill Data
+                    mId.value = data.id;
+                    mName.value = data.tenant;
+                    mPhone.value = data.phone;
+                    mRoom.value = data.room;
+                    mDate.value = data.date;
+                    mTopic.value = data.topic;
+                    mDesc.value = data.desc;
+                    mComment.value = data.comment;
+                    mStatus.value = data.status;
+
+                    // Handle Resolved Date Visibility
+                    if (data.status === 'completed') {
+                        resolvedGroup.style.display = 'block';
+                        mResolvedDate.value = data.resolved_date;
+                    } else {
+                        resolvedGroup.style.display = 'none';
+                        mResolvedDate.value = '';
+                    }
+
+                    // Open Modal
+                    modal.classList.add('active'); 
+                }
+            }
+        });
+
+        // --- 5. Logic: Auto Date when 'Completed' ---
+        mStatus.addEventListener('change', (e) => {
+            if (e.target.value === 'completed') {
+                resolvedGroup.style.display = 'block';
+                if (!mResolvedDate.value) {
+                    const today = new Date().toISOString().split('T')[0];
+                    mResolvedDate.value = today;
+                }
+            } else {
+                resolvedGroup.style.display = 'none';
+                mResolvedDate.value = ''; 
+            }
+        });
+
+        // --- 6. Save / Update ---
+        repairForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(mId.value);
+            const index = mockRepairs.findIndex(r => r.id === id);
+            
+            if(index !== -1) {
+                // Update Data
+                mockRepairs[index].status = mStatus.value;
+                mockRepairs[index].comment = mComment.value;
+                mockRepairs[index].resolved_date = mResolvedDate.value;
+
+                alert(`Updated Repair Request #${id} Successfully!`);
+                filterRepairs(); // Re-render with current filter
+                modal.classList.remove('active');
+            }
+        });
+
+        // --- 7. Close Modal Logic ---
+        const closeModal = () => modal.classList.remove('active');
+        if(btnCancel) btnCancel.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Sidebar Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.add('active');
+                if(overlay) overlay.classList.add('active');
+            });
+            if(overlay) {
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                });
+            }
+        }
+
+        // Initial Render
+        renderTable(mockRepairs);
+
+        // --- ฟังก์ชันสำหรับกรองข้อมูล (Search & Filter) ---
+    function filterRepairs() {
+        // 1. รับค่าจากช่องค้นหา (แปลงเป็นตัวพิมพ์เล็กเพื่อให้ค้นหาเจอง่ายขึ้น)
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        
+        // 2. รับค่าจาก Dropdown สถานะ
+        const statusFilter = filterSelect.value;
+
+        // 3. กรองข้อมูลจาก mockRepairs
+        const filteredData = mockRepairs.filter(item => {
+            // เงื่อนไข A: ค้นหาข้อความ (Search)
+            // เช็คว่า text ที่พิมพ์ไปตรงกับ ส่วนใดส่วนหนึ่งของ...
+            const matchesSearch = 
+                item.room.toLowerCase().includes(searchTerm) ||    // เลขห้อง (เช่น "A101")
+                item.topic.toLowerCase().includes(searchTerm) ||   // หัวข้อ (เช่น "Air")
+                item.tenant.toLowerCase().includes(searchTerm) ||  // ชื่อคนแจ้ง (เช่น "John")
+                item.desc.toLowerCase().includes(searchTerm);      // รายละเอียด (เผื่ออยากค้นในเนื้อหาด้วย)
+
+            // เงื่อนไข B: กรองสถานะ (Filter Status)
+            // ถ้าเลือก 'all' คือเอาหมด หรือถ้าเลือกสถานะเจาะจง ต้องตรงกันเป๊ะๆ
+            const matchesStatus = (statusFilter === 'all') || (item.status === statusFilter);
+
+            // ต้องผ่านทั้งสองเงื่อนไข (Search ก็ตรง และ Status ก็ใช่)
+            return matchesSearch && matchesStatus;
+        });
+
+        // 4. แสดงผลตารางใหม่ด้วยข้อมูลที่กรองแล้ว
+        renderTable(filteredData);
+    }
+
+    // --- เชื่อมต่อ Event Listener (เพื่อให้ทำงานทันทีที่พิมพ์) ---
+    // พิมพ์ปุ๊บ ค้นหาปั๊บ
+    searchInput.addEventListener('input', filterRepairs); 
+    
+    // เปลี่ยน Dropdown ปุ๊บ กรองปั๊บ
+    filterSelect.addEventListener('change', filterRepairs);
+    });
+
+
+    </script>
 </body>
 </html>

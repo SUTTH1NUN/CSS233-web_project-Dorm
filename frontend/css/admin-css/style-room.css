@@ -5,6 +5,16 @@
     --text-grey: #666;
     --bg-light: #f4f6f9;
     --sidebar-width: 260px;
+    
+    /* Room Status Colors */
+    --room-occupied-bg: #fdedec;
+    --room-occupied-text: #e74c3c;
+    --room-available-bg: #eafaf1;
+    --room-available-text: #2ecc71;
+    --room-maintenance-bg: #fef5e7;
+    --room-maintenance-text: #f39c12;
+    --room-booked-bg: #eaf2f8;
+    --room-booked-text: #3498db;
 }
 
 body {
@@ -20,7 +30,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- 2. Sidebar (เหมือนเดิม) --- */
+/* --- Sidebar --- */
 .sidebar {
     width: var(--sidebar-width);
     background: white;
@@ -40,7 +50,7 @@ body {
     margin-bottom: 20px;
 }
 
-.logo { width: 70px; margin-bottom: 10px; margin-left: 0px;}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -74,18 +84,18 @@ body {
 }
 
 .logout-section {
-    margin-top: auto; /* ดันปุ่มลงล่างสุด */
+    margin-top: auto;
     padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
 .logout-section a:hover { opacity: 0.7; }
 
-/* --- 3. Main Content (ระยะขอบเท่า Repair) --- */
+/* --- Main Content --- */
 .main-content {
     margin-left: var(--sidebar-width);
     flex-grow: 1;
-    padding: 30px 40px; /* เท่ากับ Repair */
+    padding: 30px 40px;
 }
 
 .top-bar {
@@ -118,11 +128,11 @@ body {
     display: flex; align-items: center; justify-content: center;
 }
 
-/* --- 4. Content Cards --- */
+/* --- Content Cards --- */
 .content-box {
     background: white;
     border-radius: 12px;
-    padding: 20px 30px; /* เท่ากับ Repair */
+    padding: 20px 30px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     margin-bottom: 20px;
 }
@@ -131,11 +141,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px; /* ระยะห่างระหว่าง search กับปุ่ม Add */
 }
 
-.search-group { display: flex; align-items: center; gap: 20px; width: 100%; }
+/* ปรับให้ Search Group อยู่ด้วยกัน */
+.search-group { display: flex; align-items: center; gap: 20px; flex-grow: 1; }
 
-.search-wrapper { position: relative; width: 300px; } /* เท่ากับ Repair */
+.search-wrapper { position: relative; width: 300px; }
 .search-wrapper i {
     position: absolute;
     left: 15px;
@@ -166,122 +178,121 @@ body {
     cursor: pointer;
 }
 
-/* --- 5. Table (ระยะห่างเท่า Repair) --- */
+/* --- Add Room Button --- */
+.btn-primary {
+    background-color: var(--primary-gold);
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    white-space: nowrap; /* ห้ามตัดคำ */
+}
+
+.btn-primary:hover {
+    background-color: #b09507;
+    transform: translateY(-2px);
+}
+
+/* --- Table --- */
 .modern-table { width: 100%; border-collapse: collapse; }
 .modern-table th { text-align: left; color: #888; font-weight: 500; padding: 15px; border-bottom: 1px solid #eee; }
 .modern-table td { padding: 15px; border-bottom: 1px solid #f9f9f9; color: #333; vertical-align: middle; }
 
 /* Status Badges */
 .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; min-width: 80px; text-align: center;}
-.badge.occupied { background: #fdedec; color: #e74c3c; }      /* แดง */
-.badge.available { background: #eafaf1; color: #2ecc71; }     /* เขียว */
-.badge.maintenance { background: #fef5e7; color: #f39c12; }   /* ส้ม */
-.badge.booked { background: #eaf2f8; color: #3498db; }        /* ฟ้า */
+.badge.occupied { background: var(--room-occupied-bg); color: var(--room-occupied-text); }
+.badge.available { background: var(--room-available-bg); color: var(--room-available-text); }
+.badge.maintenance { background: var(--room-maintenance-bg); color: var(--room-maintenance-text); }
+.badge.booked { background: var(--room-booked-bg); color: var(--room-booked-text); }
 
+/* Action Buttons */
 .action-btn {
-    width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; margin-right: 5px;
+    width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; margin-right: 5px; transition: 0.2s;
 }
 .action-btn.view { background: #f4f6f9; color: #666; }
+.action-btn.edit { background: rgba(196, 168, 8, 0.1); color: var(--primary-gold); } /* สีทองจางๆ */
+
 .action-btn:hover { transform: scale(1.1); }
 
+/* --- Modal Styles (เพิ่มใหม่) --- */
+.modal-overlay {
+    display: none; /* ซ่อนไว้ */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);
+}
 
-/* --- Responsive Styles (เหมือน Repair เป๊ะๆ) --- */
+.modal-content {
+    background: white;
+    padding: 40px;
+    width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
 
-/* 1. ปุ่ม Menu Toggle (ซ่อนบน Desktop) */
+.modal-title {
+    margin-top: 0;
+    color: var(--primary-dark);
+    font-family: 'Noto Serif TC', serif;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #666; }
+.form-group input, .full-select {
+    width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-family: 'Sarabun';
+}
+
+.modal-actions {
+    display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid #eee;
+}
+.btn-cancel { background: #eee; color: #666; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+.btn-cancel:hover { background: #ddd; }
+
+
+/* --- Responsive Styles --- */
 .menu-toggle {
-    display: none; /* ปกติซ่อนไว้ */
+    display: none;
     font-size: 24px;
     cursor: pointer;
     margin-right: 15px;
     color: var(--primary-dark);
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
+.header-left { display: flex; align-items: center; }
+.sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; transition: opacity 0.3s; }
+.sidebar-overlay.active { display: block; opacity: 1; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-/* 2. Overlay สำหรับมือถือ */
-.sidebar-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 99; /* อยู่ใต้ Sidebar แต่อยู่บน Content */
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.sidebar-overlay.active {
-    display: block;
-    opacity: 1;
-}
-
-/* 3. Table Responsive (Scroll แนวนอน) */
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* --- Media Queries --- */
-
-/* Tablet & Mobile (หน้าจอเล็กกว่า 992px) */
 @media (max-width: 992px) {
-    
-    /* Sidebar: ซ่อนไปทางซ้าย */
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    /* Sidebar: เมื่อมี Class active ให้เลื่อนกลับมา */
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    /* Main Content: ขยายเต็มจอ */
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-    }
-
-    /* Show Hamburger Menu */
-    .menu-toggle {
-        display: block;
-    }
-    
-    /* Filter Group: ให้ไหลลงมา */
-    .control-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .search-group {
-        flex-direction: column;
-    }
-
-    .search-wrapper, .custom-select {
-        width: 100%;
-    }
-    
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
+    .menu-toggle { display: block; }
+    .control-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+    .search-group { flex-direction: column; }
+    .search-wrapper, .custom-select { width: 100%; }
     .search-wrapper i { left: 15px; }
-}
-
-/* Mobile Small (หน้าจอเล็กกว่า 480px) */
-@media (max-width: 480px) {
-    .page-title h1 {
-        font-size: 20px;
-    }
-    
-    .sub-text {
-        font-size: 12px;
-    }
-    
-    /* ปรับตารางให้ตัวหนังสือไม่ตกบรรทัด (ใช้ Scroll แทน) */
-    .modern-table th, .modern-table td {
-        white-space: nowrap;
-        padding: 10px;
-    }
+    .btn-primary { width: 100%; justify-content: center; }
+    .modern-table th, .modern-table td { white-space: nowrap; }
+    .table-card { overflow-x: auto; }
 }
