@@ -24,10 +24,11 @@
             
             <ul class="menu-links">
                 <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
-                <li   class="active"><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
+                <li class="active"><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
 
             <div class="logout-section">
@@ -77,8 +78,9 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Topic</th>
-                                <th>Description</th> <th>Post Date</th>
-                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Post Date</th>
+                                <th>Visible Until</th> <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -88,7 +90,7 @@
                                 <td>Monthly Maintenance</td>
                                 <td class="text-truncate">Routine check-up of elevator systems and fire alarms in Building A.</td>
                                 <td>08 Dec 2025</td>
-                                <td><span class="badge active">Active</span></td>
+                                <td style="color: #e74c3c; font-weight:500;">15 Dec 2025</td> <td><span class="badge active">Active</span></td>
                                 <td>
                                     <button class="action-btn view"><i class="fas fa-eye"></i></button>
                                     <button class="action-btn edit"><i class="fas fa-pen"></i></button>
@@ -100,7 +102,7 @@
                                 <td>Pool Cleaning Schedule</td>
                                 <td class="text-truncate">Swimming pool will be closed for cleaning from 10:00 AM to 2:00 PM.</td>
                                 <td>01 Dec 2025</td>
-                                <td><span class="badge inactive">Inactive</span></td>
+                                <td style="color: #999;">02 Dec 2025</td> <td><span class="badge inactive">Inactive</span></td>
                                 <td>
                                     <button class="action-btn view"><i class="fas fa-eye"></i></button>
                                     <button class="action-btn edit"><i class="fas fa-pen"></i></button>
@@ -123,10 +125,15 @@
                         <label>Topic :</label>
                         <input type="text" placeholder="Enter announcement topic">
                     </div>
+                    
                     <div class="form-group">
                         <label>Post Date :</label>
                         <input type="date" class="date-input">
                     </div>
+                    <div class="form-group">
+                        <label>Visible Until :</label> <input type="date" class="date-input">
+                    </div>
+
                     <div class="form-group">
                         <label>Status :</label>
                         <select class="custom-select full-select">
@@ -134,6 +141,7 @@
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
+                    
                     <div class="form-group full-width">
                         <label>Description :</label>
                         <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
@@ -146,8 +154,6 @@
             </form>
         </div>
     </div>
-    
-  
     
 </body>
 </html>

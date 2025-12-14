@@ -22,9 +22,10 @@
             
             <ul class="menu-links">
                 <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li  class="active"><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
+                <li  class="active"><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
                 <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
 
@@ -70,9 +71,7 @@
                     </select>
                 </div>
 
-                <button id="add-repair-btn" class="btn-primary">
-                    <i class="fas fa-plus"></i> Add New Repair
-                </button>
+                
             </section>
 
             <section class="content-box table-card">
@@ -127,47 +126,7 @@
         </main>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay">
-        <div class="modal-content">
-            <h2 class="modal-title">Add Repair Request</h2>
-            
-            <form id="add-repair-form">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Topic :</label>
-                        <input type="text" placeholder="e.g. Air Conditioner">
-                    </div>
-                    <div class="form-group">
-                        <label>Room :</label>
-                        <input type="text" placeholder="e.g. A-101">
-                    </div>
-                    <div class="form-group">
-                        <label>Date :</label>
-                        <input type="date">
-                    </div>
-
-                   <div class="form-group full-width">
-                        <label>Description :</label>
-                        <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status :</label>
-                        <select class="status-select">
-                            <option value="pending">Pending</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-cancel">Cancel</button>
-                    <button type="button" id="save-repair-btn" class="btn-primary">Save Repair</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    
     
    
 </body>

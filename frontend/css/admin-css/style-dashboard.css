@@ -3,7 +3,7 @@
     --secondary-gold: #f9eeb6;
     --primary-dark: #333;
     --text-grey: #666;
-    --bg-light: #f4f6f9; /* สีพื้นหลังโทนเทาฟ้าอ่อนๆ สบายตา */
+    --bg-light: #f4f6f9;
     --sidebar-width: 260px;
 }
 
@@ -19,7 +19,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- Sidebar (เหมือน User Dashboard แต่ปรับ Detail นิดหน่อย) --- */
+/* --- Sidebar --- */
 .sidebar {
     width: var(--sidebar-width);
     background: white;
@@ -67,22 +67,19 @@ body {
     font-size: 15px;
 }
 
-.menu-links a i {
-    width: 35px;
-    font-size: 18px;
-    text-align: center;
-}
+.menu-links a i { width: 35px; font-size: 18px; text-align: center; }
 
-/* Active State สีทอง */
+/* Active State */
 .menu-links li.active a, .menu-links a:hover {
     background-color: var(--primary-gold);
     color: white;
     box-shadow: 0 4px 10px rgba(196, 168, 8, 0.3);
 }
 
+/* --- Logout Section (Flexible Fix) --- */
 .logout-section {
-    margin-top: 300px;
-    padding: 0 50px 20px;
+    margin-top: auto; /* ดันปุ่มลงล่างสุด */
+    padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
@@ -109,31 +106,20 @@ body {
     color: var(--primary-dark);
 }
 
-.date-today {
-    color: #888;
-    margin: 5px 0 0;
-    font-size: 14px;
-}
+.date-today { color: #888; margin: 5px 0 0; font-size: 14px; }
 
-.admin-profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+.admin-profile { display: flex; align-items: center; gap: 15px; }
 
 .profile-pic {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     background: var(--primary-gold);
     color: white;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 20px;
 }
 
-/* --- Stats Grid (การ์ดสรุปยอด) --- */
+/* --- Stats Grid --- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -154,17 +140,12 @@ body {
 .stat-card:hover { transform: translateY(-3px); }
 
 .icon-box {
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    margin-right: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-right: 20px;
 }
 
-/* สีพื้นหลัง Icon */
 .icon-box.gold { background: rgba(196, 168, 8, 0.15); color: var(--primary-gold); }
 .icon-box.blue { background: rgba(52, 152, 219, 0.15); color: #3498db; }
 .icon-box.red { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
@@ -176,10 +157,10 @@ body {
 .stat-info .text-muted { font-size: 12px; color: #aaa; }
 .stat-info .text-danger { font-size: 12px; color: #e74c3c; font-weight: 500; }
 
-/* --- Content Split (ส่วนเนื้อหาล่าง) --- */
+/* --- Content Split --- */
 .content-split {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* แบ่งซ้าย 2 ส่วน ขวา 1 ส่วน */
+    grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
 
@@ -190,13 +171,7 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
 }
 
-.box-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
+.box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .box-header h2 { font-size: 18px; margin: 0; color: #333; }
 .view-all { font-size: 14px; color: var(--primary-gold); text-decoration: none; font-weight: 500; }
 
@@ -207,37 +182,50 @@ body {
 
 /* Badges */
 .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-.badge.pending { background: #fff5e6; color: #f39c12; }
-.badge.process { background: #eaf2f8; color: #3498db; }
-.badge.completed { background: #eafaf1; color: #2ecc71; }
 
 /* Payment List */
 .payment-list { list-style: none; padding: 0; margin: 0; }
 .payment-list li { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f9f9f9; }
 .payment-list li:last-child { border-bottom: none; }
-
-.pay-icon {
-    width: 40px; height: 40px; background: #f9f9f9; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: #2ecc71; margin-right: 15px;
-}
-
+.pay-icon { width: 40px; height: 40px; background: #f9f9f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #2ecc71; margin-right: 15px; }
 .pay-detail { flex-grow: 1; }
 .pay-detail strong { display: block; font-size: 14px; color: #333; }
 .pay-detail span { font-size: 12px; color: #999; }
 .pay-amount { font-weight: 600; color: #2ecc71; }
 
-/* Responsive */
-@media (max-width: 900px) {
-    .content-split { grid-template-columns: 1fr; }
+/* --- Responsive & Mobile Menu --- */
+
+.menu-toggle {
+    display: none; /* ปกติซ่อน */
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+    color: var(--primary-dark);
 }
 
-@media (max-width: 768px) {
-    .admin-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; position: relative; padding: 10px; flex-direction: row; justify-content: space-between; align-items: center;}
-    .sidebar-header { border: none; padding: 0; margin: 0; display: flex; align-items: center; }
-    .logo { width: 40px; margin: 0 10px 0 0; }
-    .sidebar-header h3 { display: none; }
-    .menu-links, .logout-section, .logo { display: none; } /* Mobile: ซ่อนเมนูไว้ก่อน */
-    .main-content { margin-left: 0; }
+.header-left { display: flex; align-items: center; }
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar-overlay.active { display: block; opacity: 1; }
+
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Tablet & Mobile (ขยาย Breakpoint เป็น 992px) */
+@media (max-width: 992px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
+    .menu-toggle { display: block; } /* โชว์ปุ่มเมนู */
+    .content-split { grid-template-columns: 1fr; } /* เรียงกล่องลงมาแนวตั้ง */
+    .sidebar-header h3 { display: block; } /* โชว์ชื่อ ADMIN แทน */
 }

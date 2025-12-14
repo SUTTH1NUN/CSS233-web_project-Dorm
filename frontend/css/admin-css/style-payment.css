@@ -80,12 +80,13 @@ body {
 }
 
 .logout-section {
-    margin-top: 300px;
-    padding: 0 50px 20px;
+    margin-top: auto; /* ดันปุ่มลงล่างสุด */
+    padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
 .logout-section a:hover { opacity: 0.7; }
+
 
 /* --- 3. Main Content --- */
 .main-content {
