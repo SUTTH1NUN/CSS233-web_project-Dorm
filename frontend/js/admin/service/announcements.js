@@ -1,6 +1,6 @@
 // Config API
 const API_BASE = 'http://localhost:3030/api';
-const ANNOUNCEMENT_API_URL = `${API_BASE}/announcement`; 
+const API_URL = `${API_BASE}/announcement`; // ตรวจสอบว่า Backend ใช้ 'announcements' (มี s)
 
 // State
 let currentMode = 'add'; // 'add' or 'edit'
@@ -15,10 +15,6 @@ const cancelBtn = document.getElementById('btn-cancel');
 const modalTitle = document.getElementById('modal-title-text');
 const searchInput = document.getElementById('search-announcement');
 const filterStatus = document.getElementById('filter-status');
-const menuToggle = document.getElementById('menu-toggle');
-const sidebar = document.getElementById('sidebar');
-const sidebarOverlay = document.getElementById('sidebar-overlay');
-
 
 // Auth Check
 function getToken() {
@@ -33,12 +29,9 @@ async function loadAnnouncements() {
         window.location.href = '../../index.html';
         return;
     }
-    
-    // ✅ ADMIN ต้องยิงไปที่ /api/announcement/admin เพื่อดึงข้อมูลทั้งหมด
-    const adminUrl = `${ANNOUNCEMENT_API_URL}/admin`; 
 
     try {
-        const res = await fetch(adminUrl, {
+        const res = await fetch(API_URL, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -46,7 +39,7 @@ async function loadAnnouncements() {
 
         let data = await res.json();
 
-        // Client-side Filter & Search
+        // Client-side Filter & Search (เพื่อให้ไว โดยไม่ต้องแก้ Backend เพิ่ม)
         const searchText = searchInput.value.toLowerCase();
         const statusFilter = filterStatus.value;
 
@@ -84,6 +77,7 @@ function renderTable(data) {
             : '<span style="color:#007bff; font-weight:bold;">Forever</span>';
 
         // จัดการ Badge
+        const statusClass = item.announcements_status === 'active' ? 'status-active' : 'status-inactive'; // คุณต้องมี css class นี้นะ หรือใช้ style inline
         const statusBadge = `<span style="padding: 4px 8px; border-radius: 12px; font-size: 0.85em; background: ${item.announcements_status === 'active' ? '#d4edda' : '#f8d7da'}; color: ${item.announcements_status === 'active' ? '#155724' : '#721c24'};">${item.announcements_status}</span>`;
 
         const row = `
@@ -111,9 +105,8 @@ function renderTable(data) {
 // --- 3. Modal Actions ---
 function openModal(mode, data = null) {
     currentMode = mode;
-    // ใช้ flex เพื่อโชว์ Modal (ตามที่คุณกำหนดใน CSS)
-    modalOverlay.classList.add('active'); 
-    modalOverlay.style.display = 'flex'; 
+    modalOverlay.classList.add('active'); // หรือ style.display = 'flex' แล้วแต่ CSS
+    modalOverlay.style.display = 'flex'; // บังคับโชว์
 
     // Reset Form
     form.reset();
@@ -141,14 +134,12 @@ function openModal(mode, data = null) {
 window.openEditModal = async (id) => {
     const token = getToken();
     try {
-        const res = await fetch(`${ANNOUNCEMENT_API_URL}/${id}`, { // ใช้ API_URL
+        const res = await fetch(`${API_URL}/${id}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
         if(res.ok) {
             openModal('edit', data);
-        } else {
-            alert("Cannot load details: " + (data.message || 'Unknown error'));
         }
     } catch(err) {
         console.error(err);
@@ -161,27 +152,22 @@ window.deleteAnnouncement = async (id) => {
     
     const token = getToken();
     try {
-        const res = await fetch(`${ANNOUNCEMENT_API_URL}/${id}`, { // ใช้ API_URL
+        const res = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if(res.ok) {
             alert("Deleted successfully");
             loadAnnouncements();
-        } else {
-            const errorData = await res.json();
-            alert("Delete failed: " + (errorData.message || 'Unknown error'));
         }
     } catch(err) {
         console.error(err);
-        alert("Server Error");
     }
 };
 
 function closeModal() {
     modalOverlay.classList.remove('active');
     modalOverlay.style.display = 'none';
-    form.reset();
 }
 
 // --- 4. Submit Form ---
@@ -189,13 +175,13 @@ form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const token = getToken();
 
-    // Get Values from Inputs
+    // Get Values from Inputs (ต้องแก้ HTML ให้มี id ตามนี้)
     const topic = document.getElementById('ann-topic').value;
     const desc = document.getElementById('ann-desc').value;
     const status = document.getElementById('ann-status').value;
     let date = document.getElementById('ann-date').value;
 
-    if(date === "") date = null; 
+    if(date === "") date = null; // Send null for Forever
 
     const payload = {
         title: topic,
@@ -205,11 +191,11 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-        let url = ANNOUNCEMENT_API_URL;
+        let url = API_URL;
         let method = 'POST';
 
         if(currentMode === 'edit') {
-            url = `${ANNOUNCEMENT_API_URL}/${currentId}`;
+            url = `${API_URL}/${currentId}`;
             method = 'PUT';
         }
 
@@ -237,42 +223,26 @@ form.addEventListener('submit', async (e) => {
     }
 });
 
-// --- 5. Listeners (รวมไว้ใน DOMContentLoaded) ---
-document.addEventListener('DOMContentLoaded', () => {
-    // 5.1 Load Data
-    loadAnnouncements();
-    
-    // 5.2 Modal and Form Listeners
-    if(addBtn) addBtn.addEventListener('click', () => openModal('add'));
-    if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
-    if(form) {
-         // ป้องกัน Event ซ้อน (กรณีมีการ Comment โค้ด HTML เก่าไว้)
-    }
+// --- 5. Listeners ---
+document.addEventListener('DOMContentLoaded', loadAnnouncements);
+if(addBtn) addBtn.addEventListener('click', () => openModal('add'));
+if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
+if(searchInput) searchInput.addEventListener('input', loadAnnouncements); // Realtime search
+if(filterStatus) filterStatus.addEventListener('change', loadAnnouncements);
 
-    // 5.3 Filter/Search Listeners
-    if(searchInput) searchInput.addEventListener('input', loadAnnouncements); 
-    if(filterStatus) filterStatus.addEventListener('change', loadAnnouncements);
-
-    // 5.4 Sidebar Toggle Listeners (นำมาไว้ใน DOMContentLoaded)
-    if(menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            if(sidebarOverlay) sidebarOverlay.classList.add('active');
-        });
-    }
-    if(sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            sidebarOverlay.classList.remove('active');
-        });
-    }
-
-    // 5.5 Listener ปิด Modal เมื่อคลิกพื้นหลัง (ถ้ามี)
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
-            }
-        });
-    }
-});
+// Sidebar Toggle (แถมให้)
+const menuToggle = document.getElementById('menu-toggle');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+if(menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.add('active');
+        if(sidebarOverlay) sidebarOverlay.classList.add('active');
+    });
+}
+if(sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+    });
+}

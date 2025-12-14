@@ -1,64 +1,104 @@
-const pool = require('../config/db');
+const pool = require("../config/db");
 
-function clean_date(date){
-    if(!date || date === '' || date === 'null'){
-        return null;
-    }
-    else{
-        return date;
-    }
-}
+// Helper: แปลงค่าว่างให้เป็น NULL สำหรับ Database
+const cleanDate = (date) => {
+    if (!date || date === "" || date === "null") return null;
+    return date;
+};
 
-function clean_contant(contant){
-    if (!contant || contant === '' || contant === 'null'){
-        return null;
-    }
-    else{
-        return contant;
-    }
-}
+// 1. สร้างประกาศ (Create)
 exports.createAnnouncement = async (req, res) => {
+    try {
+        const { title, content, visible_until, announcements_status } = req.body;
+        const admin_id = req.user.id; // ดึงจาก Token
 
-    const {title, content, visible_until, announcement_status} = req.body;
-    if( !title){
-        return res.status(400).json({message: 'กรุณากรอกข้อมูล'});
-    }
-    try{
-        const admin_id = req.user.id;
+        if (!title || !content) return res.status(400).json({ message: "กรุณาระบุหัวข้อและเนื้อหา" });
+
+        const sql = `
+            INSERT INTO announcements (admin_id, title, content, visible_until, announcements_status)
+            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
         
-        const inUse_date = clean_date(visible_until);
-        const inUse_contant = clean_contant(content)
-        const newAnnouncement = await pool.query(
-        `insert into announcements (admin_id, title, content, visible_until, announcements_status)
-        values ($1, $2, $3, $4, $5)
-        returning *`,
-        [admin_id, title, inUse_contant, inUse_date, announcement_status || 'active']
-        );
-
-        res.status(201).json({
-            message: "สร้างประกาศสำเร็จ", 
-            announcement: newAnnouncement.rows[0]
-        });
-
-    }
-    catch (err) {
-        console.error(err.message);
+        await pool.query(sql, [admin_id, title, content, cleanDate(visible_until), announcements_status || 'active']);
+        res.status(201).json({ message: "สร้างประกาศสำเร็จ" });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Server Error" });
     }
 };
 
+// 2. ดึงทั้งหมด (Read All)
 exports.getAllAnnouncements = async (req, res) => {
-    try{
-        const getAllAnnouncement = await pool.query(
-            `select title, content, announcements_status, visible_until, created_at
-            from announcements
-            order by created_at desc`
-        );
-
-        res.json(getAllAnnouncement.rows);
+    try {
+        const sql = `
+            SELECT a.*, ad.username as admin_name 
+            FROM announcements a
+            JOIN admins ad ON a.admin_id = ad.admin_id
+            WHERE a.announcements_status = 'active'
+            ORDER BY a.created_at DESC`;
+        const result = await pool.query(sql);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
     }
-    catch (err){
-        console.error(err.message);
+};
+
+exports.getAllAnnouncementsForAdmin = async (req, res) => {
+    try {
+        const sql = `
+            SELECT a.*, ad.username as admin_name 
+            FROM announcements a
+            JOIN admins ad ON a.admin_id = ad.admin_id
+            ORDER BY a.created_at DESC`;
+        const result = await pool.query(sql);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+// 3. ดึงรายอัน (Read One) - สำหรับกด View/Edit
+exports.getAnnouncementById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM announcements WHERE announcement_id = $1', [id]);
+        
+        if (result.rows.length === 0) return res.status(404).json({ message: "ไม่พบประกาศ" });
+        
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+// 4. แก้ไข (Update)
+exports.updateAnnouncement = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, content, visible_until, announcements_status } = req.body;
+
+        const sql = `
+            UPDATE announcements 
+            SET title=$1, content=$2, visible_until=$3, announcements_status=$4
+            WHERE announcement_id=$5`;
+        
+        await pool.query(sql, [title, content, cleanDate(visible_until), announcements_status, id]);
+        res.json({ message: "แก้ไขข้อมูลสำเร็จ" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+// 5. ลบ (Delete)
+exports.deleteAnnouncement = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM announcements WHERE announcement_id = $1', [id]);
+        res.json({ message: "ลบประกาศสำเร็จ" });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Server Error" });
     }
 };

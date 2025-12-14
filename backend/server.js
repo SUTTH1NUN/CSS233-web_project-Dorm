@@ -15,10 +15,16 @@ app.use(express.json());
 // --- Import Routes ---
 const authRoutes = require("./routes/auth");
 const tenantRoutes = require("./routes/tenants");
+const announcementRoute = require('./routes/announcement');
+const repairRoutes = require('./routes/repair');
+const paymentRoutes = require('./routes/payment');
 
 // --- Mount Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/tenants", tenantRoutes);
+app.use('/api/announcement', announcementRoute);
+app.use('/api/repairs', repairRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // --- Start Server ---
 app.listen(port, () => {

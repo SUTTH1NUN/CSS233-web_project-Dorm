@@ -69,10 +69,6 @@
                         <option value="completed">Completed</option>
                     </select>
                 </div>
-
-                <button id="add-repair-btn" class="btn-primary">
-                    <i class="fas fa-plus"></i> Add New Repair
-                </button>
             </section>
 
             <section class="content-box table-card">
@@ -88,87 +84,61 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        <tr>
-                            <td>1</td>
-                            <td>A-201</td>
-                            <td>Air Conditioner</td>
-                            <td>Water leaking from unit</td>
-                            <td><span class="badge pending">Pending</span></td>
-                            <td>
-                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>B-405</td>
-                            <td>Light Bulb</td>
-                            <td>Bathroom light broken</td>
-                            <td><span class="badge process">In Progress</span></td>
-                            <td>
-                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>C-102</td>
-                            <td>Sink Clogged</td>
-                            <td>Kitchen sink not draining</td>
-                            <td><span class="badge completed">Completed</span></td>
-                            <td>
-                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </section>
         </main>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay">
+<div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">Add Repair Request</h2>
+            <h2 class="modal-title" id="modal-title">Update Repair Status</h2>
             
-            <form id="add-repair-form">
+            <form id="repair-form">
+                <input type="hidden" id="repair-id">
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Topic :</label>
-                        <input type="text" placeholder="e.g. Air Conditioner">
+                        <input type="text" id="repair-topic" disabled style="background-color: #f0f0f0;">
                     </div>
                     <div class="form-group">
                         <label>Room :</label>
-                        <input type="text" placeholder="e.g. A-101">
+                        <input type="text" id="repair-room" disabled style="background-color: #f0f0f0;">
                     </div>
                     <div class="form-group">
                         <label>Date :</label>
-                        <input type="date">
+                        <input type="text" id="repair-date" disabled style="background-color: #f0f0f0;">
                     </div>
 
                    <div class="form-group full-width">
                         <label>Description :</label>
-                        <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
+                        <textarea id="repair-desc" rows="3" disabled style="background-color: #f0f0f0;" class="text-area"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Admin Comment/Note :</label>
+                        <textarea id="repair-comment" rows="2" class="text-area" placeholder="Note for tenant..."></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Status :</label>
-                        <select class="status-select">
+                        <select id="repair-status" class="custom-select status-select">
                             <option value="pending">Pending</option>
                             <option value="in_progress">In Progress</option>
                             <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel">Cancel</button>
-                    <button type="button" id="save-repair-btn" class="btn-primary">Save Repair</button>
+                    <button type="button" class="btn-cancel" id="btn-cancel">Cancel</button>
+                    <button type="submit" id="save-repair-btn" class="btn-primary">Update Status</button>
                 </div>
             </form>
         </div>
-    </div>
-    
+    </div>    
    
 </body>
 </html>

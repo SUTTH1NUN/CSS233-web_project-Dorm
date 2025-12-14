@@ -44,7 +44,7 @@ async function handleLogin() {
                 sessionStorage.removeItem('token');
                 sessionStorage.removeItem('user');
 
-                window.location.href = '/pages/user/dash-board.html';
+                window.location.href = '/pages/user/user.html';
             }
         } else {
             alert(data.error || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
