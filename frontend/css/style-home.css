@@ -24,15 +24,19 @@ body {
 }
 
 
-.menu-bar{
+.menu-bar {
     background: white;
     height: 150px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* จัดทุกอย่างให้กึ่งกลางแนวตั้ง */
     padding: 0 40px;
     box-sizing: border-box;
+    position: sticky; /* คง properties เดิมไว้ */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .left-menu, .right-menu{
@@ -51,8 +55,8 @@ body {
 }
 
 .logo img{
-    height: 135px;
-    width: 90px;
+    height: 120px;
+    width: 60px;
 }
 
 .left-menu a{
