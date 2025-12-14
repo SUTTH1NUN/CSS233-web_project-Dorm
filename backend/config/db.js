@@ -1,7 +1,7 @@
 // /backend/config/db.js
 
 const { Pool } = require("pg");
-require("dotenv").config(); // ต้องใช้ .env ที่นี่ด้วย
+require("dotenv").config();
 
 const pool = new Pool({
   host: process.env.PGHOST,

@@ -54,10 +54,10 @@ async function handleFormSubmit(event) {
             return;
         }
 
-        let url = `${TENANT_API}/register`;
+        let url = `${TENANT_API}`; 
         let method = 'POST';
 
-        // ถ้า edit ส่ง id ผู้เช้าไปด้วย
+        // ถ้า edit ส่ง id ผู้เช่าไปด้วย
         if (currentMode === 'edit') {
             url = `${TENANT_API}/${currentTenantId}`;
             method = 'PUT';

@@ -78,37 +78,15 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Topic</th>
-                                <th>Description</th>
+                                <th>Description</th> 
                                 <th>Post Date</th>
-                                <th>Visible Until</th> <th>Status</th>
+                                <th>Visible Date</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="table-body">
-                            <tr>
-                                <td>1</td>
-                                <td>Monthly Maintenance</td>
-                                <td class="text-truncate">Routine check-up of elevator systems and fire alarms in Building A.</td>
-                                <td>08 Dec 2025</td>
-                                <td style="color: #e74c3c; font-weight:500;">15 Dec 2025</td> <td><span class="badge active">Active</span></td>
-                                <td>
-                                    <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                                    <button class="action-btn edit"><i class="fas fa-pen"></i></button>
-                                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Pool Cleaning Schedule</td>
-                                <td class="text-truncate">Swimming pool will be closed for cleaning from 10:00 AM to 2:00 PM.</td>
-                                <td>01 Dec 2025</td>
-                                <td style="color: #999;">02 Dec 2025</td> <td><span class="badge inactive">Inactive</span></td>
-                                <td>
-                                    <button class="action-btn view"><i class="fas fa-eye"></i></button>
-                                    <button class="action-btn edit"><i class="fas fa-pen"></i></button>
-                                    <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                </td>
-                            </tr>
+                        <tbody id="announcement-table-body">
+
                         </tbody>
                     </table>
                 </div>
@@ -118,17 +96,17 @@
 
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="modal-title">Create Announcement</h2>
+            <h2 class="modal-title" id="modal-title-text">Create Announcement</h2>
             <form id="add-announcement-form">
                 <div class="form-grid">
                     <div class="form-group full-width">
                         <label>Topic :</label>
-                        <input type="text" placeholder="Enter announcement topic">
+                        <input type="text" id="ann-topic" placeholder="Enter announcement topic" >
                     </div>
                     
                     <div class="form-group">
-                        <label>Post Date :</label>
-                        <input type="date" class="date-input">
+                        <label>Visible Date :</label>
+                        <input type="date" id="ann-date" class="date-input">
                     </div>
                     <div class="form-group">
                         <label>Visible Until :</label> <input type="date" class="date-input">
@@ -136,7 +114,7 @@
 
                     <div class="form-group">
                         <label>Status :</label>
-                        <select class="custom-select full-select">
+                        <select id="ann-status" class="custom-select full-select" >
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
@@ -144,12 +122,12 @@
                     
                     <div class="form-group full-width">
                         <label>Description :</label>
-                        <textarea rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
+                        <textarea id="ann-desc" rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
                     </div>
                 </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel">Cancel</button>
-                    <button type="button" id="save-announcement-btn" class="btn-primary">Post Now</button>
+                    <button type="button" class="btn-cancel" id="btn-cancel">Cancel</button>
+                    <button type="submit" id="save-announcement-btn" class="btn-primary">Post Now</button>
                 </div>
             </form>
         </div>

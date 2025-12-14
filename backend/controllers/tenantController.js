@@ -1,5 +1,7 @@
+//controllers/tenantController.js
+
 const bcrypt = require("bcrypt");
-const pool = require("../config/db"); // ใช้ pool ตัวเดิมที่มีอยู่แล้ว
+const pool = require("../config/db");
 
 exports.registerTenant = async (req, res) => {
   const {first_name, last_name, phone_number, email, tenant_status,
@@ -9,7 +11,7 @@ exports.registerTenant = async (req, res) => {
 
   if(!first_name || !last_name || !phone_number || !email ||!tenant_status 
     || !building || !room_number || !floor 
-    || !start_date || !deposit_amount){ // เอา end_date ออกจาก validation เพราะอาจเป็น null ได้
+    || !start_date || !deposit_amount){
     return res.status(400).json({error : "กรุณากรอกข้อมูลให้ครบถ้วน"});
   }
 
@@ -154,7 +156,12 @@ exports.updateTenant = async (req, res, next) => {
             WHERE tenant_id=$6
         `;
         await client.query(updateTenantSql, [first_name, last_name, email, phone_number, tenant_status, id]);
-
+        if (tenant_status === 'inactive' || tenant_status === 'vacated') {
+            const roomRes = await client.query('SELECT room_id FROM lease_contract WHERE tenant_id = $1', [id]);
+            if(roomRes.rows.length > 0) {
+                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [roomRes.rows[0].room_id]);
+            }
+        }
         //ค่อยมาทำย้ายห้อง
         const updateContractSql = `
             UPDATE lease_contract

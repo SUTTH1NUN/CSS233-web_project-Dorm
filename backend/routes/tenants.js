@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const tenantController = require("../controllers/tenantController");
+const controller = require("../controllers/tenantController");
 
-// Path: /api/tenants/...
-router.post("/register", tenantController.registerTenant);
-router.get("/", tenantController.getAllTenants);
-router.get('/:id', tenantController.getTenantById);
-router.put('/:id', tenantController.updateTenant);
+// 👇 1. เรียก Middleware มา
+const authenticate = require("../middlewares/authenticate");
+
+// 👇 2. เอา authenticate ไปคั่นไว้ทุกอันที่อยากล็อค
+router.get("/", authenticate, controller.getAllTenants);
+router.post("/", authenticate, controller.registerTenant);
+router.get("/:id", authenticate, controller.getTenantById);
+router.put("/:id", authenticate, controller.updateTenant);
 
 module.exports = router;
