@@ -2,6 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require('path');
 
 dotenv.config();
 
@@ -17,14 +18,15 @@ const authRoutes = require("./routes/auth");
 const tenantRoutes = require("./routes/tenants");
 const announcementRoute = require('./routes/announcement');
 const repairRoutes = require('./routes/repair');
-const paymentRoutes = require('./routes/payment');
+// const paymentRoutes = require('./routes/payment');
 
 // --- Mount Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/tenants", tenantRoutes);
 app.use('/api/announcement', announcementRoute);
+app.use('/uploads', express.static('uploads'));
 app.use('/api/repairs', repairRoutes);
-app.use("/api/payments", paymentRoutes);
+// app.use("/api/payments", paymentRoutes);
 
 // --- Start Server ---
 app.listen(port, () => {

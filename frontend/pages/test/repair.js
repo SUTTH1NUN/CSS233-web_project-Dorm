@@ -28,15 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let allRepairs = [];
 
-    const token = sessionStorage.getItem('token');
-
     async function fetchRepairs() {
         try {
-            
+            const token = localStorage.getItem('token');
             if (!token) {
                 alert('Please login first');
-                window.location.href = '../../index.html';
-                return;
             }
 
             const response = await fetch(API_URL, {
@@ -134,8 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(data.resolved_date) {
                     const dateObj = new Date(data.resolved_date);
                     mResolvedDate.value = dateObj.toISOString().split('T')[0];
-                    
-
                 }
             } else {
                 resolvedGroup.style.display = 'none';
@@ -143,16 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (isEditMode) {
-                modalTitle.innerHTML = 'Update Repair Status';
+                modalTitle.innerHTML = '<i class="fas fa-edit"></i> Update Repair Status';
                 mComment.disabled = false;
                 mStatus.disabled = false;
                 saveBtn.style.display = 'inline-flex';
             } else {
-                modalTitle.innerHTML = 'View Repair Details';
+                modalTitle.innerHTML = '<i class="fas fa-eye"></i> View Repair Details';
                 mComment.disabled = true;
                 mStatus.disabled = true;
                 saveBtn.style.display = 'none';
-                // เพิ่มการดึง resolved date มาแสดง
             }
 
             modal.classList.add('active');
@@ -175,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = mId.value;
         const status = mStatus.value;
         const note = mComment.value;
+        const token = localStorage.getItem('token');
 
         try {
             const response = await fetch(`${API_URL}/${id}`, {
@@ -237,4 +231,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchRepairs();
 });
-

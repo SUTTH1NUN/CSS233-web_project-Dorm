@@ -30,7 +30,7 @@ CREATE TYPE tenant_status_enum AS ENUM ('active', 'inactive');
 CREATE TYPE room_status_enum AS ENUM ('available', 'booked', 'occupied', 'under_maintenance');
 CREATE TYPE contract_status_enum AS ENUM ('active', 'ended');
 CREATE TYPE payment_status_enum AS ENUM ('pending', 'paid', 'overdue', 'cancelled');
-CREATE TYPE repair_status_enum AS ENUM ('pending', 'in_progress', 'completed');
+CREATE TYPE repair_status_enum AS ENUM ('pending', 'in_progress', 'completed', 'cancelled');
 CREATE TYPE announcements_status_enum AS ENUM ('active', 'inactive');
 
 /* =========================================
