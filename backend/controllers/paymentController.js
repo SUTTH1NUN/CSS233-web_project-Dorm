@@ -171,10 +171,9 @@ const safeParseFloat = (value) => {
 
 // --- 1. สร้างใบแจ้งหนี้ (Create Invoice) ---
 exports.createPayment = async (req, res) => {
-    // ใช้วงเล็บปีกกาครอบโค้ดทั้งหมดเพื่อให้มีการจัดการ Transaction ที่เหมาะสม
     const client = await pool.connect(); 
     try {
-        await client.query('BEGIN'); // เริ่ม Transaction
+        await client.query('BEGIN');
         
         const { 
             room_number,
@@ -186,12 +185,10 @@ exports.createPayment = async (req, res) => {
             payment_status
         } = req.body;
 
-        // 1. ตรวจสอบความสมบูรณ์ของข้อมูลเบื้องต้น
         if (!room_number || !billing_date || !due_date || !total_amount) {
              return res.status(400).json({ message: "ข้อมูลสำคัญไม่ครบถ้วน (Room, Dates, Total)." });
         }
 
-        // 2. หา contract_id และ room_id จากเลขห้อง
         const contractSql = `
             SELECT l.contract_id, r.room_id 
             FROM lease_contract l
@@ -239,22 +236,21 @@ exports.createPayment = async (req, res) => {
     }
 };
 
-// --- 2. ดูรายการทั้งหมด (รวม Search & Filter) ---
 exports.getAllPayments = async (req, res) => {
     try {
-        const { search, status } = req.query; // รับ query parameters จาก Frontend
+        const { search, status } = req.query;
         
         let conditions = [];
         let values = [];
         let valueIndex = 1;
 
-        // 1. Search (ค้นหาด้วยเลขห้อง)
+        // Search (ค้นหาด้วยเลขห้อง)
         if (search) {
             conditions.push(`r.room_number ILIKE $${valueIndex++}`);
             values.push(`%${search}%`);
         }
 
-        // 2. Status Filter
+        // Status Filter
         if (status && status !== 'all') {
             conditions.push(`p.payment_status = $${valueIndex++}`);
             values.push(status);
@@ -265,7 +261,7 @@ exports.getAllPayments = async (req, res) => {
         const sql = `
             SELECT 
                 p.payment_id, p.billing_date, p.due_date, p.total_amount, p.payment_status,
-                p.electricity_fee, p.water_fee, p.room_fee, -- เพิ่มรายละเอียดที่จำเป็น
+                p.electricity_fee, p.water_fee, p.room_fee,
                 r.room_number, r.building,
                 t.first_name, t.last_name
             FROM payments p
@@ -346,7 +342,7 @@ exports.getLatestMeterAndFee = async (req, res) => {
                 l.contract_id,
                 t.tenant_id,
                 r.room_id,
-                COALESCE( -- ใช้ COALESCE เพื่อให้ได้ค่า 0 ถ้าไม่มีบิลก่อนหน้า (บิลแรก)
+                COALESCE(
                     (
                         SELECT p.electricity_meter_current 
                         FROM payments p 
@@ -366,7 +362,7 @@ exports.getLatestMeterAndFee = async (req, res) => {
             JOIN rooms r ON l.room_id = r.room_id
             JOIN tenants t ON l.tenant_id = t.tenant_id
             WHERE r.room_number = $1 AND r.room_status = 'occupied'
-            ORDER BY l.start_date DESC -- เพื่อให้ได้สัญญาที่ล่าสุด
+            ORDER BY l.start_date DESC
             LIMIT 1
         `;
 

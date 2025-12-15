@@ -19,7 +19,7 @@ exports.registerTenant = async (req, res) => {
   try{
     await client.query('BEGIN');
 
-    // 1. เช็คห้องว่าง
+    //  เช็คห้องว่าง
     const roomQuery = await client.query(
       `select room_id, room_status from rooms where building = $1 and floor = $2 and room_number = $3`,
       [building, floor, room_number]
@@ -33,7 +33,7 @@ exports.registerTenant = async (req, res) => {
       throw new Error('ห้องพักไม่ว่าง');
     }
 
-    // 2. สร้าง User Tenant
+    //  สร้าง User Tenant
     const defaultPassword = phone_number;
     const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
@@ -45,13 +45,13 @@ exports.registerTenant = async (req, res) => {
     );
     const tenantId = newTenant.rows[0].tenant_id;
     
-    // 3. สร้างสัญญา
+    // สร้างสัญญา
     await client.query(
       `insert into lease_contract (tenant_id, room_id, start_date, end_date, deposit_amount) values ($1, $2, $3, $4, $5)`,
       [tenantId, room.room_id, start_date, end_date || null, deposit_amount]
     );
 
-    // 4. อัพเดทสถานะห้อง
+    //  อัพเดทสถานะห้อง
     await client.query(`update rooms set room_status = 'occupied' where room_id = $1`, [room.room_id]);
 
     await client.query('COMMIT');
@@ -162,7 +162,7 @@ exports.updateTenant = async (req, res, next) => {
                 await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [roomRes.rows[0].room_id]);
             }
         }
-        //ค่อยมาทำย้ายห้อง
+
         const updateContractSql = `
             UPDATE lease_contract
             SET deposit_amount=$1, start_date=$2, end_date=$3
