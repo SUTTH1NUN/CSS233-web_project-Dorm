@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repairs Management | Hatyai Condominium</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <title>Admin Dashboard | Hatyai Condominium</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style-repair.css">
     <script defer src="repair.js"></script>
 </head>
@@ -18,28 +20,30 @@
                 <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
                 <h3>ADMIN</h3>
             </div>
+            
             <ul class="menu-links">
-                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="active"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
                 <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li class="active"><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
                 <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
+
             <div class="logout-section">
-                <a href="../../index.html" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
-        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+         <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
         <main class="main-content">
             <header class="top-bar">
-                <div class="header-left">
+                 <div class="header-left">
                     <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
                     <div class="page-title">
-                        <h1>Repairs Management</h1>
-                        <p class="sub-text">Track and manage maintenance requests</p>
+                        <h1>Dashboard Overview</h1>
+                        <p class="date-today" id="current-date">Loading date...</p>
                     </div>
                 </div>
                 <div class="admin-profile">
@@ -48,112 +52,76 @@
                 </div>
             </header>
 
-            <section class="content-box control-bar">
-                <div class="search-group">
-                    <div class="search-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search-repair" placeholder="Search by Room, Topic, or Name...">
+          <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon-box gold"><i class="fas fa-wallet"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Revenue (Monthly)</h3>
+                        <p class="number" id="stat-revenue">Loading...</p>
+                        <span class="trend up"><i class="fas fa-chart-line"></i> Paid bills this month</span>
                     </div>
-                    <select id="filter-status" class="custom-select">
-                        <option value="all" selected>All Statuses</option>
-                        <option value="pending">Pending</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
+                </div>
+
+                <div class="stat-card">
+                    <div class="icon-box blue"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3>Occupancy Rate</h3>
+                        <p class="number" id="stat-occupancy-rate">0%</p>
+                        <span class="text-muted"><span id="stat-occupied-count">0</span>/<span id="stat-total-rooms">0</span> Rooms Occupied</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="icon-box red"><i class="fas fa-tools"></i></div>
+                    <div class="stat-info">
+                        <h3>Active Repairs</h3>
+                        <p class="number" id="stat-active-repairs">0</p>
+                        <span class="text-danger">Pending / In Progress</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="icon-box green"><i class="fas fa-door-open"></i></div>
+                    <div class="stat-info">
+                        <h3>Available Rooms</h3>
+                        <p class="number" id="stat-available-rooms">0</p>
+                        <span class="text-muted">Ready for booking</span>
+                    </div>
                 </div>
             </section>
 
-            <section class="content-box table-card">
-                <div class="table-responsive">
-                    <table class="modern-table">
+            <section class="content-split">
+                <div class="content-box">
+                    <div class="box-header">
+                        <h2>Room Status Overview</h2>
+                        <a href="room.html" class="view-all">View All</a>
+                    </div>
+                    <table class="simple-table">
                         <thead>
                             <tr>
-                                <th>No.</th>
-                                <th>Room</th>
-                                <th>Topic</th>
-                                <th>Reported By</th>
+                                <th>Room No.</th>
+                                <th>Type</th>
+                                <th>Floor</th>
                                 <th>Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="table-body">
-                        </tbody>
+                        <tbody id="room-list-body">
+                           </tbody>
                     </table>
                 </div>
+
+                <div class="content-box">
+                    <div class="box-header">
+                        <h2>Recent Transactions</h2>
+                        <a href="payment.html" class="view-all">View All</a>
+                    </div>
+                    <ul class="payment-list" id="payment-list-body">
+                        </ul>
+                </div>
             </section>
+
         </main>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title"><i class="fas fa-wrench"></i> Repair Request Details</h2>
-                <span class="close-btn" id="close-x">&times;</span>
-            </div>
-            
-            <form id="repair-form">
-                <input type="hidden" id="repair-id">
-
-                <div class="form-vertical-layout">
-                    <div class="form-group">
-                        <label>Room No.</label>
-                        <input type="text" id="repair-room" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Problem Category</label>
-                        <input type="text" id="repair-topic" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea id="repair-desc" rows="3" disabled></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number</label>
-                        <input type="text" id="repair-phone" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Attached Photo</label>
-                        <div id="photo-display-area" class="photo-box">
-                        </div>
-                    </div>
-
-                    <div class="admin-separator">
-                        <span>Admin Action Zone</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label style="color:#C4A808; font-weight:bold;">Admin Note</label>
-                        <textarea id="repair-comment" rows="2" placeholder="Internal note or update for tenant..."></textarea>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group half">
-                            <label style="color:#C4A808; font-weight:bold;">Status</label>
-                            <select id="repair-status" class="custom-select" style="width: 100%;">
-                                <option value="pending">Pending</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="completed">Completed</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                        </div>
-                        <div class="form-group half" id="resolved-group" style="display: none;">
-                            <label style="color: #28a745; font-weight:bold;">Resolved Date</label>
-                            <input type="date" id="repair-resolved-date" disabled style="width: 100%;">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" id="btn-cancel" class="btn-cancel" >Close</button>
-                    <button type="submit" id="save-repair-btn" class="btn-primary">Update Status</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </body>
 </html>

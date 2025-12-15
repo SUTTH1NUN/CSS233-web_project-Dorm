@@ -6,11 +6,11 @@
     <title>Admin Dashboard | Hatyai Condominium</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link rel="stylesheet" href="../../css/admin-css/style-dashboard.css">
-    <script defer src="../../js//admin/ui/script-dashboard.js"></script>
+    <script defer src="../../js/admin/ui/script-dashboard.js"></script>
 </head>
 <body>
 
@@ -22,7 +22,7 @@
             </div>
             
             <ul class="menu-links">
-                <li  class="active"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="active"><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
                 <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
@@ -31,7 +31,7 @@
             </ul>
 
             <div class="logout-section">
-                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
 
@@ -40,13 +40,11 @@
         <main class="main-content">
             <header class="top-bar">
                  <div class="header-left">
-                    <div class="menu-toggle" id="menu-toggle">
-                        <i class="fas fa-bars"></i>
+                    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <div class="page-title">
+                        <h1>Dashboard Overview</h1>
+                        <p class="date-today" id="current-date">Loading date...</p>
                     </div>
-                <div class="page-title">
-                    <h1>Dashboard Overview</h1>
-                    <p class="date-today">Today, 08 Dec 2025</p>
-                </div>
                 </div>
                 <div class="admin-profile">
                     <span>Admin Officer</span>
@@ -58,9 +56,9 @@
                 <div class="stat-card">
                     <div class="icon-box gold"><i class="fas fa-wallet"></i></div>
                     <div class="stat-info">
-                        <h3>Total Revenue</h3>
-                        <p class="number">฿ 450,200</p>
-                        <span class="trend up"><i class="fas fa-arrow-up"></i> +5.2% from last month</span>
+                        <h3>Total Revenue (Monthly)</h3>
+                        <p class="number" id="stat-revenue">Loading...</p>
+                        <span class="trend up"><i class="fas fa-chart-line"></i> Paid bills this month</span>
                     </div>
                 </div>
 
@@ -68,8 +66,8 @@
                     <div class="icon-box blue"><i class="fas fa-users"></i></div>
                     <div class="stat-info">
                         <h3>Occupancy Rate</h3>
-                        <p class="number">92%</p>
-                        <span class="text-muted">45/58 Rooms Occupied</span>
+                        <p class="number" id="stat-occupancy-rate">0%</p>
+                        <span class="text-muted"><span id="stat-occupied-count">0</span>/<span id="stat-total-rooms">0</span> Rooms Occupied</span>
                     </div>
                 </div>
 
@@ -77,8 +75,8 @@
                     <div class="icon-box red"><i class="fas fa-tools"></i></div>
                     <div class="stat-info">
                         <h3>Active Repairs</h3>
-                        <p class="number">2</p>
-                        <span class="text-danger">1 Pending / 1 In Progress</span>
+                        <p class="number" id="stat-active-repairs">0</p>
+                        <span class="text-danger">Pending / In Progress</span>
                     </div>
                 </div>
 
@@ -86,11 +84,12 @@
                     <div class="icon-box green"><i class="fas fa-door-open"></i></div>
                     <div class="stat-info">
                         <h3>Available Rooms</h3>
-                        <p class="number">13</p>
+                        <p class="number" id="stat-available-rooms">0</p>
                         <span class="text-muted">Ready for booking</span>
                     </div>
                 </div>
             </section>
+
             <section class="content-split">
                 <div class="content-box">
                     <div class="box-header">
@@ -106,80 +105,18 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>A-101</td>
-                                <td>Studio</td>
-                                <td>1</td>
-                                <td><span class="badge occupied" style="background: #eaf2f8; color: #3498db;">Occupied</span></td>
-                            </tr>
-                            <tr>
-                                <td>A-102</td>
-                                <td>Studio</td>
-                                <td>1</td>
-                                <td><span class="badge occupied" style="background: #eaf2f8; color: #3498db;">Occupied</span></td>
-                            </tr>
-                            <tr>
-                                <td>B-205</td>
-                                <td>1 Bedroom</td>
-                                <td>2</td>
-                                <td><span class="badge available" style="background: #eafaf1; color: #2ecc71;">Available</span></td>
-                            </tr>
-                            <tr>
-                                <td>C-301</td>
-                                <td>2 Bedroom</td>
-                                <td>3</td>
-                                <td><span class="badge maintenance" style="background: #fff5e6; color: #f39c12;">Maintenance</span></td>
-                            </tr>
-                             <tr>
-                                <td>C-302</td>
-                                <td>2 Bedroom</td>
-                                <td>3</td>
-                                <td><span class="badge available" style="background: #eafaf1; color: #2ecc71;">Available</span></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="room-list-body">
+                           </tbody>
                     </table>
                 </div>
 
                 <div class="content-box">
                     <div class="box-header">
-                        <h2>Recent Payments</h2>
-                        <a href="#" class="view-all">View All</a>
+                        <h2>Recent Transactions</h2>
+                        <a href="payment.html" class="view-all">View All</a>
                     </div>
-                    <ul class="payment-list">
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room A-1104</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 5,500</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room B-1402</strong>
-                                <span>Paid Water Bill</span>
-                            </div>
-                            <div class="pay-amount">+฿ 120</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room C-4111</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 6,200</div>
-                        </li>
-                        <li>
-                            <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                            <div class="pay-detail">
-                                <strong>Room A-1205</strong>
-                                <span>Paid Rent (Dec)</span>
-                            </div>
-                            <div class="pay-amount">+฿ 5,500</div>
-                        </li>
-                    </ul>
+                    <ul class="payment-list" id="payment-list-body">
+                        </ul>
                 </div>
             </section>
 

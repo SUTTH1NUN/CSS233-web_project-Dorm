@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <link rel="stylesheet" href="../../css/admin-css/style-room.css">
-    <script defer src="../../js//admin/ui/script-room.js"></script>
+    <script defer src="../../js/admin/ui/script-room.js"></script>
 </head>
 <body>
 
@@ -52,7 +52,7 @@
             </header>
 
             <section class="content-box control-bar">
-                <div class="search-group" style="width: 100%;">
+                <div class="search-group">
                     <div class="search-wrapper">
                         <i class="fas fa-search"></i>
                         <input type="text" id="search-room" placeholder="Search room number...">
@@ -61,11 +61,14 @@
                     <select id="filter-status" class="custom-select">
                         <option value="all" selected>All Statuses</option>
                         <option value="available">Available</option>
+                        <option value="booked">Booked</option>
                         <option value="occupied">Occupied</option>
                         <option value="maintenance">Maintenance</option>
-                        <option value="booked">Booked</option>
                     </select>
                 </div>
+                <button id="add-room-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> <span>Add Room</span>
+                </button>
             </section>
 
             <section class="content-box table-card">
@@ -80,141 +83,229 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody id="room-table-body">
+                        <tr data-room="A101" data-build="A" data-floor="1" data-type="Family Suite" data-status="occupied">
                             <td>Building A</td>
                             <td>1</td>
-                            <td><strong>A-101</strong></td>
-                            <td>Studio</td>
+                            <td><strong>A101</strong></td>
+                            <td>Family Suite</td>
                             <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A102" data-build="A" data-floor="1" data-type="Family Suite" data-status="available">
                             <td>Building A</td>
                             <td>1</td>
-                            <td><strong>A-102</strong></td>
-                            <td>Studio</td>
+                            <td><strong>A102</strong></td>
+                            <td>Family Suite</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr data-room="A201" data-build="A" data-floor="2" data-type="1 Bedroom Suite" data-status="occupied">
+                            <td>Building A</td>
+                            <td>2</td>
+                            <td><strong>A201</strong></td>
+                            <td>1 Bedroom Suite</td>
                             <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A202" data-build="A" data-floor="2" data-type="1 Bedroom Suite" data-status="maintenance">
                             <td>Building A</td>
-                            <td>1</td>
-                            <td><strong>A-103</strong></td>
-                            <td>Studio</td>
+                            <td>2</td>
+                            <td><strong>A202</strong></td>
+                            <td>1 Bedroom Suite</td>
                             <td><span class="badge maintenance">Maintenance</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A203" data-build="A" data-floor="2" data-type="1 Bedroom Suite" data-status="available">
                             <td>Building A</td>
                             <td>2</td>
-                            <td><strong>A-201</strong></td>
-                            <td>1 Bedroom</td>
-                            <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building A</td>
-                            <td>2</td>
-                            <td><strong>A-202</strong></td>
-                            <td>1 Bedroom</td>
+                            <td><strong>A203</strong></td>
+                            <td>1 Bedroom Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A301" data-build="A" data-floor="3" data-type="Studio Suite" data-status="occupied">
                             <td>Building A</td>
                             <td>3</td>
-                            <td><strong>A-301</strong></td>
-                            <td>2 Bedroom</td>
+                            <td><strong>A301</strong></td>
+                            <td>Studio Suite</td>
                             <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A302" data-build="A" data-floor="3" data-type="Studio Suite" data-status="available">
                             <td>Building A</td>
                             <td>3</td>
-                            <td><strong>A-302</strong></td>
-                            <td>1 Bedroom</td>
+                            <td><strong>A302</strong></td>
+                            <td>Studio Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="A303" data-build="A" data-floor="3" data-type="Studio Suite" data-status="available">
                             <td>Building A</td>
-                            <td>4</td>
-                            <td><strong>A-401</strong></td>
-                            <td>Studio</td>
+                            <td>3</td>
+                            <td><strong>A303</strong></td>
+                            <td>Studio Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building A</td>
-                            <td>4</td>
-                            <td><strong>A-402</strong></td>
-                            <td>Studio</td>
-                            <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
 
-                        <tr>
+                        <tr data-room="B101" data-build="B" data-floor="1" data-type="Family Suite" data-status="available">
                             <td>Building B</td>
                             <td>1</td>
-                            <td><strong>B-101</strong></td>
-                            <td>Studio</td>
-                            <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building B</td>
-                            <td>1</td>
-                            <td><strong>B-102</strong></td>
-                            <td>Studio</td>
-                            <td><span class="badge booked">Booked</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building B</td>
-                            <td>2</td>
-                            <td><strong>B-201</strong></td>
-                            <td>1 Bedroom</td>
-                            <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building B</td>
-                            <td>2</td>
-                            <td><strong>B-202</strong></td>
-                            <td>1 Bedroom</td>
+                            <td><strong>B101</strong></td>
+                            <td>Family Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="B102" data-build="B" data-floor="1" data-type="Family Suite" data-status="occupied">
+                            <td>Building B</td>
+                            <td>1</td>
+                            <td><strong>B102</strong></td>
+                            <td>Family Suite</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr data-room="B201" data-build="B" data-floor="2" data-type="1 Bedroom Suite" data-status="available">
+                            <td>Building B</td>
+                            <td>2</td>
+                            <td><strong>B201</strong></td>
+                            <td>1 Bedroom Suite</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr data-room="B202" data-build="B" data-floor="2" data-type="1 Bedroom Suite" data-status="available">
+                            <td>Building B</td>
+                            <td>2</td>
+                            <td><strong>B202</strong></td>
+                            <td>1 Bedroom Suite</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
+                        </tr>
+                        <tr data-room="B301" data-build="B" data-floor="3" data-type="Studio Suite" data-status="available">
                             <td>Building B</td>
                             <td>3</td>
-                            <td><strong>B-301</strong></td>
-                            <td>2 Bedroom</td>
+                            <td><strong>B301</strong></td>
+                            <td>Studio Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
-                        <tr>
+                        <tr data-room="B302" data-build="B" data-floor="3" data-type="Studio Suite" data-status="available">
                             <td>Building B</td>
-                            <td>4</td>
-                            <td><strong>B-401</strong></td>
-                            <td>2 Bedroom</td>
-                            <td><span class="badge occupied">Occupied</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td>Building B</td>
-                            <td>4</td>
-                            <td><strong>B-402</strong></td>
-                            <td>1 Bedroom</td>
+                            <td>3</td>
+                            <td><strong>B302</strong></td>
+                            <td>Studio Suite</td>
                             <td><span class="badge available">Available</span></td>
-                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                            <td>
+                                <button class="action-btn view"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+                            </td>
                         </tr>
+
                     </tbody>
                 </table>
             </section>
         </main>
     </div>
 
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Room Details</h2>
+            <form id="room-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Room Number :</label>
+                        <input type="text" id="m-room-no" placeholder="e.g. A101">
+                    </div>
+                    <div class="form-group">
+                        <label>Building :</label>
+                        <select id="m-building" class="custom-select full-select">
+                            <option value="A">Building A</option>
+                            <option value="B">Building B</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Floor :</label>
+                        <input type="number" id="m-floor" min="1" max="8">
+                    </div>
+                    <div class="form-group">
+                        <label>Room Type :</label>
+                        <select id="m-type" class="custom-select full-select">
+                            <option value="Studio Suite">Studio Suite</option>
+                            <option value="1 Bedroom Suite">1 Bedroom Suite</option>
+                            <option value="Family Suite">Family Suite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status :</label>
+                        <select id="m-status" class="custom-select full-select">
+                            <option value="available">Available</option>
+                            <option value="booked">Booked</option>
+                            <option value="occupied">Occupied</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Size (sq.m.) :</label>
+                        <input type="number" id="m-size" readonly style="background:#f9f9f9; cursor:not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Price (THB) :</label>
+                        <input type="number" id="m-price" readonly style="background:#f9f9f9; cursor:not-allowed;">
+                    </div>
+                     <div class="form-group full-width">
+                        <label>Furniture / Amenities :</label>
+                        <textarea id="m-furniture" rows="3" readonly style="background:#f9f9f9; cursor:not-allowed; resize:none;" class="text-area"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="button" id="save-room-btn" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
 </body>
 </html>

@@ -1,226 +1,128 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = 'http://localhost:3030/api/repairs';
+    // เปลี่ยน URL ให้ตรงกับ Server ของคุณ
+    const API_URL = 'http://localhost:3030/api/dashboard/stats';
+
+    // UI Elements
+    const currentDateEl = document.getElementById('current-date');
+    const revenueEl = document.getElementById('stat-revenue');
+    const occupancyRateEl = document.getElementById('stat-occupancy-rate');
+    const occupiedCountEl = document.getElementById('stat-occupied-count');
+    const totalRoomsEl = document.getElementById('stat-total-rooms');
+    const activeRepairsEl = document.getElementById('stat-active-repairs');
+    const availableRoomsEl = document.getElementById('stat-available-rooms');
     
-    const tableBody = document.getElementById('table-body');
-    const modal = document.getElementById('modal-overlay');
-    const btnCancel = document.getElementById('btn-cancel');
-    const closeX = document.getElementById('close-x');
-    const repairForm = document.getElementById('repair-form');
-    const searchInput = document.getElementById('search-repair');
-    const filterSelect = document.getElementById('filter-status');
-    const modalTitle = document.querySelector('.modal-title');
-    const saveBtn = document.getElementById('save-repair-btn');
+    const roomListBody = document.getElementById('room-list-body');
+    const paymentListBody = document.getElementById('payment-list-body');
+    
+    // Sidebar & Logout
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     const logoutBtn = document.getElementById('logout-btn');
 
-    const mId = document.getElementById('repair-id');
-    const mRoom = document.getElementById('repair-room');
-    const mTopic = document.getElementById('repair-topic');
-    const mDesc = document.getElementById('repair-desc');
-    const mPhone = document.getElementById('repair-phone');
-    const mPhotoArea = document.getElementById('photo-display-area');
-    const mComment = document.getElementById('repair-comment');
-    const mStatus = document.getElementById('repair-status');
-    const mResolvedDate = document.getElementById('repair-resolved-date');
-    const resolvedGroup = document.getElementById('resolved-group');
+    // 1. Set Date
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
 
-    let allRepairs = [];
-
-    async function fetchRepairs() {
+    // 2. Fetch Data
+    async function fetchStats() {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please login first');
-            }
-
             const response = await fetch(API_URL, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (!response.ok) throw new Error('Failed to fetch');
-            
-            allRepairs = await response.json();
-            renderTable(allRepairs);
+            if(!response.ok) throw new Error('Failed to fetch stats');
+            const data = await response.json();
+
+            updateUI(data);
+
         } catch (error) {
             console.error('Error:', error);
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color:red;">Error loading data</td></tr>`;
+            // แสดง Error บนหน้าจอ (Optional)
+            revenueEl.innerText = "Error";
         }
     }
 
-    function renderTable(data) {
-        tableBody.innerHTML = '';
-        if (data.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color:#999;">No repairs found.</td></tr>`;
-            return;
-        }
+    // 3. Update UI
+    function updateUI(data) {
+        // Revenue
+        // ใช้ toLocaleString เพื่อใส่ลูกน้ำ (,)
+        const revenue = parseFloat(data.revenue).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        revenueEl.textContent = `฿ ${revenue}`;
 
-        data.forEach((item, index) => {
-            const tr = document.createElement('tr');
-            
-            let badgeClass = 'pending';
-            if (item.repair_status === 'in_progress') badgeClass = 'process';
-            else if (item.repair_status === 'completed') badgeClass = 'completed';
-            else if (item.repair_status === 'cancelled') badgeClass = 'cancelled';
+        // Occupancy
+        occupancyRateEl.textContent = `${data.occupancy.rate}%`;
+        occupiedCountEl.textContent = data.occupancy.occupied;
+        totalRoomsEl.textContent = data.occupancy.total;
 
-            const statusText = item.repair_status.replace('_', ' ');
+        // Repairs
+        activeRepairsEl.textContent = data.active_repairs;
 
-            tr.innerHTML = `
-                <td style="text-align: center;">${index + 1}</td>
-                <td style="font-weight: 500;">${item.room_number}</td>
-                <td>${item.issue_title}</td>
-                <td>${item.first_name} ${item.last_name}</td>
-                <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                <td>
-                    <button class="action-btn view" data-id="${item.repair_id}"><i class="fas fa-eye"></i></button>
-                    <button class="action-btn edit" data-id="${item.repair_id}"><i class="fas fa-pen"></i></button>
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
-    }
+        // Available
+        availableRoomsEl.textContent = data.occupancy.available;
 
-    function filterRepairs() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
-        const statusFilter = filterSelect.value;
-
-        const filteredData = allRepairs.filter(item => {
-            const fullName = `${item.first_name} ${item.last_name}`.toLowerCase();
-            const matchesSearch = 
-                item.room_number.toLowerCase().includes(searchTerm) ||
-                item.issue_title.toLowerCase().includes(searchTerm) ||
-                fullName.includes(searchTerm);
-            const matchesStatus = (statusFilter === 'all') || (item.repair_status === statusFilter);
-            return matchesSearch && matchesStatus;
-        });
-        renderTable(filteredData);
-    }
-
-    searchInput.addEventListener('input', filterRepairs);
-    filterSelect.addEventListener('change', filterRepairs);
-
-    tableBody.addEventListener('click', (e) => {
-        const btn = e.target.closest('.action-btn');
-        if (!btn) return;
-
-        const id = parseInt(btn.getAttribute('data-id'));
-        const data = allRepairs.find(r => r.repair_id === id);
-        const isEditMode = btn.classList.contains('edit');
-
-        if (data) {
-            mId.value = data.repair_id;
-            mRoom.value = data.room_number;
-            mTopic.value = data.issue_title;
-            mDesc.value = data.issue_description;
-            mPhone.value = data.phone_number || '-';
-            mComment.value = data.admin_note || '';
-            mStatus.value = data.repair_status;
-
-            if (data.img_path) {
-                mPhotoArea.innerHTML = `<img src="${data.img_path}" class="attached-image" alt="Evidence">`;
-            } else {
-                mPhotoArea.innerHTML = `<div class="photo-placeholder"><i class="fas fa-image" style="font-size:30px; color:#ccc;"></i><p style="color:#999; font-size:12px;">No photo attached</p></div>`;
-            }
-
-            if (data.repair_status === 'completed') {
-                resolvedGroup.style.display = 'block';
-                if(data.resolved_date) {
-                    const dateObj = new Date(data.resolved_date);
-                    mResolvedDate.value = dateObj.toISOString().split('T')[0];
-                }
-            } else {
-                resolvedGroup.style.display = 'none';
-                mResolvedDate.value = '';
-            }
-
-            if (isEditMode) {
-                modalTitle.innerHTML = '<i class="fas fa-edit"></i> Update Repair Status';
-                mComment.disabled = false;
-                mStatus.disabled = false;
-                saveBtn.style.display = 'inline-flex';
-            } else {
-                modalTitle.innerHTML = '<i class="fas fa-eye"></i> View Repair Details';
-                mComment.disabled = true;
-                mStatus.disabled = true;
-                saveBtn.style.display = 'none';
-            }
-
-            modal.classList.add('active');
-        }
-    });
-
-    mStatus.addEventListener('change', (e) => {
-        if (e.target.value === 'completed') {
-            resolvedGroup.style.display = 'block';
-            if (!mResolvedDate.value) {
-                mResolvedDate.value = new Date().toISOString().split('T')[0];
-            }
+        // Room List Table
+        roomListBody.innerHTML = '';
+        if(data.rooms_list.length === 0) {
+            roomListBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No data</td></tr>`;
         } else {
-            resolvedGroup.style.display = 'none';
-        }
-    });
-
-    repairForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = mId.value;
-        const status = mStatus.value;
-        const note = mComment.value;
-        const token = localStorage.getItem('token');
-
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    repair_status: status,
-                    admin_note: note
-                })
+            data.rooms_list.forEach(room => {
+                let badgeClass = room.room_status; // ตรงกับ CSS class
+                // ถ้าใน DB เป็น 'under_maintenance' ให้เปลี่ยนเป็น 'maintenance' เพื่อให้ตรงกับ class CSS
+                if(room.room_status === 'under_maintenance') badgeClass = 'maintenance'; 
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${room.room_number}</td>
+                    <td>${room.room_type}</td>
+                    <td>${room.floor}</td>
+                    <td><span class="badge ${badgeClass}">${room.room_status.replace('_', ' ')}</span></td>
+                `;
+                roomListBody.appendChild(tr);
             });
-
-            if (response.ok) {
-                alert('Update successful');
-                closeModal();
-                fetchRepairs();
-            } else {
-                alert('Failed to update');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Something went wrong');
         }
-    });
 
-    const closeModal = () => {
-        modal.classList.remove('active');
-        repairForm.reset();
-    };
+        // Payments List
+        paymentListBody.innerHTML = '';
+        if(data.payments_list.length === 0) {
+            paymentListBody.innerHTML = `<li style="text-align:center; color:#999; padding:15px;">No recent payments</li>`;
+        } else {
+            data.payments_list.forEach(pay => {
+                const amount = parseFloat(pay.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                // แปลงวันที่จ่ายเงิน
+                const payDate = pay.payment_date ? new Date(pay.payment_date).toLocaleDateString('en-GB') : '-';
+                
+                const tr = document.createElement('li');
+                tr.innerHTML = `
+                    <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
+                    <div class="pay-detail">
+                        <strong>Room ${pay.room_number}</strong>
+                        <span>Status: ${pay.payment_status} (${payDate})</span>
+                    </div>
+                    <div class="pay-amount">+฿ ${amount}</div>
+                `;
+                paymentListBody.appendChild(tr);
+            });
+        }
+    }
 
-    btnCancel.addEventListener('click', closeModal);
-    closeX.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-
-    if (menuToggle && sidebar) {
+    // Sidebar Logic
+    if (menuToggle) {
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('active');
             if(overlay) overlay.classList.add('active');
         });
-        if(overlay) {
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('active');
-                overlay.classList.remove('active');
-            });
-        }
+    }
+    if(overlay) {
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
     }
 
-    if(logoutBtn) {
+    // Logout
+    if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('token');
@@ -229,5 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    fetchRepairs();
+    // Run
+    fetchStats();
 });
