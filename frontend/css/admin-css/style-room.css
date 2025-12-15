@@ -5,14 +5,6 @@
     --text-grey: #666;
     --bg-light: #f4f6f9;
     --sidebar-width: 260px;
-    
-    /* Status Colors */
-    --status-pending-bg: #fff3cd;
-    --status-pending-text: #856404;
-    --status-process-bg: #d1ecf1;
-    --status-process-text: #0c5460;
-    --status-completed-bg: #d4edda;
-    --status-completed-text: #155724;
 }
 
 body {
@@ -28,7 +20,7 @@ body {
     min-height: 100vh;
 }
 
-/* --- 2. Sidebar --- */
+/* --- 2. Sidebar (เหมือนเดิม) --- */
 .sidebar {
     width: var(--sidebar-width);
     background: white;
@@ -89,11 +81,11 @@ body {
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
 .logout-section a:hover { opacity: 0.7; }
 
-/* --- 3. Main Content --- */
+/* --- 3. Main Content (ระยะขอบเท่า Repair) --- */
 .main-content {
     margin-left: var(--sidebar-width);
     flex-grow: 1;
-    padding: 30px 40px;
+    padding: 30px 40px; /* เท่ากับ Repair */
 }
 
 .top-bar {
@@ -130,7 +122,7 @@ body {
 .content-box {
     background: white;
     border-radius: 12px;
-    padding: 20px 30px;
+    padding: 20px 30px; /* เท่ากับ Repair */
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     margin-bottom: 20px;
 }
@@ -141,9 +133,9 @@ body {
     align-items: center;
 }
 
-.search-group { display: flex; align-items: center; gap: 20px; }
+.search-group { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-.search-wrapper { position: relative; width: 300px; }
+.search-wrapper { position: relative; width: 300px; } /* เท่ากับ Repair */
 .search-wrapper i {
     position: absolute;
     left: 15px;
@@ -174,58 +166,26 @@ body {
     cursor: pointer;
 }
 
-.btn-primary {
-    background-color: var(--primary-gold);
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
-}
-
-.btn-primary:hover {
-    background-color: #b09507;
-    transform: translateY(-2px);
-}
-
-.btn-cancel {
-    background: #eee;
-    color: #666;
-    border: none;
-    padding: 10px 25px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: 0.3s;
-}
-
-.btn-cancel:hover {
-    background-color: #ddd;
-    transform: translateY(-2px);
-}
-
-/* --- 5. Table --- */
+/* --- 5. Table (ระยะห่างเท่า Repair) --- */
 .modern-table { width: 100%; border-collapse: collapse; }
 .modern-table th { text-align: left; color: #888; font-weight: 500; padding: 15px; border-bottom: 1px solid #eee; }
 .modern-table td { padding: 15px; border-bottom: 1px solid #f9f9f9; color: #333; vertical-align: middle; }
 
 /* Status Badges */
-.badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.badge.pending { background: var(--status-pending-bg); color: var(--status-pending-text); }
-.badge.process { background: var(--status-process-bg); color: var(--status-process-text); }
-.badge.completed { background: var(--status-completed-bg); color: var(--status-completed-text); }
+.badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; min-width: 80px; text-align: center;}
+.badge.occupied { background: #fdedec; color: #e74c3c; }      /* แดง */
+.badge.available { background: #eafaf1; color: #2ecc71; }     /* เขียว */
+.badge.maintenance { background: #fef5e7; color: #f39c12; }   /* ส้ม */
+.badge.booked { background: #eaf2f8; color: #3498db; }        /* ฟ้า */
 
 .action-btn {
     width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; margin-right: 5px;
 }
 .action-btn.view { background: #f4f6f9; color: #666; }
-.action-btn.edit { background: rgba(196, 168, 8, 0.1); color: var(--primary-gold); }
 .action-btn:hover { transform: scale(1.1); }
+
+
+/* --- Responsive Styles (เหมือน Repair เป๊ะๆ) --- */
 
 /* 1. ปุ่ม Menu Toggle (ซ่อนบน Desktop) */
 .menu-toggle {
@@ -298,28 +258,15 @@ body {
         gap: 15px;
     }
 
-    .filter-group {
+    .search-group {
         flex-direction: column;
-        width: 100%;
     }
 
-    /* Input Fields: เต็มความกว้าง */
-    .search-wrapper, .date-wrapper, .custom-select {
+    .search-wrapper, .custom-select {
         width: 100%;
     }
     
     .search-wrapper i { left: 15px; }
-    
-    /* Button: เต็มความกว้าง */
-    .btn-primary {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    /* Hide some text on mobile */
-    .admin-name {
-        display: none;
-    }
 }
 
 /* Mobile Small (หน้าจอเล็กกว่า 480px) */

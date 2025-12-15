@@ -24,10 +24,11 @@
             
             <ul class="menu-links">
                 <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
                 <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
                 <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
-                <li><a href="repair.html"><i class="fas fa-tools"></i>Repairs</a></li>
-                <li   class="active"><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
+                <li class="active"><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
             </ul>
 
             <div class="logout-section">
@@ -102,10 +103,15 @@
                         <label>Topic :</label>
                         <input type="text" id="ann-topic" placeholder="Enter announcement topic" >
                     </div>
+                    
                     <div class="form-group">
                         <label>Visible Date :</label>
                         <input type="date" id="ann-date" class="date-input">
                     </div>
+                    <div class="form-group">
+                        <label>Visible Until :</label> <input type="date" class="date-input">
+                    </div>
+
                     <div class="form-group">
                         <label>Status :</label>
                         <select id="ann-status" class="custom-select full-select" >
@@ -113,6 +119,7 @@
                             <option value="inactive">Inactive</option>
                         </select>
                     </div>
+                    
                     <div class="form-group full-width">
                         <label>Description :</label>
                         <textarea id="ann-desc" rows="4" placeholder="Enter full description details..." class="text-area"></textarea>
@@ -125,8 +132,6 @@
             </form>
         </div>
     </div>
-    
-  
     
 </body>
 </html>

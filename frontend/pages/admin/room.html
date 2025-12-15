@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Management | Hatyai Condominium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../../css/admin-css/style-room.css">
+    <script defer src="../../js//admin/ui/script-room.js"></script>
+</head>
+<body>
+
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="../../picture/logo_hatyai.png" alt="Logo" class="logo">
+                <h3>ADMIN</h3>
+            </div>
+            
+            <ul class="menu-links">
+                <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li class="active"><a href="room.html"><i class="fas fa-door-open"></i> Rooms</a></li>
+                <li><a href="tenant.html"><i class="fas fa-users"></i> Tenants</a></li>
+                <li><a href="payment.html"><i class="fas fa-credit-card"></i> Payments</a></li>
+                <li><a href="repair.html"><i class="fas fa-tools"></i> Repairs</a></li>
+                <li><a href="announcement.html"><i class="fas fa-bullhorn"></i> Announcement</a></li>
+            </ul>
+
+            <div class="logout-section">
+                <a href="../../index.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="header-left">
+                    <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+                    <div class="page-title">
+                        <h1>Room Management</h1>
+                        <p class="sub-text">Overview of Building A & B status</p>
+                    </div>
+                </div>
+                <div class="admin-profile">
+                    <span>Admin Officer</span>
+                    <div class="profile-pic"><i class="fas fa-user-shield"></i></div>
+                </div>
+            </header>
+
+            <section class="content-box control-bar">
+                <div class="search-group" style="width: 100%;">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-room" placeholder="Search room number...">
+                    </div>
+                    
+                    <select id="filter-status" class="custom-select">
+                        <option value="all" selected>All Statuses</option>
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="booked">Booked</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="content-box table-card">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th>Floor</th>
+                            <th>Room No.</th>
+                            <th>Room Type</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Building A</td>
+                            <td>1</td>
+                            <td><strong>A-101</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>1</td>
+                            <td><strong>A-102</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>1</td>
+                            <td><strong>A-103</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge maintenance">Maintenance</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>2</td>
+                            <td><strong>A-201</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>2</td>
+                            <td><strong>A-202</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>3</td>
+                            <td><strong>A-301</strong></td>
+                            <td>2 Bedroom</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>3</td>
+                            <td><strong>A-302</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>4</td>
+                            <td><strong>A-401</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building A</td>
+                            <td>4</td>
+                            <td><strong>A-402</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+
+                        <tr>
+                            <td>Building B</td>
+                            <td>1</td>
+                            <td><strong>B-101</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>1</td>
+                            <td><strong>B-102</strong></td>
+                            <td>Studio</td>
+                            <td><span class="badge booked">Booked</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>2</td>
+                            <td><strong>B-201</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>2</td>
+                            <td><strong>B-202</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>3</td>
+                            <td><strong>B-301</strong></td>
+                            <td>2 Bedroom</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>4</td>
+                            <td><strong>B-401</strong></td>
+                            <td>2 Bedroom</td>
+                            <td><span class="badge occupied">Occupied</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                        <tr>
+                            <td>Building B</td>
+                            <td>4</td>
+                            <td><strong>B-402</strong></td>
+                            <td>1 Bedroom</td>
+                            <td><span class="badge available">Available</span></td>
+                            <td><button class="action-btn view"><i class="fas fa-eye"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
