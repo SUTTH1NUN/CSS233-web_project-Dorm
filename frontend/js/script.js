@@ -196,4 +196,24 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    const revealElements = document.querySelectorAll('.reveal-text, hr.hr-main');
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // observer.unobserve(entry.target); // ถ้าอยากให้เล่นแค่ครั้งเดียวให้เอา comment ออก
+            } else {
+                // ถ้าอยากให้เลื่อนกลับไปแล้วเล่นใหม่ ให้เปิดบรรทัดนี้
+                // entry.target.classList.remove('visible'); 
+            }
+        });
+    }, {
+        root: null,
+        threshold: 0.15, // ต้องเห็น element 15% ก่อนถึงจะเริ่ม animation
+        rootMargin: "0px 0px -50px 0px" // สั่งให้เริ่มก่อนถึงขอบล่างนิดหน่อย
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
 });

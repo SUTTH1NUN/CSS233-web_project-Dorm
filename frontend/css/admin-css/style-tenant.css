@@ -436,19 +436,34 @@ body {
 
 }
 
-/* Mobile Small (หน้าจอเล็กกว่า 480px) */
 @media (max-width: 480px) {
-    .page-title h1 {
-        font-size: 20px;
+    
+    /* 1. ปุ่มค้นหา */
+    .control-bar, .search-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
     }
     
-    .sub-text {
-        font-size: 12px;
+    .search-wrapper, .custom-select, .btn-primary { width: 100%; }
+    .btn-primary { justify-content: center; margin-top: 5px; }
+
+    /* 2. Modal เพิ่มผู้เช่า */
+    .modal-content {
+        width: 90%;
+        padding: 20px;
     }
     
-    /* ปรับตารางให้ตัวหนังสือไม่ตกบรรทัด (ใช้ Scroll แทน) */
-    .modern-table th, .modern-table td {
-        white-space: nowrap;
-        padding: 10px;
+    /* บังคับ Grid 3 ช่อง ให้เหลือ 1 ช่อง */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
     }
+    
+    .modal-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    
+    .btn-cancel, .modal-actions button { width: 100%; }
 }

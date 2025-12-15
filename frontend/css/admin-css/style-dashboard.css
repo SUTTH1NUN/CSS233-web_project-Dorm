@@ -229,3 +229,31 @@ body {
     .content-split { grid-template-columns: 1fr; } /* เรียงกล่องลงมาแนวตั้ง */
     .sidebar-header h3 { display: block; } /* โชว์ชื่อ ADMIN แทน */
 }
+
+@media (max-width: 480px) {
+    
+    /* 1. การ์ดสถิติ */
+    .stats-grid {
+        grid-template-columns: 1fr; /* เรียงแถวเดียว */
+        gap: 15px;
+    }
+    
+    .stat-card { padding: 20px; }
+    .icon-box { width: 45px; height: 45px; font-size: 20px; }
+    .stat-info .number { font-size: 22px; }
+
+    /* 2. กล่องกราฟและตารางล่าสุด */
+    .content-split {
+        grid-template-columns: 1fr; /* เรียงลงมา */
+        gap: 20px;
+    }
+    
+    .content-box { padding: 15px; }
+    
+    /* 3. รายการจ่ายเงินล่าสุด */
+    .pay-icon { width: 35px; height: 35px; font-size: 14px; margin-right: 10px; }
+    .pay-detail strong { font-size: 13px; }
+    .pay-amount { font-size: 14px; }
+    
+    .box-header h2 { font-size: 16px; }
+}

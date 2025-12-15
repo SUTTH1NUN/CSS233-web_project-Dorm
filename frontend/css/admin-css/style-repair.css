@@ -142,7 +142,7 @@ body {
 }
 
 .search-group { display: flex; align-items: center; gap: 20px; }
-
+ 
 .search-wrapper { position: relative; width: 300px; }
 .search-wrapper i {
     position: absolute;

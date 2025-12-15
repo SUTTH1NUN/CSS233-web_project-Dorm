@@ -296,3 +296,37 @@ body {
     .modern-table th, .modern-table td { white-space: nowrap; }
     .table-card { overflow-x: auto; }
 }
+/* --- Mobile Small (หน้าจอเล็กกว่า 480px) --- */
+@media (max-width: 480px) {
+    
+    /* 1. ส่วนหัวและปุ่มค้นหา */
+    .control-bar {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .search-group { width: 100%; flex-direction: column; gap: 10px; }
+    .search-wrapper, .custom-select { width: 100%; }
+    .btn-primary { width: 100%; justify-content: center; }
+
+    /* 2. Modal เพิ่มห้อง */
+    .modal-content {
+        width: 90%;
+        padding: 20px;
+        max-height: 80vh;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr; /* เรียงลงมา */
+        gap: 15px;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    
+    .btn-cancel, .modal-actions button { width: 100%; }
+
+    /* 3. ตาราง */
+    .badge { min-width: auto; padding: 4px 8px; font-size: 11px; }
+}
