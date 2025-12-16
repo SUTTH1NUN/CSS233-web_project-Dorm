@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inputs
     const searchInput = document.getElementById('search-payment');
     const filterStatus = document.getElementById('filter-status');
-    
+    const filterDate = document.getElementById('filter-date');
+
     // Form Inputs
     const mRoom = document.getElementById('m_room_id');
     const mDate = document.getElementById('m_billing_date');
@@ -89,16 +90,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyFilters() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         const statusValue = filterStatus.value;
+        const dateValue = filterDate.value;
 
         const filteredData = allPaymentsData.filter(item => {
+            
             const matchStatus = (statusValue === 'all' || statusValue === '') || (item.payment_status === statusValue);
+            
             const matchRoom = item.room_number.toLowerCase().includes(searchTerm);
-            return matchStatus && matchRoom;
+
+            let matchDate = true;
+            if (dateValue) {
+                if (item.billing_date) {
+                     matchDate = item.billing_date.startsWith(dateValue);
+                } else {
+                     matchDate = false;
+                }
+            }
+            return matchStatus && matchRoom && matchDate;
         });
 
         renderTable(filteredData);
     }
 
+    // --- Event Listeners ---
+    if(searchInput) searchInput.addEventListener('input', applyFilters);
+    if(filterStatus) filterStatus.addEventListener('change', applyFilters);
+    if(filterDate) {
+        filterDate.addEventListener('change', applyFilters);
+    }
+    
     function renderTable(data) {
         tableBody.innerHTML = '';
         

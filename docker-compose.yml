@@ -42,7 +42,7 @@ services:
     container_name: postgres_db
 
     environment:
-      POSTGRES_USER: ${postgres}
+      POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDATABASE}
     

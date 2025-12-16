@@ -3,7 +3,7 @@ const API_BASE = 'http://localhost:3030/api';
 const ANNOUNCEMENT_API_URL = `${API_BASE}/announcement`; 
 
 // --- State Management ---
-let currentMode = 'add'; // 'add' | 'edit'
+let currentMode = 'add'; // 'add' | 'edit' | 'view'
 let currentId = null;
 let allAnnouncements = []; // เก็บข้อมูลทั้งหมดไว้เพื่อทำ Filter หน้าบ้าน
 
@@ -31,6 +31,27 @@ const getStatusBadge = (status) => {
     return `<span style="font-weight:bold; padding: 4px 8px; border-radius: 12px; font-size: 11px; background: ${bgColor}; color: ${textColor};">${status}</span>`;
 };
 
+// [เพิ่มใหม่] ฟังก์ชันเปิด/ปิด การพิมพ์ใน Input
+function toggleInputs(enable) {
+    const inputs = form.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.disabled = !enable; // ถ้า enable=false คือ disabled=true
+    });
+}
+
+// [เพิ่มใหม่] ฟังก์ชันกรอกข้อมูลลงฟอร์ม (ใช้ร่วมกันทั้ง Edit และ View)
+function fillFormData(data) {
+    document.getElementById('ann-topic').value = data.title;
+    document.getElementById('ann-desc').value = data.content;
+    document.getElementById('ann-status').value = data.announcements_status;
+    
+    if(data.visible_until) {
+        document.getElementById('ann-date').value = new Date(data.visible_until).toISOString().split('T')[0];
+    } else {
+        document.getElementById('ann-date').value = '';
+    }
+}
+
 // --- 1. Load Data ---
 async function fetchAnnouncements() {
     const token = getToken();
@@ -41,7 +62,6 @@ async function fetchAnnouncements() {
     }
 
     try {
-        // ใช้ Endpoint ของ Admin เพื่อดูข้อมูลทั้งหมด (รวมที่ Inactive)
         const res = await fetch(`${ANNOUNCEMENT_API_URL}/admin`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -49,8 +69,8 @@ async function fetchAnnouncements() {
         if (!res.ok) throw new Error("Failed to fetch data");
 
         const data = await res.json();
-        allAnnouncements = data; // เก็บลงตัวแปร Global
-        renderTable(); // แสดงผล
+        allAnnouncements = data; 
+        renderTable(); 
 
     } catch (err) {
         console.error("Fetch Error:", err);
@@ -63,7 +83,6 @@ function renderTable() {
     const searchText = searchInput.value.toLowerCase();
     const statusFilter = filterStatus.value;
 
-    // Filter จากตัวแปร Global (ไม่ต้องยิง API ใหม่ทุกครั้งที่พิมพ์)
     const filteredData = allAnnouncements.filter(item => {
         const matchSearch = item.title.toLowerCase().includes(searchText) || 
                             item.content.toLowerCase().includes(searchText);
@@ -94,19 +113,16 @@ function renderTable() {
                 <td>${visibleDate}</td>
                 <td>${getStatusBadge(item.announcements_status)}</td>
                 <td>
-                <button class="action-btn" onclick="viewModal(${item.announcement_id})" 
-                        style="border:none;  background: #f4f6f9;
-    color: #666; cursor:pointer; margin-right:5px;">
+                    <button class="action-btn" onclick="viewModal(${item.announcement_id})" 
+                        style="border:none; background: #f4f6f9; color: #666; cursor:pointer; margin-right:5px;">
                         <i class="fas fa-eye"></i>
                     </button>
                     <button class="action-btn" onclick="openEditModal(${item.announcement_id})" 
-                        style="border:none;  background: rgba(196, 168, 8, 0.1);
-    color: #C4A808; cursor:pointer; margin-right:5px;">
+                        style="border:none; background: rgba(196, 168, 8, 0.1); color: #C4A808; cursor:pointer; margin-right:5px;">
                         <i class="fas fa-pen"></i>
                     </button>
                     <button class="action-btn" onclick="deleteAnnouncement(${item.announcement_id})" 
-                        style="border:none; background:none; background: #fdedec;
-    color: #e74c3c;cursor:pointer; color:#e74c3c;">
+                        style="border:none; background: #fdedec; color: #e74c3c; cursor:pointer;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -126,19 +142,24 @@ function openModal(mode, data = null) {
     if (mode === 'add') {
         modalTitle.innerText = "Create Announcement";
         saveBtn.innerText = "Post Now";
-    } else {
+        saveBtn.style.display = 'inline-block'; // โชว์ปุ่ม Save
+        toggleInputs(true); // เปิดให้พิมพ์ได้
+    } 
+    else if (mode === 'edit') {
         modalTitle.innerText = "Edit Announcement";
         saveBtn.innerText = "Save Changes";
+        saveBtn.style.display = 'inline-block'; // โชว์ปุ่ม Save
+        toggleInputs(true); // เปิดให้พิมพ์ได้
         
         currentId = data.announcement_id;
-        document.getElementById('ann-topic').value = data.title;
-        document.getElementById('ann-desc').value = data.content;
-        document.getElementById('ann-status').value = data.announcements_status;
+        fillFormData(data);
+    } 
+    else if (mode === 'view') { // [Logic ใหม่] สำหรับดูอย่างเดียว
+        modalTitle.innerText = "Announcement Details";
+        saveBtn.style.display = 'none'; // ซ่อนปุ่ม Save
+        toggleInputs(false); // ปิดการพิมพ์ (Read-only)
         
-        // แปลงวันที่สำหรับใส่ใน input type="date" (YYYY-MM-DD)
-        if(data.visible_until) {
-            document.getElementById('ann-date').value = new Date(data.visible_until).toISOString().split('T')[0];
-        }
+        fillFormData(data);
     }
 }
 
@@ -147,14 +168,24 @@ function closeModal() {
     modalOverlay.style.display = 'none';
     form.reset();
     currentId = null;
+    toggleInputs(true); // คืนค่าให้พิมพ์ได้เผื่อกด Add ต่อ
 }
 
 // Attached to window for HTML onclick access
-window.openEditModal = async (id) => {
-    // ดึงข้อมูลจาก Global Array ได้เลย ไม่ต้องยิง API ใหม่ (ลด Load Server)
+window.openEditModal = (id) => {
     const item = allAnnouncements.find(a => a.announcement_id === id);
     if (item) {
         openModal('edit', item);
+    } else {
+        alert("Data not found");
+    }
+};
+
+// [เพิ่มใหม่] ฟังก์ชันสำหรับปุ่มลูกตา (View)
+window.viewModal = (id) => {
+    const item = allAnnouncements.find(a => a.announcement_id === id);
+    if (item) {
+        openModal('view', item);
     } else {
         alert("Data not found");
     }
@@ -170,11 +201,11 @@ window.deleteAnnouncement = async (id) => {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        const data = await res.json(); // อ่าน Error message จาก Backend
+        const data = await res.json();
         
         if (res.ok) {
             alert("Deleted successfully");
-            fetchAnnouncements(); // โหลดข้อมูลใหม่
+            fetchAnnouncements(); 
         } else {
             alert("Delete failed: " + (data.message || 'Unknown error'));
         }
@@ -187,8 +218,11 @@ window.deleteAnnouncement = async (id) => {
 // --- 4. Form Submission ---
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const token = getToken();
+    
+    // ถ้าอยู่ในโหมด view ไม่ให้กด submit (กันเหนียว)
+    if (currentMode === 'view') return;
 
+    const token = getToken();
     const title = document.getElementById('ann-topic').value.trim();
     const content = document.getElementById('ann-desc').value.trim();
     const status = document.getElementById('ann-status').value;
@@ -236,26 +270,21 @@ form.addEventListener('submit', async (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     fetchAnnouncements();
 
-    // ปุ่มเปิด Modal สร้างใหม่
     const addBtn = document.getElementById('add-announcement-btn');
     if (addBtn) addBtn.addEventListener('click', () => openModal('add'));
 
-    // ปุ่มยกเลิกใน Modal
     const cancelBtn = document.getElementById('btn-cancel');
     if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
-    // Search & Filter (เปลี่ยน event เป็น 'input' เพื่อให้ทำงานทันทีที่พิมพ์)
     if (searchInput) searchInput.addEventListener('input', renderTable);
     if (filterStatus) filterStatus.addEventListener('change', renderTable);
 
-    // ปิด Modal เมื่อคลิกพื้นหลัง
     if (modalOverlay) {
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) closeModal();
         });
     }
 
-    // Sidebar Toggle (เผื่อไว้ถ้ามีใช้ในหน้านี้)
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
