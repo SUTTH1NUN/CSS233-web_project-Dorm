@@ -10,11 +10,13 @@
     --room-occupied-bg: #fdedec;
     --room-occupied-text: #e74c3c;
     --room-available-bg: #eafaf1;
-    --room-available-text: #2ecc71;
+    --status-paid-bg: #eafaf1;
+    --status-paid-text:#2ecc71;
     --room-maintenance-bg: #fef5e7;
     --room-maintenance-text: #f39c12;
     --room-booked-bg: #eaf2f8;
     --room-booked-text: #3498db;
+
 }
 
 /* --- Status Badges --- */
@@ -58,7 +60,7 @@ body {
     margin-bottom: 20px;
 }
 
-.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 0px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -92,8 +94,8 @@ body {
 }
 
 .logout-section {
-    margin-top: 300px;
-    padding: 0 50px 20px;
+    margin-top: auto;
+    padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}

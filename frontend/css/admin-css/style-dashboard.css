@@ -225,15 +225,15 @@ body {
 }
 
 /* Room Status Colors */
-.badge.available { background-color: #d1e7dd; color: #0f5132; }
-.badge.occupied { background-color: #cff4fc; color: #055160; }
-.badge.maintenance { background-color: #f8d7da; color: #842029; }
+.badge.available { background-color: #eafaf1; color: #2ecc71; }
+.badge.occupied { background-color: #fdedec; color: #e74c3c; }
+.badge.maintenance { background-color: #fef5e7; color: #f39c12; }
 
 /* Payment Status Colors */
-.badge.paid { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
-.badge.pending { background-color: #cff4fc; color: #055160; border: 1px solid #b6effb; }
-.badge.overdue { background-color: #fff3cd; color: #664d03; border: 1px solid #ffecb5; }
-.badge.cancelled { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+.badge.paid { background-color: #eafaf1; color: #2ecc71;  }
+.badge.overdue { background-color: #fef5e7; color: #f39c12;  }
+ .badge.pending{ background-color: #eaf2f8; color: #3498db; }
+.badge.cancelled { background-color: #fdedec; color: #e74c3c;  }
 
 /* --- Responsive & Mobile Menu --- */
 

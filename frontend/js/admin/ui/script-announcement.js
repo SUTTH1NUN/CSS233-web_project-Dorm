@@ -26,9 +26,9 @@ const formatDate = (dateString) => {
 
 const getStatusBadge = (status) => {
     const isActive = status === 'active';
-    const bgColor = isActive ? '#d4edda' : '#f8d7da';
-    const textColor = isActive ? '#155724' : '#721c24';
-    return `<span style="padding: 4px 8px; border-radius: 12px; font-size: 0.85em; background: ${bgColor}; color: ${textColor};">${status}</span>`;
+    const bgColor = isActive ? '#eafaf1' : '#f8d7da';
+    const textColor = isActive ? '#2ecc71' : '#721c24';
+    return `<span style="font-weight:bold; padding: 4px 8px; border-radius: 12px; font-size: 11px; background: ${bgColor}; color: ${textColor};">${status}</span>`;
 };
 
 // --- 1. Load Data ---
@@ -94,12 +94,19 @@ function renderTable() {
                 <td>${visibleDate}</td>
                 <td>${getStatusBadge(item.announcements_status)}</td>
                 <td>
+                <button class="action-btn" onclick="viewModal(${item.announcement_id})" 
+                        style="border:none;  background: #f4f6f9;
+    color: #666; cursor:pointer; margin-right:5px;">
+                        <i class="fas fa-eye"></i>
+                    </button>
                     <button class="action-btn" onclick="openEditModal(${item.announcement_id})" 
-                        style="border:none; background:none; cursor:pointer; color:#f39c12; margin-right:5px;">
-                        <i class="fas fa-edit"></i>
+                        style="border:none;  background: rgba(196, 168, 8, 0.1);
+    color: #C4A808; cursor:pointer; margin-right:5px;">
+                        <i class="fas fa-pen"></i>
                     </button>
                     <button class="action-btn" onclick="deleteAnnouncement(${item.announcement_id})" 
-                        style="border:none; background:none; cursor:pointer; color:#e74c3c;">
+                        style="border:none; background:none; background: #fdedec;
+    color: #e74c3c;cursor:pointer; color:#e74c3c;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
