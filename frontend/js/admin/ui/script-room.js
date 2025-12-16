@@ -1,16 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Configuration ---
     const API_URL = 'http://localhost:3030/api/rooms';
     
-    // Elements
+    // --- State Variables ---
+    let allRooms = [];
+    let roomTypes = []; 
+    let currentMode = 'add'; // 'add', 'edit', 'view'
+    let currentRoomId = null;
+
+    // --- UI Elements ---
     const tableBody = document.getElementById('room-table-body');
     const searchInput = document.getElementById('search-room');
     const filterSelect = document.getElementById('filter-status');
     const addBtn = document.getElementById('add-room-btn');
     
-    // Modal Elements
+    // Modal & Form
     const modal = document.getElementById('modal-overlay');
     const modalTitle = document.querySelector('.modal-title');
-    const form = document.getElementById('room-form');
     const btnCancel = document.querySelector('.btn-cancel');
     const btnSave = document.getElementById('save-room-btn');
 
@@ -24,51 +30,80 @@ document.addEventListener('DOMContentLoaded', () => {
     const mPrice = document.getElementById('m-price');
     const mFurn = document.getElementById('m-furniture');
 
-    // State
-    let allRooms = [];
-    let roomTypes = []; 
-    let currentMode = 'add'; // add, edit, view
-    let currentRoomId = null;
-    
-    // --- 1. Fetch Room Types (เพื่อเอาไปใส่ Dropdown และ Map ข้อมูล) ---
-async function fetchRoomTypes() {
-        try {
-            const token = sessionStorage.getItem('token');
-            
-            // 1. เช็ค Token ก่อน
-            if (!token) {
-                // ถ้าไม่มี Token ไม่ต้องแจ้งเตือนซ้ำซ้อน เพราะเดี๋ยว fetchRooms จะจัดการเอง
-                return; 
-            }
+    // Sidebar
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const logoutBtn = document.getElementById('logout-btn');
 
+    // --- Helpers ---
+    // ✅ ใช้ sessionStorage สำหรับ Admin (ตามที่คุยกันในไฟล์ Dashboard)
+    const getToken = () => sessionStorage.getItem('token'); 
+
+    // --- 1. Fetch Data Functions ---
+
+    // 1.1 ดึงประเภทห้อง (Room Types)
+    async function fetchRoomTypes() {
+        const token = getToken();
+        if (!token) return; // ถ้าไม่มี Token เดี๋ยว fetchRooms จะจัดการ Redirect เอง
+
+        try {
             const res = await fetch(`${API_URL}/types`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            // 2. ดักจับ 401/403
-            if (res.status === 401 || res.status === 403) {
-                // ไม่ต้อง alert ที่นี่ก็ได้ เพราะ fetchRooms จะ alert ให้แล้ว (กัน alert เด้งซ้อนกัน 2 รอบ)
-                localStorage.removeItem('token');
-                window.location.href = '../../index.html';
-                return;
-            }
-
             if (!res.ok) throw new Error('Failed to fetch types');
             
             const data = await res.json();
-
-            // 3. ตรวจสอบว่าเป็น Array จริงไหมก่อนใช้งาน
+            
             if (Array.isArray(data)) {
                 roomTypes = data;
                 populateTypeDropdown();
-            } else {
-                console.error("Room types data is not an array:", data);
             }
 
         } catch (error) {
             console.error('Error fetching types:', error);
         }
     }
+
+    // 1.2 ดึงข้อมูลห้องพัก (Rooms)
+    async function fetchRooms() {
+        const token = getToken();
+        if (!token) {
+            window.location.href = '../../index.html';
+            return;
+        }
+
+        try {
+            const res = await fetch(API_URL, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (res.status === 401 || res.status === 403) {
+                alert('Session expired. Please login again.');
+                sessionStorage.clear();
+                window.location.href = '../../index.html';
+                return;
+            }
+
+            if (!res.ok) throw new Error('Failed to fetch rooms');
+            
+            const data = await res.json();
+            
+            if (Array.isArray(data)) {
+                allRooms = data;
+                filterAndRender(); // เรียกผ่านฟังก์ชัน Filter เพื่อแสดงผล
+            } else {
+                console.error("Invalid Data Format:", data);
+            }
+
+        } catch (error) {
+            console.error('Fetch Rooms Error:', error);
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data</td></tr>`;
+        }
+    }
+
+    // --- 2. Render Functions ---
 
     function populateTypeDropdown() {
         mType.innerHTML = '';
@@ -80,77 +115,28 @@ async function fetchRoomTypes() {
         });
     }
 
-    // Event: เมื่อเปลี่ยน Type ให้เปลี่ยนราคา/ขนาด อัตโนมัติ
-    mType.addEventListener('change', () => {
-        const selectedType = roomTypes.find(t => t.room_type === mType.value);
-        if (selectedType) {
-            mSize.value = selectedType.room_size;
-            mPrice.value = selectedType.room_price;
-            mFurn.value = selectedType.room_furniture;
-        }
-    });
-
-    // --- 2. Fetch Rooms ---
-async function fetchRooms() {
-        try {
-            const token = sessionStorage.getItem('token');
-            
-            // 1. เช็คว่ามี Token ในเครื่องไหม ถ้าไม่มีให้ดีดออกไปหน้า Login
-            if (!token) {
-                alert('Please login first');
-                window.location.href = '../../index.html'; // ปรับ path ให้ตรงกับหน้า Login ของคุณ
-                return;
-            }
-            
-            const response = await fetch(API_URL, {
-                headers: {
-                    'Authorization': `Bearer ${token}` // ส่ง Token ไปยืนยันตัวตน
-                }
-            });
-
-            // 2. เช็คว่า Server ตอบกลับมาว่า error หรือไม่ (เช่น 401, 403)
-            if (response.status === 401 || response.status === 403) {
-                alert('Session expired or unauthorized. Please login again.');
-                localStorage.removeItem('token'); // ลบ Token ที่เสียทิ้ง
-                window.location.href = '../../index.html'; // ดีดกลับหน้า Login
-                return;
-            }
-
-            if (!response.ok) throw new Error('Failed to fetch rooms');
-            
-            allRooms = await response.json();
-            
-            // 3. เช็คว่าเป็น Array จริงไหมก่อนส่งไป render
-            if (Array.isArray(allRooms)) {
-                renderTable(allRooms);
-            } else {
-                console.error("Data received is not an array:", allRooms);
-                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Invalid Data Format</td></tr>`;
-            }
-
-        } catch (error) {
-            console.error('Error fetching rooms:', error);
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data</td></tr>`;
-        }
-    }
-
     function renderTable(rooms) {
         tableBody.innerHTML = '';
         if (rooms.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No rooms found</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#999;">No rooms found</td></tr>`;
             return;
         }
 
         rooms.forEach(room => {
             const tr = document.createElement('tr');
+            
+            // Logic จัดการ CSS Class ของ Badge
             let badgeClass = room.room_status;
-            if(badgeClass == 'under_maintenance') badgeClass = 'maintenance';
+            if(badgeClass === 'under_maintenance') badgeClass = 'maintenance';
+            
+            const displayStatus = room.room_status.replace('_', ' ');
+
             tr.innerHTML = `
-                <td>Building ${room.building}</td>
+                <td>${room.building}</td>
                 <td>${room.floor}</td>
                 <td><strong>${room.room_number}</strong></td>
                 <td>${room.room_type}</td>
-                <td><span class="badge ${badgeClass}">${badgeClass}</span></td>
+                <td><span class="badge ${badgeClass}">${displayStatus}</span></td>
                 <td>
                     <button class="action-btn view" data-id="${room.room_id}"><i class="fas fa-eye"></i></button>
                     <button class="action-btn edit" data-id="${room.room_id}"><i class="fas fa-pen"></i></button>
@@ -160,22 +146,40 @@ async function fetchRooms() {
         });
     }
 
-    // --- 3. Modal Logic (Add / Edit / View) ---
+    // --- 3. Filter Logic ---
+    function filterAndRender() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        let statusValue = filterSelect.value;
+
+        // Map value จาก dropdown ให้ตรงกับ Database enum
+        if(statusValue === 'maintenance') statusValue = 'under_maintenance';
+        
+        const filtered = allRooms.filter(r => {
+            const matchText = r.room_number.toLowerCase().includes(searchText);
+            const matchStatus = (statusValue === 'all') || (r.room_status === statusValue);
+            return matchText && matchStatus;
+        });
+
+        renderTable(filtered);
+    }
+
+    // --- 4. Modal Logic ---
+    
     function openModal(mode, roomId = null) {
         currentMode = mode;
         currentRoomId = roomId;
         modal.classList.add('active');
 
-        // Reset Inputs
+        // Reset Common Inputs
         mRoomNo.value = '';
         mFloor.value = '';
-        mBuilding.value = 'A';
-        mStatus.value = 'available';
+        mBuilding.value = 'A'; // Default
+        mStatus.value = 'available'; // Default
         
-        // Default Type values
+        // Set Default Type (Trigger change event to fill price/size)
         if(roomTypes.length > 0) {
             mType.value = roomTypes[0].room_type;
-            mType.dispatchEvent(new Event('change')); // Trigger auto-fill
+            mType.dispatchEvent(new Event('change'));
         }
 
         if (mode === 'add') {
@@ -184,6 +188,7 @@ async function fetchRooms() {
             btnSave.style.display = 'inline-block';
             btnSave.textContent = 'Add Room';
         } else {
+            // Find room data from state
             const room = allRooms.find(r => r.room_id == roomId);
             if (!room) return;
 
@@ -194,7 +199,7 @@ async function fetchRooms() {
             mType.value = room.room_type;
             mStatus.value = room.room_status;
             
-            // Trigger Change to fill readonly fields
+            // Trigger Change to fill readonly fields (Price/Size)
             mType.dispatchEvent(new Event('change'));
 
             if (mode === 'edit') {
@@ -202,12 +207,16 @@ async function fetchRooms() {
                 setFormEditable(true);
                 btnSave.style.display = 'inline-block';
                 btnSave.textContent = 'Save Changes';
-            } else { // View
+            } else { // View Mode
                 modalTitle.textContent = 'Room Details';
                 setFormEditable(false);
                 btnSave.style.display = 'none';
             }
         }
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
     }
 
     function setFormEditable(isEditable) {
@@ -218,9 +227,19 @@ async function fetchRooms() {
         mStatus.disabled = !isEditable;
     }
 
-    // --- 4. Event Listeners ---
+    // --- 5. Event Listeners ---
 
-    // Click on Table (View/Edit)
+    // 5.1 Dropdown Change (Auto-fill Price/Size/Furniture)
+    mType.addEventListener('change', () => {
+        const selectedType = roomTypes.find(t => t.room_type === mType.value);
+        if (selectedType) {
+            mSize.value = selectedType.room_size;
+            mPrice.value = selectedType.room_price;
+            mFurn.value = selectedType.room_furniture || '-';
+        }
+    });
+
+    // 5.2 Table Actions (Delegate Event)
     tableBody.addEventListener('click', (e) => {
         const btn = e.target.closest('.action-btn');
         if (!btn) return;
@@ -233,14 +252,14 @@ async function fetchRooms() {
         }
     });
 
-    // Add Button
-    addBtn.addEventListener('click', () => {
-        openModal('add');
-    });
-
-// Save Button (Submit)
+    // 5.3 Save Button (Create / Update)
     btnSave.addEventListener('click', async () => {
-        // 1. เตรียมข้อมูล Payload
+        const token = getToken();
+        if (!token) {
+            window.location.href = '../../index.html';
+            return;
+        }
+
         const payload = {
             room_number: mRoomNo.value,
             building: mBuilding.value,
@@ -249,20 +268,11 @@ async function fetchRooms() {
             room_status: mStatus.value
         };
 
-        const token = sessionStorage.getItem('token');
-        
-        // 2. เช็ค Token ก่อนส่ง
-        if (!token) {
-            alert('Please login first');
-            window.location.href = '../../index.html';
-            return;
-        }
-
         let url = API_URL;
         let method = 'POST';
 
         if (currentMode === 'edit') {
-            url = `${API_URL}/${currentRoomId}`; // เช่น .../api/rooms/9
+            url = `${API_URL}/${currentRoomId}`;
             method = 'PUT';
         }
 
@@ -271,66 +281,38 @@ async function fetchRooms() {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // ต้องมีบรรทัดนี้!
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(payload)
             });
 
-            // 3. ดักจับ Error Token หมดอายุ (401/403)
-            if (res.status === 401 || res.status === 403) {
-                alert('Session expired. Please login again.');
-                localStorage.removeItem('token');
-                window.location.href = '../../index.html';
-                return;
-            }
+            const data = await res.json();
 
             if (res.ok) {
-                alert(currentMode === 'add' ? 'Room added successfully!' : 'Room updated successfully!');
+                alert(data.message || (currentMode === 'add' ? 'Room added!' : 'Room updated!'));
                 closeModal();
-                fetchRooms(); // โหลดตารางใหม่
+                fetchRooms(); // Refresh Data
             } else {
-                // อ่าน Error จาก Backend (ถ้ามี)
-                const errorData = await res.json();
-                alert('Operation failed: ' + (errorData.msg || 'Unknown error'));
+                alert('Operation failed: ' + (data.message || 'Unknown error'));
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Something went wrong. Please check console.');
+            console.error('Save Error:', error);
+            alert('Server Error');
         }
     });
 
-    // Search & Filter
-    function filterRooms() {
-        const text = searchInput.value.toLowerCase().trim();
-        let status = filterSelect.value;
+    // 5.4 Search & Filter
+    searchInput.addEventListener('input', filterAndRender);
+    filterSelect.addEventListener('change', filterAndRender);
 
-        if(filterSelect.value === 'maintenance') status = 'under_maintenance';
-        
-        const filtered = allRooms.filter(r => {
-            const matchText = r.room_number.toLowerCase().includes(text);
-            const matchStatus = status === 'all' || r.room_status === status;
-            return matchText && matchStatus;
-        });
-        renderTable(filtered);
-    }
-    searchInput.addEventListener('input', filterRooms);
-    filterSelect.addEventListener('change', filterRooms);
-
-    // Modal Close
-    function closeModal() {
-        modal.classList.remove('active');
-    }
+    // 5.5 Modal & Sidebar UI
+    addBtn.addEventListener('click', () => openModal('add'));
     btnCancel.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if(e.target === modal) closeModal();
     });
 
-    // Sidebar
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    
-    if (menuToggle) {
+    if (menuToggle && sidebar) {
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('active');
             if(overlay) overlay.classList.add('active');
@@ -342,10 +324,17 @@ async function fetchRooms() {
             overlay.classList.remove('active');
         });
     }
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        localStorage.removeItem('token');
-    });
 
-    // Init
+    // 5.6 Logout
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sessionStorage.clear(); // Clear Session for Admin
+            window.location.href = '../../index.html';
+        });
+    }
+
+    // --- Init ---
+    // โหลด Types ก่อน แล้วค่อยโหลด Rooms เพื่อให้ Dropdown พร้อมใช้งาน
     fetchRoomTypes().then(() => fetchRooms());
 });

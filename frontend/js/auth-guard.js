@@ -1,34 +1,67 @@
 // frontend/js/auth-guard.js
+
 (function(){
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    // --- 1. Constants & Configuration ---
+    // กำหนด Path ของหน้า Login (ปรับแก้ได้ตามตำแหน่งไฟล์จริง)
+    const LOGIN_PAGE = '/index.html'; 
+    
+    // --- 2. Get Credentials ---
+    // เช็คทั้ง Session (Admin) และ Local (Tenant)
+    const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+    
+    // รองรับทั้งการเก็บแบบ Object (user) หรือเก็บเฉพาะ Role (user_role)
+    const userStr = sessionStorage.getItem('user') || localStorage.getItem('user');
+    const roleStr = sessionStorage.getItem('user_role') || localStorage.getItem('user_role');
 
-    const userStr = localStorage.getItem('user') || sessionStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : null;
+    let userRole = null;
 
-    indexPage = window.location.origin + '/index.html';
+    // Logic: พยายามหา Role ของผู้ใช้
+    if (roleStr) {
+        userRole = roleStr;
+    } else if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            userRole = user.role;
+        } catch (e) {
+            console.error("Auth Guard: Error parsing user data", e);
+        }
+    }
 
+    // ฟังก์ชันสำหรับดีดกลับหน้า Login
+    const redirectToLogin = (reason) => {
+        console.warn(`Redirecting to login: ${reason}`);
+        // alert(reason); // แนะนำให้ปิด Alert เพื่อ UX ที่ดี (ให้ดีดไปเงียบๆ หรือหน้า 403 แทน)
+        
+        // ใช้ origin + path เพื่อความชัวร์
+        window.location.href = window.location.origin + LOGIN_PAGE;
+    };
 
-    if(!token || !user){
-        console.log('go login');
-        alert('go back to login');
+    // --- 3. Validation Logic ---
 
-        window.location.href = indexPage;
+    // 3.1 เช็คว่ามี Token และ Role หรือไม่
+    if (!token || !userRole) {
+        redirectToLogin("No active session found");
+        return; // จบการทำงานทันที
+    }
+
+    const currentPath = window.location.pathname;
+
+    // 3.2 Admin Guard: ถ้าอยู่ในโฟลเดอร์ admin แต่ role ไม่ใช่ admin
+    // ใช้ .includes('/admin/') เพื่อครอบคลุมทุกไฟล์ใน folder admin
+    if (currentPath.includes('/admin/') && userRole !== 'admin') {
+        redirectToLogin("Unauthorized access to Admin area");
         return;
     }
 
-    const currentPage = window.location.pathname;
-    if(currentPage.includes('/pages/admin/dashboard.html') && user.role !== 'admin'){
-        console.log('hacker!!')
-        alert('แปลกๆน้าาาา hacker ป่าวเนี่ย');
-
-        window.location.href = indexPage;
+    // 3.3 Tenant Guard: ถ้าอยู่ในโฟลเดอร์ user แต่ role ไม่ใช่ tenant
+    if (currentPath.includes('/user/') && userRole !== 'tenant') {
+        // กรณี Admin เผลอเข้ามาหน้านี้ อาจจะ redirect ไปหน้า dashboard admin แทนก็ได้
+        // แต่เบื้องต้นให้ดีดออกไปก่อนเพื่อความปลอดภัย
+        redirectToLogin("Unauthorized access to Tenant area");
+        return;
     }
 
-    if(currentPage.includes('/pages/user/dash-board.html') && user.role !== 'tenant'){
-        console.log('admin มาหน้านี้ทำไม');
-        alert('admin มาหน้านี้ทำไม');
-
-        window.location.href = indexPage;
-    }
+    // ถ้าผ่านทุกเงื่อนไข ก็ปล่อยให้โหลดหน้าเว็บต่อไป...
+    console.log(`Access granted as ${userRole}`);
 
 })();

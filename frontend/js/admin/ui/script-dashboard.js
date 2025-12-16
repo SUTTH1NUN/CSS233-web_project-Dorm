@@ -1,155 +1,189 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // เปลี่ยน URL ให้ตรงกับ Server ของคุณ
+    // --- Configuration ---
     const API_URL = 'http://localhost:3030/api/dashboard/stats';
-
-    // UI Elements
-    const currentDateEl = document.getElementById('current-date');
-    const revenueEl = document.getElementById('stat-revenue');
-    const occupancyRateEl = document.getElementById('stat-occupancy-rate');
-    const occupiedCountEl = document.getElementById('stat-occupied-count');
-    const totalRoomsEl = document.getElementById('stat-total-rooms');
-    const activeRepairsEl = document.getElementById('stat-active-repairs');
-    const availableRoomsEl = document.getElementById('stat-available-rooms');
     
-    const roomListBody = document.getElementById('room-list-body');
-    const paymentListBody = document.getElementById('payment-list-body');
-    
-    // Sidebar & Logout
-    const menuToggle = document.getElementById('menu-toggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const logoutBtn = document.getElementById('logout-btn');
+    // --- UI Elements ---
+    const elements = {
+        currentDate: document.getElementById('current-date'),
+        revenue: document.getElementById('stat-revenue'),
+        occupancyRate: document.getElementById('stat-occupancy-rate'),
+        occupiedCount: document.getElementById('stat-occupied-count'),
+        totalRooms: document.getElementById('stat-total-rooms'),
+        activeRepairs: document.getElementById('stat-active-repairs'),
+        availableRooms: document.getElementById('stat-available-rooms'),
+        roomListBody: document.getElementById('room-list-body'),
+        paymentListBody: document.getElementById('payment-list-body'),
+        menuToggle: document.getElementById('menu-toggle'),
+        sidebar: document.getElementById('sidebar'),
+        sidebarOverlay: document.getElementById('sidebar-overlay'),
+        logoutBtn: document.getElementById('logout-btn')
+    };
 
-    // 1. Set Date
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
+    // --- Helpers ---
+    const getToken = () => sessionStorage.getItem('token'); 
 
-    // 2. Fetch Data
-// 2. Fetch Dashboard Data
+    // Helper: Format เงิน (฿)
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat('en-US', { 
+            style: 'currency', 
+            currency: 'THB',
+            minimumFractionDigits: 2 
+        }).format(amount).replace('THB', '฿');
+    };
+
+    // Helper: Format วันที่
+    const formatDate = (dateString) => {
+        if (!dateString) return '-';
+        return new Date(dateString).toLocaleDateString('en-GB', { 
+            day: 'numeric', month: 'short' 
+        });
+    };
+
+    // --- 1. Initialize ---
+    function init() {
+        // เช็คก่อนเลยว่าเป็น Admin หรือไม่ (Optional: ถ้ามีเก็บ Role ไว้)
+        // const role = sessionStorage.getItem('user_role');
+        // if(role !== 'admin') { window.location.href = '/unauthorized.html'; return; }
+
+        // Set Header Date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        elements.currentDate.textContent = new Date().toLocaleDateString('en-US', options);
+
+        fetchStats();
+    }
+
+    // --- 2. Fetch Data ---
     async function fetchStats() {
-        try {
-            const token = sessionStorage.getItem('token');
-            
-            // 1. เช็คว่ามี Token ไหม ถ้าไม่มี ดีดกลับหน้า Login
-            if (!token) {
-                window.location.href = '../../index.html';
-                return;
-            }
+        const token = getToken();
+        
+        // ถ้าไม่มี Token ใน Session ให้ดีดกลับทันที
+        if (!token) {
+            window.location.href = '../../index.html';
+            return;
+        }
 
-            const response = await fetch(API_URL, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+        try {
+            const res = await fetch(API_URL, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            // 2. ดักจับ Error 401 (Unauthorized) หรือ 403 (Forbidden)
-            if (response.status === 401 || response.status === 403) {
+            // 401/403: Token หมดอายุ หรือ ไม่มีสิทธิ์
+            if (res.status === 401 || res.status === 403) {
                 alert('Session expired. Please login again.');
-                localStorage.removeItem('token'); // ลบ Token ที่ใช้ไม่ได้ทิ้ง
-                window.location.href = '../../index.html'; // ดีดกลับหน้า Login
+                handleLogout(); 
                 return;
             }
 
-            if(!response.ok) throw new Error('Failed to fetch stats');
+            if (!res.ok) throw new Error('Failed to fetch stats');
             
-            const data = await response.json();
+            const data = await res.json();
             updateUI(data);
 
         } catch (error) {
-            console.error('Error:', error);
-            // แสดง Error บนหน้าจอแทนข้อมูลที่โหลดไม่ได้
-            document.getElementById('stat-revenue').innerText = "Error";
-            document.getElementById('stat-occupancy-rate').innerText = "-";
+            console.error('Dashboard Error:', error);
+            elements.revenue.innerText = "Error";
+            elements.occupancyRate.innerText = "-";
         }
     }
 
-    // 3. Update UI
+    // --- 3. Update UI ---
     function updateUI(data) {
-        // Revenue
-        // ใช้ toLocaleString เพื่อใส่ลูกน้ำ (,)
-        const revenue = parseFloat(data.revenue).toLocaleString('en-US', { minimumFractionDigits: 2 });
-        revenueEl.textContent = `฿ ${revenue}`;
+        // 3.1 Stat Cards
+        elements.revenue.textContent = formatCurrency(data.revenue);
+        
+        elements.occupancyRate.textContent = `${data.occupancy.rate}%`;
+        elements.occupiedCount.textContent = data.occupancy.occupied;
+        elements.totalRooms.textContent = data.occupancy.total;
+        elements.availableRooms.textContent = data.occupancy.available;
 
-        // Occupancy
-        occupancyRateEl.textContent = `${data.occupancy.rate}%`;
-        occupiedCountEl.textContent = data.occupancy.occupied;
-        totalRoomsEl.textContent = data.occupancy.total;
+        elements.activeRepairs.textContent = data.active_repairs;
 
-        // Repairs
-        activeRepairsEl.textContent = data.active_repairs;
+        // 3.2 Tables
+        renderRoomList(data.rooms_list);
+        renderPaymentList(data.payments_list);
+    }
 
-        // Available
-        availableRoomsEl.textContent = data.occupancy.available;
+    function renderRoomList(rooms) {
+        elements.roomListBody.innerHTML = '';
 
-        // Room List Table
-        roomListBody.innerHTML = '';
-        if(data.rooms_list.length === 0) {
-            roomListBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No data</td></tr>`;
-        } else {
-            data.rooms_list.forEach(room => {
-                let badgeClass = room.room_status; // ตรงกับ CSS class
-                // ถ้าใน DB เป็น 'under_maintenance' ให้เปลี่ยนเป็น 'maintenance' เพื่อให้ตรงกับ class CSS
-                if(room.room_status === 'under_maintenance') badgeClass = 'maintenance'; 
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
+        if (!rooms || rooms.length === 0) {
+            elements.roomListBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999;">No data</td></tr>`;
+            return;
+        }
+
+        rooms.forEach(room => {
+            let badgeClass = room.room_status; 
+            if (room.room_status === 'under_maintenance') badgeClass = 'maintenance'; 
+            
+            const row = `
+                <tr>
                     <td>${room.room_number}</td>
                     <td>${room.room_type}</td>
                     <td>${room.floor}</td>
                     <td><span class="badge ${badgeClass}">${room.room_status.replace('_', ' ')}</span></td>
-                `;
-                roomListBody.appendChild(tr);
-            });
-        }
-
-        // Payments List
-        paymentListBody.innerHTML = '';
-        if(data.payments_list.length === 0) {
-            paymentListBody.innerHTML = `<li style="text-align:center; color:#999; padding:15px;">No recent payments</li>`;
-        } else {
-            data.payments_list.forEach(pay => {
-                const amount = parseFloat(pay.total_amount).toLocaleString('en-US', { minimumFractionDigits: 2 });
-                // แปลงวันที่จ่ายเงิน
-                const payDate = pay.payment_date ? new Date(pay.payment_date).toLocaleDateString('en-GB') : '-';
-                
-                const tr = document.createElement('li');
-                tr.innerHTML = `
-                    <div class="pay-icon"><i class="fas fa-money-bill-wave"></i></div>
-                    <div class="pay-detail">
-                        <strong>Room ${pay.room_number}</strong>
-                        <span>Status: ${pay.payment_status} (${payDate})</span>
-                    </div>
-                    <div class="pay-amount">+฿ ${amount}</div>
-                `;
-                paymentListBody.appendChild(tr);
-            });
-        }
-    }
-
-    // Sidebar Logic
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-            if(overlay) overlay.classList.add('active');
-        });
-    }
-    if(overlay) {
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
+                </tr>
+            `;
+            elements.roomListBody.innerHTML += row;
         });
     }
 
-    // Logout
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
+    function renderPaymentList(payments) {
+        elements.paymentListBody.innerHTML = '';
+
+        if (!payments || payments.length === 0) {
+            elements.paymentListBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999; padding: 15px;">No recent transactions</td></tr>`;
+            return;
+        }
+
+        payments.forEach(pay => {
+            const displayDate = pay.payment_date || pay.billing_date;
+
+            let badgeClass = 'pending'; 
+            if (pay.payment_status === 'paid') badgeClass = 'paid';
+            else if (pay.payment_status === 'cancelled') badgeClass = 'cancelled';
+            else if (pay.payment_status === 'overdue') badgeClass = 'overdue';
+
+            const row = `
+                <tr>
+                    <td><strong>${pay.room_number}</strong></td>
+                    <td style="color: #666;">${formatDate(displayDate)}</td>
+                    <td style="font-weight: 500;">${formatCurrency(pay.total_amount)}</td>
+                    <td><span class="badge ${badgeClass}" style="padding: 4px 10px; font-size: 11px;">${pay.payment_status}</span></td>
+                </tr>
+            `;
+            elements.paymentListBody.innerHTML += row;
+        });
+    }
+
+    // --- 4. Event Listeners ---
+    function handleLogout() {
+        sessionStorage.clear(); // ล้าง Session ทั้งหมด (Token, Role)
+        // localStorage.clear(); // (Optional) ถ้าอยากล้าง Local ด้วยเผื่อมีขยะค้าง
+        window.location.href = '../../index.html';
+    }
+
+    if (elements.logoutBtn) {
+        elements.logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            localStorage.removeItem('token');
-            localStorage.removeItem('user_role');
-            window.location.href = '../../index.html';
+            handleLogout();
         });
     }
 
-    // Run
-    fetchStats();
+    // Sidebar Toggle
+    if (elements.menuToggle) {
+        elements.menuToggle.addEventListener('click', () => {
+            elements.sidebar.classList.add('active');
+            if (elements.sidebarOverlay) elements.sidebarOverlay.classList.add('active');
+        });
+    }
+
+    if (elements.sidebarOverlay) {
+        elements.sidebarOverlay.addEventListener('click', () => {
+            elements.sidebar.classList.remove('active');
+            elements.sidebarOverlay.classList.remove('active');
+        });
+    }
+
+    // Start App
+    init();
 });

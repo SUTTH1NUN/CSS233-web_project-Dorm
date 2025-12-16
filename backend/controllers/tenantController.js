@@ -1,117 +1,149 @@
-//controllers/tenantController.js
-
 const bcrypt = require("bcrypt");
 const pool = require("../config/db");
 
+const SALT_ROUNDS = 10;
+
+// 1. ลงทะเบียนผู้เช่าใหม่ + ทำสัญญา + จองห้อง (Transaction)
 exports.registerTenant = async (req, res) => {
-  const {first_name, last_name, phone_number, email, tenant_status,
+    const {
+        first_name, last_name, phone_number, email, tenant_status,
         building, floor, room_number, 
         start_date, end_date, deposit_amount
-  } = req.body;
+    } = req.body;
 
-  if(!first_name || !last_name || !phone_number || !email ||!tenant_status 
-    || !building || !room_number || !floor 
-    || !start_date || !deposit_amount){
-    return res.status(400).json({error : "กรุณากรอกข้อมูลให้ครบถ้วน"});
-  }
-
-  const client = await pool.connect();
-  try{
-    await client.query('BEGIN');
-
-    //  เช็คห้องว่าง
-    const roomQuery = await client.query(
-      `select room_id, room_status from rooms where building = $1 and floor = $2 and room_number = $3`,
-      [building, floor, room_number]
-    );
-
-    if (roomQuery.rows.length === 0){
-      throw new Error(`ไม่พบห้องพักที่ build:${building} floor:${floor} room no.:${room_number} `);
-    }
-    const room = roomQuery.rows[0];
-    if (room.room_status !== 'available'){
-      throw new Error('ห้องพักไม่ว่าง');
+    // Validation Inputs
+    if (!first_name || !last_name || !phone_number || !email || !tenant_status || 
+        !building || !room_number || !floor || 
+        !start_date || !deposit_amount) {
+        return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
-    //  สร้าง User Tenant
-    const defaultPassword = phone_number;
-    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+    // ใช้ client จาก pool เพื่อทำ Transaction
+    const client = await pool.connect();
 
-    const newTenant = await client.query(
-      `insert into tenants (first_name, last_name, phone_number, email, tenant_status, password_hash)
-      values ($1, $2, $3, $4, $5, $6)
-      returning tenant_id, first_name, last_name, email, tenant_status`,
-      [first_name, last_name, phone_number, email, tenant_status, hashedPassword]
-    );
-    const tenantId = newTenant.rows[0].tenant_id;
-    
-    // สร้างสัญญา
-    await client.query(
-      `insert into lease_contract (tenant_id, room_id, start_date, end_date, deposit_amount) values ($1, $2, $3, $4, $5)`,
-      [tenantId, room.room_id, start_date, end_date || null, deposit_amount]
-    );
+    try {
+        await client.query('BEGIN');
 
-    //  อัพเดทสถานะห้อง
-    await client.query(`update rooms set room_status = 'occupied' where room_id = $1`, [room.room_id]);
+        // Step 1: ตรวจสอบสถานะห้อง
+        const roomSql = `
+            SELECT room_id, room_status 
+            FROM rooms 
+            WHERE building = $1 AND floor = $2 AND room_number = $3
+        `;
+        const roomRes = await client.query(roomSql, [building, floor, room_number]);
 
-    await client.query('COMMIT');
+        if (roomRes.rows.length === 0) {
+            throw new Error(`ไม่พบห้องพักที่ระบุ: ${building} ชั้น ${floor} ห้อง ${room_number}`);
+        }
 
-    res.status(201).json({
-      message: "เพิ่มผู้เช่าและทำสัญญาสำเร็จ!",
-      tenant: newTenant.rows[0],
-    });
-  } catch (err){
-    await client.query('ROLLBACK');
-    if (err.code === "23505") {
-        return res.status(409).json({ error: "อีเมลหรือเบอร์นี้มีอยู่ในระบบแล้ว" });
+        const room = roomRes.rows[0];
+        if (room.room_status !== 'available') {
+            throw new Error('ห้องพักนี้ไม่ว่าง');
+        }
+
+        // Step 2: สร้าง User Tenant (ใช้เบอร์โทรเป็นรหัสผ่านตั้งต้น)
+        const hashedPassword = await bcrypt.hash(phone_number, SALT_ROUNDS);
+
+        const createTenantSql = `
+            INSERT INTO tenants (first_name, last_name, phone_number, email, tenant_status, password_hash)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING tenant_id, first_name, last_name, email, tenant_status
+        `;
+        const newTenant = await client.query(createTenantSql, [
+            first_name, last_name, phone_number, email, tenant_status, hashedPassword
+        ]);
+        
+        const tenantId = newTenant.rows[0].tenant_id;
+        
+        // Step 3: สร้างสัญญาเช่า (Lease Contract)
+        const createContractSql = `
+            INSERT INTO lease_contract (tenant_id, room_id, start_date, end_date, deposit_amount) 
+            VALUES ($1, $2, $3, $4, $5)
+        `;
+        await client.query(createContractSql, [
+            tenantId, room.room_id, start_date, end_date || null, deposit_amount
+        ]);
+
+        // Step 4: อัปเดตสถานะห้องเป็น 'occupied'
+        const updateRoomSql = `UPDATE rooms SET room_status = 'occupied' WHERE room_id = $1`;
+        await client.query(updateRoomSql, [room.room_id]);
+
+        await client.query('COMMIT');
+
+        res.status(201).json({
+            message: "เพิ่มผู้เช่าและทำสัญญาสำเร็จ!",
+            tenant: newTenant.rows[0],
+        });
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        
+        // Error Code 23505 = Unique Violation (ข้อมูลซ้ำ)
+        if (err.code === "23505") {
+            return res.status(409).json({ message: "อีเมลหรือเบอร์โทรนี้มีอยู่ในระบบแล้ว" });
+        }
+        
+        console.error("Register Tenant Error:", err.message);
+        // ส่ง Error message กลับไปหากเป็น Error ที่เรา throw เอง (เช่น ห้องไม่ว่าง)
+        res.status(500).json({ message: err.message || "Server Error" });
+
+    } finally {
+        client.release();
     }
-    console.error("Register tenant error", err.message);
-    res.status(500).json({message: err.message || "server error"});
-  } finally {
-    client.release();
-  }
 };
 
+// 2. ดึงรายชื่อผู้เช่าทั้งหมด (พร้อมระบบ Filter และ Search)
 exports.getAllTenants = async (req, res) => {
-  try{
-    const {search, status} = req.query;
-    let sql = `
-      select t.tenant_id, t.first_name, t.last_name, t.phone_number, t.tenant_status, r.room_number
-      from tenants t
-      join lease_contract l on t.tenant_id = l.tenant_id
-      join rooms r on l.room_id = r.room_id
-      where 1=1
-    `;
-    const param = [];
+    try {
+        const { search, status } = req.query;
+        
+        let sql = `
+            SELECT 
+                t.tenant_id, 
+                t.first_name, 
+                t.last_name, 
+                t.phone_number, 
+                t.tenant_status, 
+                r.room_number
+            FROM tenants t
+            JOIN lease_contract l ON t.tenant_id = l.tenant_id
+            JOIN rooms r ON l.room_id = r.room_id
+            WHERE 1=1
+        `;
+        
+        const params = [];
 
-    if(status && status !== 'all'){
-        param.push(status);
-        sql += ` and t.tenant_status = $${param.length}`;
+        // Filter by Status
+        if (status && status !== 'all') {
+            params.push(status);
+            sql += ` AND t.tenant_status = $${params.length}`;
+        }
+
+        // Filter by Search Text (Name, Phone, Room)
+        if (search) {
+            params.push(`%${search}%`);
+            const idx = params.length;
+            sql += ` AND (
+                t.first_name ILIKE $${idx} OR 
+                t.last_name ILIKE $${idx} OR 
+                t.phone_number ILIKE $${idx} OR 
+                r.room_number ILIKE $${idx}
+            )`;
+        }
+        
+        sql += ` ORDER BY t.tenant_id ASC`;
+        
+        const result = await pool.query(sql, params);
+        res.json(result.rows);
+
+    } catch (err) {
+        console.error("Get All Tenants Error:", err.message);
+        res.status(500).json({ message: "Server Error" });
     }
-
-    if (search) {
-      param.push(`%${search}%`);
-      const idx = param.length;
-      sql += ` and (
-        t.first_name ilike $${idx} OR 
-        t.last_name ilike $${idx} OR 
-        t.phone_number ilike $${idx} OR 
-        r.room_number ilike $${idx}
-      )`;
-    }
-    
-    sql += ` order by t.tenant_id ASC`;
-    const tenant_query = await pool.query(sql, param);
-    res.json(tenant_query.rows);
-
-  } catch (error){
-    console.error(error.message);
-    res.status(500).send('Server Error');
-  }
 };
 
-
-exports.getTenantById = async (req, res, next) => {
+// 3. ดึงข้อมูลผู้เช่ารายคน (Detail)
+exports.getTenantById = async (req, res) => {
     try {
         const { id } = req.params;
         
@@ -126,20 +158,22 @@ exports.getTenantById = async (req, res, next) => {
             WHERE t.tenant_id = $1
         `;
 
-        const { rows } = await pool.query(sql, [id]);
+        const result = await pool.query(sql, [id]);
 
-        if (rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({ message: 'ไม่พบข้อมูลผู้เช่า' });
         }
 
-        res.json(rows[0]); 
+        res.json(result.rows[0]); 
+
     } catch (err) {
-        console.error(err.message);
+        console.error("Get Tenant By ID Error:", err.message);
         res.status(500).json({ message: "Server Error" });
     }
 };
 
-exports.updateTenant = async (req, res, next) => {
+// 4. แก้ไขข้อมูลผู้เช่า (Transaction)
+exports.updateTenant = async (req, res) => {
     const client = await pool.connect();
     try {
         const { id } = req.params;
@@ -150,23 +184,36 @@ exports.updateTenant = async (req, res, next) => {
 
         await client.query('BEGIN');
 
+        // Step 1: Update Tenant Info
         const updateTenantSql = `
             UPDATE tenants 
-            SET first_name=$1, last_name=$2, email=$3, phone_number=$4, tenant_status=$5
-            WHERE tenant_id=$6
+            SET first_name = $1, 
+                last_name = $2, 
+                email = $3, 
+                phone_number = $4, 
+                tenant_status = $5
+            WHERE tenant_id = $6
         `;
         await client.query(updateTenantSql, [first_name, last_name, email, phone_number, tenant_status, id]);
+
+        // Step 2: Check Logic - หากสถานะเปลี่ยนเป็นย้ายออก (vacated/inactive) ต้องคืนห้องว่าง
         if (tenant_status === 'inactive' || tenant_status === 'vacated') {
-            const roomRes = await client.query('SELECT room_id FROM lease_contract WHERE tenant_id = $1', [id]);
-            if(roomRes.rows.length > 0) {
-                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [roomRes.rows[0].room_id]);
+            // หา room_id ที่ผู้เช่าคนนี้ถือครองอยู่
+            const contractRes = await client.query('SELECT room_id FROM lease_contract WHERE tenant_id = $1', [id]);
+            
+            if (contractRes.rows.length > 0) {
+                const roomId = contractRes.rows[0].room_id;
+                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [roomId]);
             }
         }
 
+        // Step 3: Update Contract Info
         const updateContractSql = `
             UPDATE lease_contract
-            SET deposit_amount=$1, start_date=$2, end_date=$3
-            WHERE tenant_id=$4
+            SET deposit_amount = $1, 
+                start_date = $2, 
+                end_date = $3
+            WHERE tenant_id = $4
         `;
         await client.query(updateContractSql, [deposit_amount, start_date, end_date || null, id]);
 
@@ -175,7 +222,7 @@ exports.updateTenant = async (req, res, next) => {
 
     } catch (err) {
         await client.query('ROLLBACK');
-        console.error(err.message);
+        console.error("Update Tenant Error:", err.message);
         res.status(500).json({ message: "Server Error" });
     } finally {
         client.release();

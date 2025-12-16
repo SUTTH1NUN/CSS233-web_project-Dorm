@@ -1,86 +1,92 @@
+// backend/controllers/dashboardController.js
 const pool = require("../config/db");
 
 exports.getDashboardStats = async (req, res) => {
     try {
-        // 1. Total Revenue (เดือนนี้)
-        // นับรวมยอด total_amount จากตาราง payments เฉพาะสถานะ 'paid' ในเดือนนี้
-        const revenueQuery = `
-            SELECT SUM(total_amount) as total 
-            FROM payments 
+        // 1. Prepare SQL Queries
+        const revenueSql = `
+            SELECT COALESCE(SUM(total_amount), 0) AS total_revenue
+            FROM payments
             WHERE payment_status = 'paid'
-            AND date_part('month', payment_date) = date_part('month', CURRENT_DATE)
-            AND date_part('year', payment_date) = date_part('year', CURRENT_DATE)
+            AND EXTRACT(MONTH FROM payment_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+            AND EXTRACT(YEAR FROM payment_date) = EXTRACT(YEAR FROM CURRENT_DATE)
         `;
 
-        // 2. Room Stats (Available, Occupied, etc.)
-        const roomStatsQuery = `
+        const occupancySql = `
             SELECT 
-                COUNT(*) FILTER (WHERE room_status = 'occupied') as occupied,
-                COUNT(*) FILTER (WHERE room_status = 'available') as available,
-                COUNT(*) as total
+                COUNT(*) AS total_rooms,
+                SUM(CASE WHEN room_status = 'occupied' THEN 1 ELSE 0 END) AS occupied_rooms
             FROM rooms
         `;
 
-        // 3. Active Repairs (Pending + In Progress)
-        const repairStatsQuery = `
-            SELECT COUNT(*) as active_count 
-            FROM repairs 
+        const repairSql = `
+            SELECT COUNT(*) AS active_count
+            FROM repairs
             WHERE repair_status IN ('pending', 'in_progress')
         `;
 
-        // 4. Room List (Overview)
-        const recentRoomsQuery = `
-            SELECT room_number, room_type, floor, room_status 
-            FROM rooms 
-            ORDER BY building, room_number 
+        const roomListSql = `
+            SELECT room_number, room_type, floor, room_status
+            FROM rooms
+            ORDER BY room_number ASC
             LIMIT 5
         `;
 
-        // 5. Recent Payments (List)
-        // **สำคัญ:** Join payments -> lease_contract -> rooms เพื่อเอาเลขห้อง
-        const recentPaymentsQuery = `
+        const transactionSql = `
             SELECT 
-                p.total_amount, 
-                p.payment_status, 
-                p.payment_date, 
-                r.room_number 
+                p.payment_id,
+                p.total_amount,
+                p.payment_status,
+                p.payment_date,
+                p.billing_date,
+                r.room_number
             FROM payments p
             JOIN lease_contract lc ON p.contract_id = lc.contract_id
             JOIN rooms r ON lc.room_id = r.room_id
-            ORDER BY p.payment_date DESC 
-            LIMIT 4
+            ORDER BY p.payment_id DESC
+            LIMIT 5
         `;
 
-        // รัน Query ทั้งหมดพร้อมกัน
-        const [revenueRes, roomRes, repairRes, roomsListRes, paymentListRes] = await Promise.all([
-            pool.query(revenueQuery),
-            pool.query(roomStatsQuery),
-            pool.query(repairStatsQuery),
-            pool.query(recentRoomsQuery),
-            pool.query(recentPaymentsQuery)
+        // 2. Execute all queries in parallel
+        const [revenueRes, occupancyRes, repairsRes, roomsRes, paymentsRes] = await Promise.all([
+            pool.query(revenueSql),
+            pool.query(occupancySql),
+            pool.query(repairSql),
+            pool.query(roomListSql),
+            pool.query(transactionSql)
         ]);
 
-        // คำนวณ % Occupancy
-        const totalRooms = parseInt(roomRes.rows[0].total) || 1;
-        const occupiedRooms = parseInt(roomRes.rows[0].occupied) || 0;
-        const occupancyRate = ((occupiedRooms / totalRooms) * 100).toFixed(1);
+        // 3. Process Data
+        const totalRevenue = parseFloat(revenueRes.rows[0].total_revenue);
+        
+        const totalRooms = parseInt(occupancyRes.rows[0].total_rooms) || 0;
+        const occupiedRooms = parseInt(occupancyRes.rows[0].occupied_rooms) || 0;
+        const availableRooms = totalRooms - occupiedRooms;
+        
+        // คำนวณ % Occupancy (ป้องกัน Error หารด้วย 0)
+        const occupancyRate = totalRooms > 0 
+            ? Math.round((occupiedRooms / totalRooms) * 100) 
+            : 0;
 
-        // ส่งข้อมูลกลับไป Frontend
+        const activeRepairs = parseInt(repairsRes.rows[0].active_count) || 0;
+
+        // 4. Response
         res.json({
-            revenue: revenueRes.rows[0].total || 0,
+            revenue: totalRevenue,
             occupancy: {
                 rate: occupancyRate,
                 occupied: occupiedRooms,
                 total: totalRooms,
-                available: roomRes.rows[0].available
+                available: availableRooms
             },
-            active_repairs: repairRes.rows[0].active_count,
-            rooms_list: roomsListRes.rows,
-            payments_list: paymentListRes.rows
+            active_repairs: activeRepairs,
+            rooms_list: roomsRes.rows,
+            payments_list: paymentsRes.rows
         });
 
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
+        console.error("Dashboard Stats Error:", err.message);
+        // เปลี่ยนจาก .send() เป็น .json() เพื่อให้ Frontend รับค่าเหมือนกันทุก API
+        res.status(500).json({ message: "Server Error" });
     }
 };
