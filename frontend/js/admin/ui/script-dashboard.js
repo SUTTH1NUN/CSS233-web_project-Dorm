@@ -50,22 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
     currentDateEl.textContent = new Date().toLocaleDateString('en-US', options);
 
     // 2. Fetch Data
+// 2. Fetch Dashboard Data
     async function fetchStats() {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
+            
+            // 1. เช็คว่ามี Token ไหม ถ้าไม่มี ดีดกลับหน้า Login
+            if (!token) {
+                window.location.href = '../../index.html';
+                return;
+            }
+
             const response = await fetch(API_URL, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
-            if(!response.ok) throw new Error('Failed to fetch stats');
-            const data = await response.json();
+            // 2. ดักจับ Error 401 (Unauthorized) หรือ 403 (Forbidden)
+            if (response.status === 401 || response.status === 403) {
+                alert('Session expired. Please login again.');
+                localStorage.removeItem('token'); // ลบ Token ที่ใช้ไม่ได้ทิ้ง
+                window.location.href = '../../index.html'; // ดีดกลับหน้า Login
+                return;
+            }
 
+            if(!response.ok) throw new Error('Failed to fetch stats');
+            
+            const data = await response.json();
             updateUI(data);
 
         } catch (error) {
             console.error('Error:', error);
-            // แสดง Error บนหน้าจอ (Optional)
-            revenueEl.innerText = "Error";
+            // แสดง Error บนหน้าจอแทนข้อมูลที่โหลดไม่ได้
+            document.getElementById('stat-revenue').innerText = "Error";
+            document.getElementById('stat-occupancy-rate').innerText = "-";
         }
     }
 

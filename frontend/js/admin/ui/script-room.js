@@ -31,14 +31,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRoomId = null;
     
     // --- 1. Fetch Room Types (เพื่อเอาไปใส่ Dropdown และ Map ข้อมูล) ---
-    async function fetchRoomTypes() {
+async function fetchRoomTypes() {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
+            
+            // 1. เช็ค Token ก่อน
+            if (!token) {
+                // ถ้าไม่มี Token ไม่ต้องแจ้งเตือนซ้ำซ้อน เพราะเดี๋ยว fetchRooms จะจัดการเอง
+                return; 
+            }
+
             const res = await fetch(`${API_URL}/types`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            roomTypes = await res.json();
-            populateTypeDropdown();
+
+            // 2. ดักจับ 401/403
+            if (res.status === 401 || res.status === 403) {
+                // ไม่ต้อง alert ที่นี่ก็ได้ เพราะ fetchRooms จะ alert ให้แล้ว (กัน alert เด้งซ้อนกัน 2 รอบ)
+                localStorage.removeItem('token');
+                window.location.href = '../../index.html';
+                return;
+            }
+
+            if (!res.ok) throw new Error('Failed to fetch types');
+            
+            const data = await res.json();
+
+            // 3. ตรวจสอบว่าเป็น Array จริงไหมก่อนใช้งาน
+            if (Array.isArray(data)) {
+                roomTypes = data;
+                populateTypeDropdown();
+            } else {
+                console.error("Room types data is not an array:", data);
+            }
+
         } catch (error) {
             console.error('Error fetching types:', error);
         }
@@ -65,14 +91,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 2. Fetch Rooms ---
-    async function fetchRooms() {
+async function fetchRooms() {
         try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(API_URL, {
-                headers: { 'Authorization': `Bearer ${token}` }
+            const token = sessionStorage.getItem('token');
+            
+            // 1. เช็คว่ามี Token ในเครื่องไหม ถ้าไม่มีให้ดีดออกไปหน้า Login
+            if (!token) {
+                alert('Please login first');
+                window.location.href = '../../index.html'; // ปรับ path ให้ตรงกับหน้า Login ของคุณ
+                return;
+            }
+            
+            const response = await fetch(API_URL, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // ส่ง Token ไปยืนยันตัวตน
+                }
             });
-            allRooms = await res.json();
-            renderTable(allRooms);
+
+            // 2. เช็คว่า Server ตอบกลับมาว่า error หรือไม่ (เช่น 401, 403)
+            if (response.status === 401 || response.status === 403) {
+                alert('Session expired or unauthorized. Please login again.');
+                localStorage.removeItem('token'); // ลบ Token ที่เสียทิ้ง
+                window.location.href = '../../index.html'; // ดีดกลับหน้า Login
+                return;
+            }
+
+            if (!response.ok) throw new Error('Failed to fetch rooms');
+            
+            allRooms = await response.json();
+            
+            // 3. เช็คว่าเป็น Array จริงไหมก่อนส่งไป render
+            if (Array.isArray(allRooms)) {
+                renderTable(allRooms);
+            } else {
+                console.error("Data received is not an array:", allRooms);
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Invalid Data Format</td></tr>`;
+            }
+
         } catch (error) {
             console.error('Error fetching rooms:', error);
             tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">Error loading data</td></tr>`;
@@ -183,8 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
         openModal('add');
     });
 
-    // Save Button (Submit)
+// Save Button (Submit)
     btnSave.addEventListener('click', async () => {
+        // 1. เตรียมข้อมูล Payload
         const payload = {
             room_number: mRoomNo.value,
             building: mBuilding.value,
@@ -193,12 +249,20 @@ document.addEventListener('DOMContentLoaded', () => {
             room_status: mStatus.value
         };
 
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');
+        
+        // 2. เช็ค Token ก่อนส่ง
+        if (!token) {
+            alert('Please login first');
+            window.location.href = '../../index.html';
+            return;
+        }
+
         let url = API_URL;
         let method = 'POST';
 
         if (currentMode === 'edit') {
-            url = `${API_URL}/${currentRoomId}`;
+            url = `${API_URL}/${currentRoomId}`; // เช่น .../api/rooms/9
             method = 'PUT';
         }
 
@@ -207,20 +271,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}` // ต้องมีบรรทัดนี้!
                 },
                 body: JSON.stringify(payload)
             });
 
+            // 3. ดักจับ Error Token หมดอายุ (401/403)
+            if (res.status === 401 || res.status === 403) {
+                alert('Session expired. Please login again.');
+                localStorage.removeItem('token');
+                window.location.href = '../../index.html';
+                return;
+            }
+
             if (res.ok) {
-                alert(currentMode === 'add' ? 'Room added!' : 'Room updated!');
+                alert(currentMode === 'add' ? 'Room added successfully!' : 'Room updated successfully!');
                 closeModal();
-                fetchRooms();
+                fetchRooms(); // โหลดตารางใหม่
             } else {
-                alert('Operation failed');
+                // อ่าน Error จาก Backend (ถ้ามี)
+                const errorData = await res.json();
+                alert('Operation failed: ' + (errorData.msg || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('Something went wrong. Please check console.');
         }
     });
 

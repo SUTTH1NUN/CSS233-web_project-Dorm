@@ -196,4 +196,97 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    
+ // ... (ส่วนอื่นๆ เหมือนเดิม) ...
+
+    // --- 6. Live Room Availability Logic (ปรับปรุงใหม่) ---
+    
+    async function fetchRoomAvailability() {
+        const API_URL = 'http://localhost:3030/api/public/available-rooms';
+
+        // เช็คให้ชัวร์ว่า Key ด้านซ้าย ตรงกับ room_type ใน Database เป๊ะๆ
+        const typeMapping = {
+            'Studio Suite': 'avail-studio',    
+            '1 Bedroom Suite': 'avail-1bed',
+            'Family Suite': 'avail-2bed'
+        };
+
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Failed to fetch availability');
+            
+            const data = await response.json(); 
+            // data: { "Studio Suite": ["A-101", ...], ... }
+
+            for (const [dbType, elementId] of Object.entries(typeMapping)) {
+                const container = document.getElementById(elementId);
+                
+                if (container) {
+                    const rooms = data[dbType] || []; // ถ้าไม่มี key นี้ แสดงว่าว่างเปล่า (เต็ม)
+                    updateAvailabilityUI(container, rooms);
+                }
+            }
+
+        } catch (error) {
+            console.error('Error loading room availability:', error);
+        }
+    }
+
+    // ฟังก์ชันอัปเดต UI ที่สลับ Class และ Icon ตามที่คุณต้องการ
+    function updateAvailabilityUI(container, rooms) {
+        // 1. หา Element พ่อ (Wrapper) และ หัวข้อ (Label)
+        const wrapper = container.closest('.room-availability');
+        const label = wrapper.querySelector('.avail-label');
+
+        // ล้างข้อมูลเก่าออกก่อน
+        container.innerHTML = '';
+
+        if (rooms.length > 0) {
+            // --- กรณี: มีห้องว่าง (Available) ---
+            
+            // 1. เอา class 'full' ออก (เพื่อให้เป็นสีเขียว/ปกติ)
+            wrapper.classList.remove('full');
+
+            // 2. เปลี่ยน Label และ Icon เป็น "Available Rooms"
+            label.innerHTML = '<i class="fas fa-door-open"></i> Available Rooms:';
+
+            // 3. สร้าง Tag เลขห้อง
+            const displayLimit = 6;
+            rooms.slice(0, displayLimit).forEach(roomNo => {
+                const span = document.createElement('span');
+                span.className = 'room-tag';
+                span.textContent = roomNo;
+                container.appendChild(span);
+            });
+
+            // ถ้าห้องเยอะเกินลิมิต ให้ขึ้น +more
+            if (rooms.length > displayLimit) {
+                const moreSpan = document.createElement('span');
+                moreSpan.className = 'room-tag';
+                moreSpan.style.background = '#eee';
+                moreSpan.style.color = '#666';
+                moreSpan.textContent = `+${rooms.length - displayLimit} more`;
+                container.appendChild(moreSpan);
+            }
+
+        } else {
+            // --- กรณี: ห้องเต็ม (Fully Booked) ---
+
+            // 1. ใส่ class 'full' (เพื่อให้เป็นสีแดง ตาม CSS ของคุณ)
+            wrapper.classList.add('full');
+
+            // 2. เปลี่ยน Label และ Icon เป็น "Status"
+            label.innerHTML = '<i class="fas fa-times-circle"></i> Status:';
+
+            // 3. สร้าง Tag "Fully Booked"
+            const span = document.createElement('span');
+            span.className = 'room-tag empty';
+            span.textContent = 'Fully Booked';
+            container.appendChild(span);
+        }
+    }
+
+    // เรียกใช้งาน
+    fetchRoomAvailability();
 });
+

@@ -21,16 +21,18 @@ const repairRoutes = require('./routes/repair');
 // const paymentRoutes = require('./routes/payment');
 const roomRoutes = require('./routes/room');
 const dashboardRoutes = require('./routes/dashboard');
+const publicRoutes = require('./routes/public');
 
 // --- Mount Routes ---
 app.use("/api/auth", authRoutes);
-app.use("/api/tenants", tenantRoutes);// แก้ logic เล็กน้อย
+app.use("/api/tenants", tenantRoutes);// แก้ logic ตอนย้ายห้อง
 app.use('/api/announcement', announcementRoute);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/repairs', repairRoutes); //แก้ความสวยงามเล็กน้อย
 // app.use("/api/payments", paymentRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/public', publicRoutes);
 
 // --- Start Server ---
 app.listen(port, () => {
