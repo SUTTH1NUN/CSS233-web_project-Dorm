@@ -4,14 +4,26 @@
     --primary-dark: #333;
     --text-grey: #666;
     --bg-light: #f4f6f9;
-    --sidebar-width: 260px;
+
     
-    /* Status Colors */
-    --status-paid-bg: #d4edda;
-    --status-paid-text: #155724;
-    --status-unpaid-bg: #f8d7da;
-    --status-unpaid-text: #721c24;
+    --sidebar-width: 260px;
+    --room-occupied-bg: #fdedec;
+    --room-occupied-text: #e74c3c;
+    --room-available-bg: #eafaf1;
+    --room-available-text: #2ecc71;
+    --room-maintenance-bg: #fef5e7;
+    --room-maintenance-text: #f39c12;
+    --room-booked-bg: #eaf2f8;
+    --room-booked-text: #3498db;
 }
+
+/* --- Status Badges --- */
+.badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; min-width: 80px; text-align: center;}
+
+.badge.cancelled { background: var(--room-occupied-bg); color: var(--room-occupied-text); }
+.badge.paid { background: var(--room-available-bg); color: var(--room-available-text); }
+.badge.overdue { background: var(--room-maintenance-bg); color: var(--room-maintenance-text); }
+.badge.pending { background: var(--room-booked-bg); color: var(--room-booked-text); }
 
 body {
     margin: 0;

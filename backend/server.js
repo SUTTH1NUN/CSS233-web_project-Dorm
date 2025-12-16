@@ -18,7 +18,7 @@ const authRoutes = require("./routes/auth");
 const tenantRoutes = require("./routes/tenants");
 const announcementRoute = require('./routes/announcement');
 const repairRoutes = require('./routes/repair');
-// const paymentRoutes = require('./routes/payment');
+const paymentRoutes = require('./routes/payment');
 const roomRoutes = require('./routes/room');
 const dashboardRoutes = require('./routes/dashboard');
 const publicRoutes = require('./routes/public');
@@ -29,7 +29,7 @@ app.use("/api/tenants", tenantRoutes);// แก้ logic ตอนย้าย�
 app.use('/api/announcement', announcementRoute);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/repairs', repairRoutes); //แก้ความสวยงามเล็กน้อย
-// app.use("/api/payments", paymentRoutes);
+app.use("/api/payments", paymentRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/public', publicRoutes);
