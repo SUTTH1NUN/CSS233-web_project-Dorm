@@ -147,13 +147,13 @@ section {
 }
 
 .image-text-overlay {
-    position: absolute; /* สั่งให้ลอย */
-    top: 50%;           /* กึ่งกลางแนวตั้ง */
-    left: 50%;          /* กึ่งกลางแนวนอน */
-    transform: translate(-50%, -50%); /* ขยับให้กลางเป๊ะๆ */
+    position: absolute; 
+    top: 50%;           
+    left: 50%;          
+    transform: translate(-50%, -50%); 
     text-align: center;
     width: 80%;         /* ความกว้างสูงสุดไม่เกิน 80% ของจอ */
-    z-index: 5;         /* ให้อยู่เหนือรูปภาพ แต่อยู่ใต้กล่องเนื้อหาสีขาว (ซึ่ง z-index: 10) */
+    z-index: 5;         /* ให้อยู่เหนือรูปภาพ แต่อยู่ใต้กล่องเนื้อหาสีขาว  */
     
 }
 
@@ -180,25 +180,16 @@ section {
 
 
 .full-width-image-container {
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    overflow: hidden;
-    
-    margin-top: 0; 
+     width:100vw;
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+  overflow:hidden;
 }
 .full-width-image-container img.main-image {
-    width: 100%;
-    
-    height: 70vh ; 
-    
-
-    display: block;
-    
-    object-fit: cover; 
-    object-position: center; /* จัดกึ่งกลางรูป */
+    width:100%;
+  height:clamp(30vh,60vh,70vh);
+  object-fit:cover;
     
 }
 
@@ -729,44 +720,49 @@ section {
    RESPONSIVE STYLES 
    ========================================================================== */
 
-/* --- Tablet & Mobile (หน้าจอเล็กกว่า 1024px) --- */
 @media screen and (max-width: 1024px) {
     
-  
-
-    /* ซ่อนเมนู Desktop เดิม */
-    .desktop-only { display: none !important; }
-
-    /* แสดงปุ่ม Hamburger */
-    .hamburger-menu {
-        display: block;
-        font-size: 28px;
-        cursor: pointer;
-        color: #333;
-        z-index: 1002; /* ให้อยู่บนสุด */
+    /* ปรับ Menu Bar ให้เล็กลง */
+    .menu-bar {
+        height: 80px; /* ลดจาก 150px */
+        padding: 0 20px;
     }
 
-    /* สไตล์กล่องเมนูมือถือ (Slide Down) */
+    .logo img {
+        height: 60px; /* ลดขนาดโลโก้ */
+        width: auto;
+    }
+    
+    .logo { margin-bottom: 0; }
+
+    /* ซ่อนเมนู Desktop */
+    .desktop-only { display: none !important; }
+
+    /* ปุ่ม Hamburger */
+    .hamburger-menu {
+        display: block;
+        font-size: 24px;
+        cursor: pointer;
+        color: #333;
+    }
+
+    /* Mobile Menu Dropdown */
     .mobile-menu {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 80px; /* ต่อจาก Menu bar */
+        top: 80px; /* ต้องเท่ากับความสูง menu-bar */
         left: 0;
         width: 100%;
         background-color: white;
         box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-        
-        /* ซ่อนไว้ก่อน */
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.4s ease-in-out;
-        z-index: 1001;
     }
 
-    /* คลาสนี้จะถูก JS เติมเข้ามาตอนกดปุ่ม */
     .mobile-menu.active {
-        max-height: 500px; /* เปิดลงมา */
+        max-height: 500px;
     }
 
     .mobile-menu a {
@@ -776,225 +772,327 @@ section {
         font-family: 'Oswald', sans-serif;
         color: #333;
         text-decoration: none;
-        font-size: 16px;
-    }
-    
-    .mobile-menu a:hover {
-        background-color: #f9f9f9;
-        color: #C4A808;
     }
 
-    /* 2. แก้ไขรูปภาพ Banner ที่ล้นจอ (150vw) ให้กลับมาพอดี */
+    /* แก้ไขรูป Banner ให้ไม่ล้นจอ */
     .full-width-image-container {
-        width: 135vw;
-        
-       
-   
-        
-        
-       
+        width:100vw;
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+  overflow:hidden;
     }
 
     .full-width-image-container img.main-image {
-        height: 50vh; /* ลดความสูง Banner ในมือถือ */
-        object-fit: cover;       /* เพิ่มบรรทัดนี้ เพื่อให้รูปไม่เบี้ยว */
-        object-position: center; /* เพิ่มบรรทัดนี้ เพื่อให้รูปอยู่กึ่งกลาง */
+        height: 40vh; /* ลดความสูงรูป Banner */
+        object-fit: cover;
     }
 
-    /* 3. ปรับขนาดตัวหนังสือบนรูปภาพ */
-    .image-text-overlay {
-        width: 95%; /* ขยายพื้นที่ข้อความ */
-    }
-
-    .image-text-overlay a {
-        font-size: 36px; /* ลดขนาดหัวข้อ */
-    }
-
-    .image-text-overlay p {
-        font-size: 16px; /* ลดขนาดคำโปรย */
-        letter-spacing: 1px;
-    }
-
-    /* 4. ปรับกล่องเนื้อหา (Box) */
-    .box {
-        width: 90%;
-        padding: 30px 15px;
-    }
-
-
-    
-    .box p.main { font-size: 32px; }
-    .box p.sec { font-size: 24px; }
-    
-
+    /* ปรับ Layout ห้องพัก */
     .room-card, .room-card.reverse {
-        flex-direction: column; /* เรียงลงมา */
+        flex-direction: column;
         gap: 30px;
+        align-items: stretch; /* ให้การ์ดเต็มความกว้าง */
     }
 
     .room-image {
         width: 100%;
-        height: 250px; /* ลดความสูงรูป */
+        height: 300px;
     }
 
     .room-details {
-        text-align: center !important; /* จัดกลางในมือถือ */
+        text-align: center !important;
         padding: 0 10px;
     }
-    
-    .amenities {
-        justify-content: center;
-    }
-    /* 5. About Us: เรียงเนื้อหาลงมาแนวตั้ง */
+
+  
     .content-container {
         flex-direction: column;
         gap: 20px;
     }
-}
 
-/* --- Mobile Only (หน้าจอเล็กกว่า 768px) --- */
-@media screen and (max-width: 768px) {
-    
-    /* 1. Services: เรียงรูปและข้อความลงมาแนวตั้ง */
-    .service-row, .service-row.reverse {
-        flex-direction: column; /* บังคับเรียงลงมาเสมอ */
-        gap: 20px;
-        margin: 40px 0;
-    }
-    
-     .modal-room-title { font-size: 24px; }
-    .main-image-wrapper { height: 250px; }
-    .row-info { flex-direction: column; }
-    .detail-text strong { width: 100px; }
-
-    /* ปรับกล่องแจ้งเตือนให้กระชับขึ้น */
-    .room-availability.full {
-        padding: 15px; /* ลด padding ลงนิดหน่อย */
-    }
-    
-    /* ปรับข้อความเชิญชวน */
-    .avail-contact-box p {
-        font-size: 13px; /* ลดขนาดตัวหนังสือเล็กน้อย */
-        margin-bottom: 10px;
-    }
-
-    /* จัดกลุ่มปุ่มให้เรียงแนวตั้ง (Stack) */
-    .contact-buttons {
+      .contact-buttons {
         flex-direction: column; /* เรียงลงมา */
         gap: 8px; /* ระยะห่างระหว่างปุ่ม */
         width: 100%;
     }
 
-    /* ปรับปุ่มให้กว้างเต็มจอ (Full Width) */
-    .contact-pill {
-        width: 100%; /* กว้างเต็มพื้นที่ */
-        justify-content: center; /* จัดตัวหนังสือและไอคอนให้อยู่กลางปุ่ม */
-        padding: 10px; /* เพิ่มพื้นที่กดให้ง่ายขึ้น (Touch Friendly) */
-        font-size: 15px; /* เพิ่มขนาดตัวอักษรให้ชัดเจน */
-        box-sizing: border-box; /* รวม padding ในความกว้าง */
-    }
-    
-    /* ปรับไอคอนในปุ่มให้ใหญ่ขึ้นนิดนึง */
-    .contact-pill i {
-        font-size: 18px;
-    }
-    
-    /* ให้รูปภาพอยู่ด้านบนเสมอ */
-    .service-img {
-        width: 100%;
-        height: 250px; /* ลดความสูงรูปลง */
+   /* ===== SERVICE TEXT ===== */
+  .service-text h2{
+    font-size:42px; /* จาก 56 */
+  }
+
+  .service-text .open-time{
+    font-size:22px; /* จาก 28 */
+  }
+
+  .service-text p{
+    font-size:16px; /* จาก 18 */
+  }
+
+  /* ===== CONTACT ===== */
+  #contact .content p.main{
+    font-size:24px; /* จาก 28 */
+  }
+
+  #contact .content p{
+    font-size:18px; /* จาก 20 */
+  }
+
+  /* ===== ROOM MODAL ===== */
+   .room-modal-overlay{
+    justify-content:flex-start;   /* จาก center → ซ้าย */
+    align-items:flex-start;
+    padding:20px;                 /* เว้นขอบจอ */
+  }
+
+  /* กล่อง modal */
+  .room-modal-content{
+    margin:0;                     /* เอากึ่งกลางออก */
+    margin-left:0;                /* ชิดซ้าย */
+    width:100%;
+    max-width:900px;              /* tablet ยังไม่กว้างเกิน */
+  }
+
+  .main-image-wrapper{
+    height:320px;
+  }
+
+  .modal-room-title{
+    font-size:26px;
+  }
+
+  .thumbnail-list{
+    gap:8px;
+  }
+
+  .thumb{
+    width:80px;
+    height:55px;
+  }
+}
+
+/* --- Mobile (iPhone / Android) --- 
+   ช่วง: น้อยกว่า 768px */
+@media screen and (max-width: 768px) {
+
+    /* ปรับระยะห่าง Section ให้กระชับขึ้น */
+    section {
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 
-    .service-text {
-        padding: 0 10px;
-    }
-
-    .service-text h2 { font-size: 32px; }
-
-    /* 2. Contact Us: เรียงลงมา */
-    #contact .main-content{
-        font-size: 35px;
-    }
-
-    #contact .content {
-        display: flex;
-        flex-direction: column;
-        padding: 0 20px;
-        font-size: 10px;
-    }
-
-    /* 3. Login Box */
-    .box-login {
+    /* Text Overlay บนรูป Banner */
+    .image-text-overlay {
         width: 90%;
-        padding: 40px 20px;
+    }
+    .image-text-overlay a {
+        font-size: 32px; /* ลดขนาดหัวข้อ */
+    }
+    .image-text-overlay p {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+   .full-width-image-container {
+        width:100vw;
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+  overflow:hidden;
+    }
+
+    .full-width-image-container img.main-image {
+        height: 40vh; /* ลดความสูงรูป Banner */
+        object-fit: cover;
+    }
+
+    /* หัวข้อ Section */
+    .box { padding: 20px 10px; }
+    .box p.main { font-size: 28px; }
+    .box p.sec { font-size: 20px; }
+    .box p.des { 
+        font-size: 15px; 
+        text-align: left; /* ให้อ่านง่ายบนมือถือ */
+    }
+
+    /* Contact Section */
+    #contact .content {
+        flex-direction: column;
+        padding: 0 10px;
+        text-align: center;
     }
     
-    .box-login h2 { font-size: 30px; }
+    .content-section { margin-bottom: 30px; }
+
+    /* Login Form */
+    .box-login {
+        width: 100%;
+        padding: 30px 15px;
+    }
     
-    /* 4. Footer */
+    /* Footer Stack */
     .footer-content {
         flex-direction: column;
         gap: 30px;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
     }
 
-    /* ปรับ Typography ให้ขนาดไหลลื่น (Fluid Typography) ไม่ใหญ่คับจอ */
-    .image-text-overlay a {
-        font-size: clamp(32px, 8vw, 48px); /* ปรับขนาดตามความกว้างจอ */
-        line-height: 1.1;
-        display: block;
-        margin-bottom: 10px;
+    /* Buttons & Touch Targets */
+    .btn-book {
+        width: 100%; /* ปุ่มเต็มความกว้างกดง่าย */
+        padding: 15px;
     }
 
-    .image-text-overlay p {
-        font-size: clamp(14px, 4vw, 18px);
-        font-weight: 300;
-        letter-spacing: 1px;
-        opacity: 0.9;
+    /* Room Availability Box */
+    .room-availability {
+        padding: 15px;
+    }
+    
+    /* ===== SERVICE ===== */
+  .service-text h2{
+    font-size:30px;
+  }
+
+  .service-text .open-time{
+    font-size:18px;
+  }
+
+  .service-text p{
+    font-size:14px;
+  }
+
+  /* ===== CONTACT ===== */
+  #contact .content p.main{
+    font-size:20px;
+  }
+
+  #contact .content p{
+    font-size:16px;
+  }
+
+ 
+  /* ===== title ===== */
+  .modal-room-title{
+    font-size:22px;
+    margin-bottom:20px;
+  }
+
+  /* ===== main image ===== */
+  .main-image-wrapper{
+    height:240px;
+  }
+
+  /* ===== thumbnails ===== */
+  .thumbnail-list{
+    gap:6px;
+  }
+
+  .thumb{
+    width:70px;
+    height:50px;
+  }
+
+  /* ===== detail text ===== */
+  .detail-text p{
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  .detail-text strong{
+    width:100%;
+    display:block;
+    margin-bottom:2px;
+  }
+
+  .row-info{
+    flex-direction:column;
+    gap:8px;
+    max-width:100%;
+  }
+}
+
+/* --- Small Mobile (iPhone SE / Older Android) --- 
+   ช่วง: น้อยกว่า 480px */
+@media screen and (max-width: 480px) {
+    .menu-bar { height: 60px; padding: 0 15px; }
+    .mobile-menu { top: 60px; }
+    .logo img { height: 40px; }
+    
+    .full-width-image-container {
+        width:100vw;
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
+  overflow:hidden;
     }
 
-
-    /* ปรับกล่องเนื้อหา (Box) ให้ดูโปร่งขึ้น */
-    .box {
-        width: 100%;
-        padding: 40px 20px;
-        box-sizing: border-box;
-    }
-
-    .box p.main {
-        font-size: 28px;
-        line-height: 1.3;
-    }
-
-    .box p.des {
-        font-size: 16px;
-        line-height: 1.8; /* เพิ่มระยะห่างบรรทัดให้อ่านสบายตา */
-        color: #666;
-        width: 100%;
-        text-align: justify; /* จัดชิดขอบซ้ายขวา (Optional) */
-        text-align-last: center; /* บรรทัดสุดท้ายจัดกลาง */
-    }
-
-    /* ปรับรูปห้องและบริการให้เต็มจอสวยๆ */
-    .room-card, .service-row, .service-row.reverse {
-        gap: 0;
-        margin-bottom: 60px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08); /* เพิ่มเงาให้ดูลอย */
-        background: white;
+    .full-width-image-container img.main-image {
+        height: 40vh; /* ลดความสูงรูป Banner */
+        object-fit: cover;
     }
 
     .room-image, .service-img {
-        height: 250px;
-        border-radius: 0; /* ลบมุมโค้งเพราะอยู่ใน card */
+        height: 150px;
+    }
+    
+    .detail-text strong {
+        display: block; /* ขึ้นบรรทัดใหม่สำหรับหัวข้อใน Modal */
+        margin-bottom: 5px;
     }
 
-    .room-details, .service-text {
-        padding: 30px 20px;
-    }
+      /* ===== SERVICE ===== */
+  .service-text h2{
+    font-size:24px;
+  }
 
-    .room-details h3, .service-text h2 {
-        font-size: 28px;
-        margin-top: 0;
-    }
+  .service-text .open-time{
+    font-size:16px;
+  }
+
+  .service-text p{
+    font-size:13px;
+  }
+
+  /* ===== CONTACT ===== */
+  #contact .content p.main{
+    font-size:18px;
+  }
+
+  #contact .content p{
+    font-size:15px;
+  }
+
+  /* ===== ROOM MODAL ===== */
+ .room-modal-overlay{
+    margin-top: 60px;
+    width:420px;
+    padding:8px;
+  }
+
+  .room-modal-content{
+    padding:15px 10px;
+  }
+  .modal-room-title{
+    font-size:20px;
+  }
+
+  .main-image-wrapper{
+    height:200px;
+  }
+
+  .thumb{
+    width:60px;
+    height:45px;
+  }
+
+  .detail-text p{
+    font-size:13px;
+  }
 }

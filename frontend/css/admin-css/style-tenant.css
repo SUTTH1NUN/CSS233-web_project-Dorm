@@ -375,95 +375,133 @@ body {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
-/* Tablet & Mobile (หน้าจอเล็กกว่า 992px) */
-@media (max-width: 992px) {
-    
-    /* ซ่อน Sidebar ไปทางซ้าย */
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    /* แสดง Sidebar เมื่อมี class active */
-    .sidebar.active {
-        transform: translateX(0);
-    }
+/* ==========================================================================
+   RESPONSIVE STYLES (TENANT PAGE FIX)
+   ========================================================================== */
 
-    /* ขยายเนื้อหาหลัก */
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-    }
-
-    /* โชว์ปุ่ม Hamburger */
+/* --- Tablet (769px - 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
     .menu-toggle { display: block; }
     
-    /* ปรับ Layout แถบค้นหา */
-    .control-bar, .search-group {
+    /* Control Bar */
+    .control-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+    .search-group { width: 100%; justify-content: space-between; }
+    .search-wrapper, .custom-select { width: 48%; }
+    .btn-primary { width: 100%; justify-content: center; margin-top: 10px; }
+    
+    /* Table */
+    .content-box.table-card { overflow-x: auto; }
+}
+
+/* --- Mobile (<= 768px) --- */
+@media (max-width: 768px) {
+
+    /* 1. Reset Global */
+    body { overflow-x: hidden; }
+    .admin-container { width: 100%; overflow-x: hidden; }
+
+    /* 2. Sidebar & Toggle */
+    .menu-toggle {
+        display: block;
+        margin-right: 15px;
+        z-index: 1100;
+        position: relative;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 260px;
+        height: 100vh;
+        background: #fff;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 2000; /* อยู่บนสุด */
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        overflow-y: auto;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    .sidebar-overlay { z-index: 1999; } /* อยู่ใต้ Sidebar */
+
+    /* 3. Main Content */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .page-title h1 { font-size: 22px; }
+    .sub-text { font-size: 13px; }
+    .admin-name { display: none; }
+
+    /* 4. Controls (Search & Add Button) */
+    .control-bar {
         flex-direction: column;
         align-items: stretch;
         gap: 15px;
     }
 
-    .search-wrapper, .custom-select, .btn-primary {
+    .search-group {
+        flex-direction: column;
         width: 100%;
+        gap: 10px;
     }
-    .search-wrapper i { left: 15px; }
 
-    /* ซ่อนชื่อ Admin */
-    .admin-name { display: none; }
+    .search-wrapper, .custom-select, #add-tenant-btn {
+        width: 100% !important;
+    }
     
-    /* ปรับ Modal ให้เต็มจอ */
+    .search-wrapper i { top: 50%; transform: translateY(-50%); }
+    .btn-primary { justify-content: center; }
+
+    /* 5. Table Fix (บังคับ Scroll แนวนอน) */
+    .content-box.table-card {
+        padding: 0 !important;
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        border: 1px solid #eee;
+    }
+
+    .modern-table {
+        width: 100%;
+        min-width: 700px; /* บังคับกว้างกว่าจอเพื่อให้ Scroll */
+    }
+
+    .modern-table th, .modern-table td {
+        white-space: nowrap;
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    /* 6. Modal (ฟอร์มเพิ่มผู้เช่า) */
     .modal-content {
-        width: 90%;
+        width: 95% !important;
         padding: 20px;
+        margin: 10px auto;
         max-height: 85vh;
         overflow-y: auto;
     }
-    
+
     .form-grid {
-        grid-template-columns: 1fr; /* เรียงฟอร์มลงมา */
+        grid-template-columns: 1fr !important; /* เรียงแถวเดียว */
         gap: 15px;
+        margin-bottom: 20px;
     }
 
-    /* ปรับปุ่มให้เต็มจอและเห็นชัดเจน */
-    .btn-primary, #add-tenant-btn {
-        width: 100%;
-        margin-top: 10px;
-        display: block; /* บังคับแสดงผล */
-    }
-
-
-}
-
-@media (max-width: 480px) {
-    
-    /* 1. ปุ่มค้นหา */
-    .control-bar, .search-group {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-    
-    .search-wrapper, .custom-select, .btn-primary { width: 100%; }
-    .btn-primary { justify-content: center; margin-top: 5px; }
-
-    /* 2. Modal เพิ่มผู้เช่า */
-    .modal-content {
-        width: 90%;
-        padding: 20px;
-    }
-    
-    /* บังคับ Grid 3 ช่อง ให้เหลือ 1 ช่อง */
-    .form-grid {
-        grid-template-columns: 1fr !important;
-        gap: 15px;
-    }
-    
     .modal-actions {
-        flex-direction: column-reverse;
+        flex-direction: column-reverse; /* ปุ่ม Cancel ไว้ล่าง */
         gap: 10px;
+        padding-top: 15px;
     }
-    
-    .btn-cancel, .modal-actions button { width: 100%; }
+
+    .btn-cancel, .modal-actions button {
+        width: 100%;
+        margin: 0;
+    }
 }

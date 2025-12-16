@@ -519,74 +519,116 @@ body {
     }
 }
 
-@media screen and (max-width: 480px) {
+@media (max-width: 768px) {
+    /* 1. Reset Global Styles */
+    body, .admin-container { overflow-x: hidden; }
     
-    /* 1. ปรับ Layout หลัก */
+    /* 2. Sidebar & Menu */
+    .menu-toggle { display: block; margin-right: 15px; }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 2000; /* อยู่บนสุด */
+    }
+    .sidebar.active { transform: translateX(0); }
+    
+    .sidebar-overlay { z-index: 1999; } /* อยู่ใต้ Sidebar นิดนึง */
+
+    /* 3. Main Content Layout */
     .main-content {
-        padding: 15px; /* ลดขอบข้างให้เหลือพื้นที่เนื้อหามากขึ้น */
+        margin-left: 0 !important;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
-    .page-title h1 {
-        font-size: 22px; /* ลดขนาดหัวข้อ */
-    }
+    .page-title h1 { font-size: 22px; }
+    .sub-text { font-size: 13px; }
+    .admin-name { display: none; } /* ซ่อนชื่อ Admin ในมือถือ */
 
-    /* 2. ปรับแถบเครื่องมือ (Filter & Search) */
-    .control-bar, .filter-group {
-        flex-direction: column; /* เรียงลงแนวตั้ง */
+    /* 4. Filter & Search Bar */
+    .control-bar {
+        flex-direction: column;
         align-items: stretch;
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        width: 100%;
         gap: 10px;
     }
 
-    .search-wrapper, .date-wrapper, .custom-select, .btn-primary {
-        width: 100%; /* ขยายเต็มความกว้าง */
+    .search-wrapper, .date-wrapper, .custom-select, #add-payment-btn {
+        width: 100% !important; /* เต็มความกว้าง */
     }
     
-    .search-wrapper i { left: 15px; top: 50%; transform: translateY(-50%); }
+    .search-wrapper i { top: 50%; transform: translateY(-50%); }
 
-    /* 3. ปรับ Modal (ฟอร์มสร้าง Invoice) ให้เป็นแนวตั้ง */
-    .modal-content {
-        width: 95% !important; /* กว้างเกือบเต็มจอ */
-        padding: 20px;
-        margin: 10px auto;
-        max-height: 85vh; /* กันล้นจอ */
-    }
-
-    .form-grid {
-        /* บังคับให้เหลือ 1 คอลัมน์ (เรียงลงมา) */
-        grid-template-columns: 1fr !important; 
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    /* ซ่อน Div ว่างๆ ที่ใช้จัด Layout ใน Desktop */
-    .form-group:empty {
-        display: none;
-    }
-
-    /* ปรับปุ่ม Action ใน Modal */
-    .modal-actions {
-        flex-direction: column-reverse; /* เอาปุ่ม Save ไว้บน Cancel (หรือเรียงตามความถนัด) */
-        gap: 10px;
-    }
-
-    .modal-actions button {
+    /* 5. Table (บังคับ Scroll แนวนอน) */
+    .table-card {
+        padding: 0 !important;
+        border: 1px solid #eee;
+        overflow-x: auto; /* Scroll แนวนอน */
+        display: block;
         width: 100%;
     }
 
-    /* 4. ปรับตาราง (Table) */
-    .table-responsive {
-        border-radius: 8px;
-        border: 1px solid #eee;
+    .modern-table {
+        min-width: 700px; /* บังคับให้กว้างกว่าจอมือถือ */
     }
-    
+
     .modern-table th, .modern-table td {
-        white-space: nowrap; /* ห้ามตัดคำ (ให้เลื่อน scroll เอา) */
+        white-space: nowrap;
         padding: 12px 10px;
-        font-size: 14px;
+        font-size: 13px;
+    }
+
+    /* 6. Modal (ฟอร์มสร้าง Invoice) */
+    .modal-content {
+        width: 95% !important;
+        padding: 20px;
+        margin: 10px auto;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    /* จัดฟอร์มเป็นแถวเดียว */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    /* ซ่อน Div ว่างที่ใช้จัด Layout ใน Desktop */
+    .form-group:empty { display: none; }
+
+    /* เส้นคั่น */
+    .dashed-line, .solid-line { margin: 15px 0; }
+
+    /* กล่องสรุปยอด */
+    .calc-summary-box { padding: 10px; }
+    .grand-total { font-size: 20px; }
+
+    /* ยอดรวมด้านล่างสุด */
+    .bottom-row { 
+        flex-direction: column; 
+        align-items: stretch;
     }
     
-    /* ปรับปุ่ม Action ในตารางไม่ให้เบียดกัน */
-    .action-btn {
-        margin-right: 8px;
+    .input-total { text-align: center; }
+
+    /* ปุ่ม Action */
+    .modal-actions {
+        flex-direction: column-reverse; /* เอาปุ่ม Save ไว้บน */
+        gap: 10px;
+        padding-top: 15px;
+    }
+
+    .btn-cancel, .btn-primary, .btn-calculate {
+        width: 100%;
+        margin: 0;
+        justify-content: center;
     }
 }

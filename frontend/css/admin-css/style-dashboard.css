@@ -220,39 +220,123 @@ body {
 
 .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-/* Tablet & Mobile (ขยาย Breakpoint เป็น 992px) */
-@media (max-width: 992px) {
+/* ==========================================================================
+   RESPONSIVE FIX FOR DASHBOARD (FINAL VERSION)
+   ========================================================================== */
+
+/* --- Tablet (769px - 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
     .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
     .sidebar.active { transform: translateX(0); }
     .main-content { margin-left: 0; padding: 20px; }
-    .menu-toggle { display: block; } /* โชว์ปุ่มเมนู */
+    .menu-toggle { display: block; }
+    
     .content-split { grid-template-columns: 1fr; } /* เรียงกล่องลงมาแนวตั้ง */
-    .sidebar-header h3 { display: block; } /* โชว์ชื่อ ADMIN แทน */
+    .stats-grid { grid-template-columns: repeat(2, 1fr); } /* สถิติเรียง 2 แถว */
 }
 
-@media (max-width: 480px) {
-    
-    /* 1. การ์ดสถิติ */
-    .stats-grid {
-        grid-template-columns: 1fr; /* เรียงแถวเดียว */
-        gap: 15px;
+/* --- Mobile (<= 768px) --- */
+@media (max-width: 768px) {
+
+    /* 1. Global Reset */
+    body { overflow-x: hidden; }
+    .admin-container { width: 100%; overflow-x: hidden; }
+
+    /* 2. Sidebar (Overlay Mode) */
+    .menu-toggle {
+        display: block;
+        margin-right: 15px;
+        z-index: 1100;
+        position: relative;
     }
-    
-    .stat-card { padding: 20px; }
-    .icon-box { width: 45px; height: 45px; font-size: 20px; }
+
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 260px;
+        height: 100vh;
+        background: #fff;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 2000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        overflow-y: auto;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    .sidebar-overlay { z-index: 1999; }
+
+    /* 3. Main Content */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .page-title h1 { font-size: 22px; }
+    .date-today { font-size: 12px; }
+    .admin-profile { display: none; } /* ซ่อน Profile บนมือถือ */
+
+    /* 4. Stats Grid (การ์ดสถิติ) */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* เรียงลงมาแถวเดียว */
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        padding: 20px;
+        width: 100%;
+        box-sizing: border-box; /* สำคัญ: ไม่ให้ Padding ดันกล่องล้น */
+    }
+
+    .icon-box {
+        width: 45px; height: 45px; font-size: 20px; margin-right: 15px;
+    }
+
     .stat-info .number { font-size: 22px; }
 
-    /* 2. กล่องกราฟและตารางล่าสุด */
+    /* 5. Content Split (กราฟ & ตาราง) */
     .content-split {
-        grid-template-columns: 1fr; /* เรียงลงมา */
+        display: flex; /* ใช้ Flex แทน Grid เพื่อให้เรียงลงง่ายๆ */
+        flex-direction: column;
         gap: 20px;
     }
+
+    .content-box {
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden; /* กันเนื้อหาล้น */
+    }
+
+    /* 6. Table Fix */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+    }
+
+    .simple-table {
+        min-width: 500px; /* บังคับ Scroll แนวนอนถ้าจอเล็กมาก */
+    }
     
-    .content-box { padding: 15px; }
+    .simple-table th, .simple-table td {
+        white-space: nowrap;
+        padding: 10px 5px;
+        font-size: 13px;
+    }
+
+    /* 7. Payment List */
+    .payment-list li {
+        padding: 12px 0;
+    }
     
-    /* 3. รายการจ่ายเงินล่าสุด */
     .pay-icon { width: 35px; height: 35px; font-size: 14px; margin-right: 10px; }
     .pay-detail strong { font-size: 13px; }
+    .pay-detail span { font-size: 11px; }
     .pay-amount { font-size: 14px; }
     
     .box-header h2 { font-size: 16px; }

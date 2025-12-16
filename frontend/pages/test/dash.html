@@ -346,6 +346,25 @@
         window.addEventListener('click', (e) => {
             if (e.target === modal) modal.classList.remove('active');
         });
+
+         // --- Sidebar Logic (เหมือนเดิม) ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            if(overlay) overlay.classList.add('active');
+        });
+
+        if(overlay) {
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+    }
     });
     </script>
 
