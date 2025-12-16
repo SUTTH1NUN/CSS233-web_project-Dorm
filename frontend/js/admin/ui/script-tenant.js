@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${tenant.first_name} ${tenant.last_name}</td>
                 <td><strong>${tenant.room_number}</strong></td> 
                 <td>${tenant.phone_number}</td>
-                <td><span class="badge ${statusClass}">${tenant.tenant_status}</span></td>
+                <td><span class="badge ${statusClass}" style="padding: 4px 10px; font-size: 11px;">${tenant.tenant_status}</span></td>
                 <td>
                     <button class="action-btn view" onclick="getTenantDetails(${tenant.tenant_id}, 'view')"><i class="fas fa-eye"></i></button>
                     <button class="action-btn edit" onclick="getTenantDetails(${tenant.tenant_id}, 'edit')"><i class="fas fa-pen"></i></button>

@@ -188,7 +188,7 @@ section {
 }
 .full-width-image-container img.main-image {
     width:100%;
-  height:clamp(30vh,60vh,70vh);
+  height:70vh;
   object-fit:cover;
     
 }

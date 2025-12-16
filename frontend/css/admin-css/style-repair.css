@@ -4,12 +4,12 @@
     --text-grey: #666;
     --bg-light: #f4f6f9;
     --sidebar-width: 260px;
-    --status-pending-bg: #fff3cd;
-    --status-pending-text: #856404;
-    --status-process-bg: #d1ecf1;
-    --status-process-text: #0c5460;
-    --status-completed-bg: #d4edda;
-    --status-completed-text: #155724;
+    --status-pending-bg: #fef5e7;
+    --status-pending-text: #f39c12;
+    --status-process-bg: #eaf2f8;
+    --status-process-text: #3498db;
+    --status-completed-bg: #eafaf1;
+    --status-completed-text: #2ecc71;
     --status-cancelled-bg: #f8d7da;
     --status-cancelled-text: #721c24;
 }

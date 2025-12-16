@@ -1,5 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    const revealElements = document.querySelectorAll('.reveal-text');
+    revealElements.forEach(el => revealObserver.observe(el));
     // --- 1. Configuration & Data ---
     const API_AVAILABILITY_URL = 'http://localhost:3030/api/public/available-rooms';
     

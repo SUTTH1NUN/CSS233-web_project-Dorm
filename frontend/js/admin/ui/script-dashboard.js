@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const row = `
                 <tr>
-                    <td>${room.room_number}</td>
+                    <td><strong>${room.room_number}</strong></td>
                     <td>${room.room_type}</td>
                     <td>${room.floor}</td>
                     <td><span class="badge ${badgeClass}">${room.room_status.replace('_', ' ')}</span></td>

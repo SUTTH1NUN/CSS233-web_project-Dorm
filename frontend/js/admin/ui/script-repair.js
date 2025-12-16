@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusText = item.repair_status.replace('_', ' ');
 
             tr.innerHTML = `
-                <td style="text-align: center;">${index + 1}</td>
+                <td>${index + 1}</td>
                 <td style="font-weight: 500;">${item.room_number}</td>
                 <td>${item.issue_title}</td>
                 <td>${item.first_name} ${item.last_name}</td>
