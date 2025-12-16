@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${room.floor}</td>
                 <td><strong>${room.room_number}</strong></td>
                 <td>${room.room_type}</td>
-                <td><span class="badge ${badgeClass}">${displayStatus}</span></td>
+                <td><span class="badge ${badgeClass} style="padding: 4px 10px; font-size: 11px;"">${displayStatus}</span></td>
                 <td>
                     <button class="action-btn view" data-id="${room.room_id}"><i class="fas fa-eye"></i></button>
                     <button class="action-btn edit" data-id="${room.room_id}"><i class="fas fa-pen"></i></button>
