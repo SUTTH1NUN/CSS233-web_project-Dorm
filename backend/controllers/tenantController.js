@@ -179,12 +179,14 @@ exports.updateTenant = async (req, res) => {
         const { id } = req.params;
         const {
             first_name, last_name, email, phone_number,
-            tenant_status, deposit_amount, start_date, end_date
+            tenant_status, deposit_amount, start_date, end_date,
+            // รับค่าข้อมูลห้องใหม่มาด้วย (ถ้ามีการเปลี่ยน)
+            building, floor, room_number 
         } = req.body;
 
         await client.query('BEGIN');
 
-        // Step 1: Update Tenant Info
+        //Update ข้อมูลส่วนตัวผู้เช่า (Tenant Info)
         const updateTenantSql = `
             UPDATE tenants 
             SET first_name = $1, 
@@ -196,18 +198,66 @@ exports.updateTenant = async (req, res) => {
         `;
         await client.query(updateTenantSql, [first_name, last_name, email, phone_number, tenant_status, id]);
 
-        // Step 2: Check Logic - หากสถานะเปลี่ยนเป็นย้ายออก (vacated/inactive) ต้องคืนห้องว่าง
+        // ดึง room_id ปัจจุบันจากสัญญา (เพื่อเอาไว้เช็คว่ามีการเปลี่ยนห้องไหม)
+        const currentContractRes = await client.query(
+            'SELECT contract_id, room_id FROM lease_contract WHERE tenant_id = $1 LIMIT 1', 
+            [id]
+        );
+        
+        let oldRoomId = null;
+        if (currentContractRes.rows.length > 0) {
+            oldRoomId = currentContractRes.rows[0].room_id;
+        }
+
+        // ---------------------------------------------------------
+        // CASE A: ผู้เช่าย้ายออก (Inactive / Vacated) -> คืนห้องเดิม
+        // ---------------------------------------------------------
         if (tenant_status === 'inactive' || tenant_status === 'vacated') {
-            // หา room_id ที่ผู้เช่าคนนี้ถือครองอยู่
-            const contractRes = await client.query('SELECT room_id FROM lease_contract WHERE tenant_id = $1', [id]);
+            if (oldRoomId) {
+                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [oldRoomId]);
+            }
+        } 
+        // ---------------------------------------------------------
+        // CASE B: ผู้เช่ายังอยู่ (Active) แต่มีการ "ย้ายห้อง" (Move Room)
+        // ---------------------------------------------------------
+        else if (building && floor && room_number) {
             
-            if (contractRes.rows.length > 0) {
-                const roomId = contractRes.rows[0].room_id;
-                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [roomId]);
+            // หา room_id ของห้องใหม่ที่ระบุมา
+            const newRoomRes = await client.query(
+                "SELECT room_id, room_status FROM rooms WHERE building = $1 AND floor = $2 AND room_number = $3",
+                [building, floor, room_number]
+            );
+
+            if (newRoomRes.rows.length === 0) {
+                throw new Error(`ไม่พบห้องพัก: ${building} ชั้น ${floor} ห้อง ${room_number}`);
+            }
+
+            const newRoom = newRoomRes.rows[0];
+            const newRoomId = newRoom.room_id;
+
+            // เช็คว่าห้องเปลี่ยนไปจากเดิมหรือไม่
+            if (oldRoomId && oldRoomId !== newRoomId) {
+                
+                // ตรวจสอบว่าห้องใหม่ว่างไหม?
+                if (newRoom.room_status !== 'available') {
+                    throw new Error(`ห้อง ${room_number} ไม่ว่าง (สถานะ: ${newRoom.room_status})`);
+                }
+
+                // A. คืนห้องเก่า -> Available
+                await client.query("UPDATE rooms SET room_status = 'available' WHERE room_id = $1", [oldRoomId]);
+
+                // B. จองห้องใหม่ -> Occupied
+                await client.query("UPDATE rooms SET room_status = 'occupied' WHERE room_id = $1", [newRoomId]);
+
+                // C. อัปเดตสัญญาเช่าให้ชี้ไปที่ห้องใหม่
+                await client.query(
+                    "UPDATE lease_contract SET room_id = $1 WHERE tenant_id = $2", 
+                    [newRoomId, id]
+                );
             }
         }
 
-        // Step 3: Update Contract Info
+        // Update ข้อมูลสัญญาอื่นๆ (เงินมัดจำ, วันที่)
         const updateContractSql = `
             UPDATE lease_contract
             SET deposit_amount = $1, 
@@ -218,13 +268,37 @@ exports.updateTenant = async (req, res) => {
         await client.query(updateContractSql, [deposit_amount, start_date, end_date || null, id]);
 
         await client.query('COMMIT');
-        res.json({ message: 'อัปเดตข้อมูลสำเร็จ' });
+        res.json({ message: 'อัปเดตข้อมูลและจัดการห้องพักเรียบร้อยแล้ว' });
 
     } catch (err) {
         await client.query('ROLLBACK');
         console.error("Update Tenant Error:", err.message);
-        res.status(500).json({ message: "Server Error" });
+        res.status(500).json({ message: err.message || "Server Error" });
     } finally {
         client.release();
+    }
+};
+
+exports.resetTenantPassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // ดึงเบอร์โทรมาเพื่อใช้เป็นรหัสผ่าน
+        const tenantRes = await pool.query("SELECT phone_number FROM tenants WHERE tenant_id = $1", [id]);
+        
+        if (tenantRes.rows.length === 0) {
+            return res.status(404).json({ message: "ไม่พบผู้เช่า" });
+        }
+
+        const phoneNumber = tenantRes.rows[0].phone_number;
+        const hashedPassword = await bcrypt.hash(phoneNumber, SALT_ROUNDS);
+
+        await pool.query("UPDATE tenants SET password_hash = $1 WHERE tenant_id = $2", [hashedPassword, id]);
+
+        res.json({ message: "รีเซ็ตรหัสผ่านเรียบร้อยแล้ว (รหัสผ่านคือเบอร์โทรศัพท์)" });
+
+    } catch (err) {
+        console.error("Reset Password Error:", err.message);
+        res.status(500).json({ message: "Server Error" });
     }
 };

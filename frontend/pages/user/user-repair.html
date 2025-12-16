@@ -84,9 +84,12 @@
                         <div class="form-group">
                             <label>Attach Photo (Optional)</label>
                             <div class="file-upload-wrapper" id="upload-area">
-                                <input type="file" id="repair-image" accept="image/*">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Click or Drag photo here</p>
+                                <input type="file" id="repair-image" name="image" accept="image/*" style="display: none;">
+                                <div id="upload-placeholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to select photo</p>
+                                </div>
+                                <img id="repair-img-preview" src="#" alt="Preview" style="display: none;">
                             </div>
                         </div>
 

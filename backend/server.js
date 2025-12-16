@@ -27,7 +27,7 @@ const publicRoutes = require('./routes/public');
 app.use("/api/auth", authRoutes);
 app.use("/api/tenants", tenantRoutes);// แก้ logic ตอนย้ายห้อง
 app.use('/api/announcement', announcementRoute);
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/repairs', repairRoutes); //แก้ความสวยงามเล็กน้อย
 app.use("/api/payments", paymentRoutes);
 app.use('/api/rooms', roomRoutes);

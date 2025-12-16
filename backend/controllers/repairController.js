@@ -3,8 +3,7 @@ const pool = require("../config/db");
 // 1. ดึงรายการแจ้งซ่อมทั้งหมด (สำหรับ Admin)
 exports.getAllRepairs = async (req, res) => {
     try {
-        // Logic: เรียงสถานะ 'pending' ขึ้นก่อน (1), สถานะอื่นเอาไว้ทีหลัง (2) 
-        // แล้วค่อยเรียงตามวันที่ล่าสุด
+        // เพิ่ม r.resolved_date เข้าไปใน SELECT เพื่อให้เห็นวันที่เสร็จ
         const sql = `
             SELECT 
                 r.repair_id,
@@ -12,7 +11,9 @@ exports.getAllRepairs = async (req, res) => {
                 r.issue_description,
                 r.repair_status,
                 r.request_date,
+                r.resolved_date, 
                 r.admin_note,
+                r.img_path,
                 rm.room_number,
                 t.phone_number,
                 t.first_name,
@@ -34,24 +35,59 @@ exports.getAllRepairs = async (req, res) => {
     }
 };
 
+// [เพิ่มใหม่] 1.5 ดึงรายการแจ้งซ่อมรายตัว (สำหรับกดปุ่ม View)
+exports.getRepairById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const sql = `
+            SELECT 
+                r.*,
+                rm.room_number,
+                t.first_name,
+                t.last_name,
+                t.phone_number
+            FROM repairs r
+            JOIN rooms rm ON r.room_id = rm.room_id
+            JOIN tenants t ON r.tenant_id = t.tenant_id
+            WHERE r.repair_id = $1
+        `;
+
+        const result = await pool.query(sql, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: "Repair not found" });
+        }
+
+        res.json(result.rows[0]);
+
+    } catch (err) {
+        console.error("Get Repair By ID Error:", err.message);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
 // 2. อัปเดตสถานะและ Admin Note
 exports.updateRepairStatus = async (req, res) => {
     try {
         const { id } = req.params;
         const { repair_status, admin_note } = req.body;
 
-        // Logic: ถ้าสถานะเป็น 'completed' ให้บันทึกวันที่ปัจจุบันลง resolved_date ด้วย
+        // Logic: ถ้าสถานะเป็น 'completed' ให้บันทึกวันที่ปัจจุบันลง resolved_date
+        // ถ้าเปลี่ยนกลับเป็นสถานะอื่น ให้ลบวันที่ออก (NULL)
         const sql = `
             UPDATE repairs 
             SET repair_status = $1, 
                 admin_note = $2,
                 resolved_date = CASE 
-                    WHEN $1::repair_status_enum = 'completed' THEN CURRENT_DATE 
+                    WHEN $1 = 'completed' THEN CURRENT_DATE 
                     ELSE NULL 
                 END
             WHERE repair_id = $3
             RETURNING *
         `;
+
+        // หมายเหตุ: เอา ::repair_status_enum ออกถ้า Database ไม่ได้ทำ type enum ไว้
+        // แต่ถ้าทำไว้ ใส่ไว้เหมือนเดิมได้ครับ ($1::repair_status_enum)
 
         const result = await pool.query(sql, [repair_status, admin_note, id]);
 
@@ -71,11 +107,10 @@ exports.updateRepairStatus = async (req, res) => {
 exports.createRepair = async (req, res) => {
     try {
         const tenantId = req.user.id;
-        // รับค่า issue_category มาใส่ในช่อง issue_title ตาม Logic เดิม
         const { issue_category, issue_description, phone_number } = req.body;
         const imgPath = req.file ? `/uploads/${req.file.filename}` : null;
 
-        // Step 1: หา Room ID จากสัญญาเช่าปัจจุบัน (Active Contract)
+        // Step 1: หา Room ID
         const contractSql = `
             SELECT room_id 
             FROM lease_contract 
@@ -90,13 +125,13 @@ exports.createRepair = async (req, res) => {
         
         const roomId = contractRes.rows[0].room_id;
 
-        // Step 2: บันทึกการแจ้งซ่อม
+        // Step 2: บันทึก
         const insertSql = `
             INSERT INTO repairs (
                 tenant_id, room_id, issue_title, issue_description, 
-                phone_number, img_path, repair_status
+                phone_number, img_path, repair_status, request_date
             )
-            VALUES ($1, $2, $3, $4, $5, $6, 'pending')
+            VALUES ($1, $2, $3, $4, $5, $6, 'pending', CURRENT_TIMESTAMP)
             RETURNING *
         `;
         
@@ -152,7 +187,6 @@ exports.getMyRoomInfo = async (req, res) => {
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
         } else {
-            // กรณีไม่มีห้อง ให้ส่ง JSON กลับไปดีกว่าส่ง plain text เพื่อให้ Frontend parse ง่าย
             res.json({ room_number: "Not Assigned" });
         }
 

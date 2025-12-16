@@ -1,17 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'http://localhost:3030/api/repairs';
     
+    // --- Elements ---
     const repairForm = document.getElementById('repair-form');
     const roomDisplay = document.getElementById('room-display');
     const historyContainer = document.getElementById('history-container');
-    const imageInput = document.getElementById('repair-image');
-    const uploadText = document.querySelector('#upload-area p');
     
+    // Upload Elements
+    const uploadArea = document.getElementById('upload-area');
+    const imageInput = document.getElementById('repair-image');
+    const placeholder = document.getElementById('upload-placeholder'); // ไอคอน+ข้อความ
+    const imgPreview = document.getElementById('repair-img-preview'); // tag img เปล่าๆ
+    
+    // Sidebar & Layout
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     const logoutBtn = document.getElementById('logout-btn');
 
+    // Auth Check
     const token = localStorage.getItem('token');
     if (!token) {
         alert('Please login first');
@@ -19,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // 1. Fetch Room Info
     async function fetchRoomInfo() {
         try {
             const response = await fetch(`${API_URL}/my-room`, {
@@ -37,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 2. Fetch Repair History
     async function fetchHistory() {
         try {
             const response = await fetch(`${API_URL}/my-history`, {
@@ -47,12 +56,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const repairs = await response.json();
 
+            // Reset Container but keep Title
             const title = historyContainer.querySelector('.form-title');
             historyContainer.innerHTML = '';
-            historyContainer.appendChild(title);
+            if(title) historyContainer.appendChild(title);
 
             if (repairs.length === 0) {
-                historyContainer.innerHTML += `<div style="text-align:center; color:#999; margin-top:20px;">No repair history found.</div>`;
+                const noData = document.createElement('div');
+                noData.style.textAlign = 'center';
+                noData.style.color = '#999';
+                noData.style.marginTop = '20px';
+                noData.innerText = 'No repair history found.';
+                historyContainer.appendChild(noData);
                 return;
             }
 
@@ -80,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-                historyContainer.innerHTML += itemHtml;
+                // ใช้ insertAdjacentHTML เพื่อไม่ให้ทับ Title
+                historyContainer.insertAdjacentHTML('beforeend', itemHtml);
             });
 
         } catch (error) {
@@ -88,15 +104,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    imageInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            uploadText.textContent = this.files[0].name;
-            uploadText.style.color = '#333';
-        } else {
-            uploadText.textContent = 'Click or Drag photo here';
-        }
-    });
+    // --- 3. Upload Preview Logic (UPDATED) ---
+    
+    // A. คลิกที่กล่อง upload-area แล้วให้ไป trigger input file
+    if (uploadArea && imageInput) {
+        uploadArea.addEventListener('click', () => {
+            imageInput.click();
+        });
+    }
 
+    // B. เมื่อเลือกไฟล์ ให้แสดง Preview
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+
+            if (file) {
+                // เช็คประเภทไฟล์
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file only.');
+                    this.value = ''; // Reset input
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // ซ่อน Placeholder
+                    if(placeholder) placeholder.style.display = 'none';
+                    // โชว์รูป
+                    if(imgPreview) {
+                        imgPreview.src = event.target.result;
+                        imgPreview.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // กรณี User กด Cancel หรือลบไฟล์
+                if(placeholder) placeholder.style.display = 'block';
+                if(imgPreview) {
+                    imgPreview.style.display = 'none';
+                    imgPreview.src = '#';
+                }
+            }
+        });
+    }
+
+    // 4. Submit Form
     repairForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -127,10 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 alert('Request submitted successfully!');
                 repairForm.reset();
-                uploadText.textContent = 'Click or Drag photo here';
-                fetchHistory();
+                
+                // Reset Upload Area ให้กลับไปเป็น Placeholder
+                if(placeholder) placeholder.style.display = 'block';
+                if(imgPreview) {
+                    imgPreview.style.display = 'none';
+                    imgPreview.src = '#';
+                }
+
+                fetchHistory(); // โหลดประวัติใหม่
             } else {
-                alert(result.msg || 'Submission failed');
+                alert(result.message || 'Submission failed');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -138,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Sidebar Logic
     if (menuToggle) {
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('active');
@@ -151,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -160,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Init Data
     fetchRoomInfo();
     fetchHistory();
 });
