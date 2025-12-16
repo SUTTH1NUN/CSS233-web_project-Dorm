@@ -58,7 +58,7 @@ body {
     margin-bottom: 20px;
 }
 
-.logo { width: 70px; margin-bottom: 10px; margin-left: 0px;}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -92,13 +92,12 @@ body {
 }
 
 .logout-section {
-    margin-top: auto; /* ดันปุ่มลงล่างสุด */
-    padding: 20px 50px;
+    margin-top: 300px;
+    padding: 0 50px 20px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
 .logout-section a:hover { opacity: 0.7; }
-
 
 /* --- 3. Main Content --- */
 .main-content {
@@ -532,19 +531,116 @@ body {
     }
 }
 
-/* Mobile Small (หน้าจอเล็กกว่า 480px) */
-@media (max-width: 480px) {
-    .page-title h1 {
-        font-size: 20px;
+@media (max-width: 768px) {
+    /* 1. Reset Global Styles */
+    body, .admin-container { overflow-x: hidden; }
+    
+    /* 2. Sidebar & Menu */
+    .menu-toggle { display: block; margin-right: 15px; }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 2000; /* อยู่บนสุด */
+    }
+    .sidebar.active { transform: translateX(0); }
+    
+    .sidebar-overlay { z-index: 1999; } /* อยู่ใต้ Sidebar นิดนึง */
+
+    /* 3. Main Content Layout */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .page-title h1 { font-size: 22px; }
+    .sub-text { font-size: 13px; }
+    .admin-name { display: none; } /* ซ่อนชื่อ Admin ในมือถือ */
+
+    /* 4. Filter & Search Bar */
+    .control-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .search-wrapper, .date-wrapper, .custom-select, #add-payment-btn {
+        width: 100% !important; /* เต็มความกว้าง */
     }
     
-    .sub-text {
-        font-size: 12px;
+    .search-wrapper i { top: 50%; transform: translateY(-50%); }
+
+    /* 5. Table (บังคับ Scroll แนวนอน) */
+    .table-card {
+        padding: 0 !important;
+        border: 1px solid #eee;
+        overflow-x: auto; /* Scroll แนวนอน */
+        display: block;
+        width: 100%;
     }
-    
-    /* ปรับตารางให้ตัวหนังสือไม่ตกบรรทัด (ใช้ Scroll แทน) */
+
+    .modern-table {
+        min-width: 700px; /* บังคับให้กว้างกว่าจอมือถือ */
+    }
+
     .modern-table th, .modern-table td {
         white-space: nowrap;
-        padding: 10px;
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    /* 6. Modal (ฟอร์มสร้าง Invoice) */
+    .modal-content {
+        width: 95% !important;
+        padding: 20px;
+        margin: 10px auto;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    /* จัดฟอร์มเป็นแถวเดียว */
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    /* ซ่อน Div ว่างที่ใช้จัด Layout ใน Desktop */
+    .form-group:empty { display: none; }
+
+    /* เส้นคั่น */
+    .dashed-line, .solid-line { margin: 15px 0; }
+
+    /* กล่องสรุปยอด */
+    .calc-summary-box { padding: 10px; }
+    .grand-total { font-size: 20px; }
+
+    /* ยอดรวมด้านล่างสุด */
+    .bottom-row { 
+        flex-direction: column; 
+        align-items: stretch;
+    }
+    
+    .input-total { text-align: center; }
+
+    /* ปุ่ม Action */
+    .modal-actions {
+        flex-direction: column-reverse; /* เอาปุ่ม Save ไว้บน */
+        gap: 10px;
+        padding-top: 15px;
+    }
+
+    .btn-cancel, .btn-primary, .btn-calculate {
+        width: 100%;
+        margin: 0;
+        justify-content: center;
     }
 }
