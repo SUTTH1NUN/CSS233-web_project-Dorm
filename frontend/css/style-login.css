@@ -37,7 +37,6 @@ body{
     display: block;
     font-size: 20px;
     color: #333;
-    margin-bottom: 10px;
     font-weight: light;
     font-family: 'Oswald', sans-serif;
 }
@@ -45,11 +44,10 @@ body{
 .content input {
     width: 165%;
     padding: 16px 20px;
-    font-size: 15px;
+    font-size: 18px;
     border: none;
     background: #E0E0E0;
     color: #666;
-    margin-bottom: 18px;
     font-family: 'Oswald', sans-serif;
     font-weight: lighter;
     border-radius: 5px;
@@ -57,7 +55,7 @@ body{
 
 .content input::placeholder {
     color: #999;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .content input:focus {
@@ -72,7 +70,7 @@ body{
     color: white;
     border: none;
     font-size: 20px;
-    font-family: 'Noto Serif TC', serif;
+    font-family: 'Times New Roman', Times, serif; 
     cursor: pointer;
     transition: background 0.3s, transform 0.1s;
     font-weight: 500;
@@ -112,8 +110,11 @@ body{
         }
         .footer-logo img{
             
-        height: 135px;
-        width: 90px;
+        
+    height: 120px;
+    width: 60px;
+
+
         }
         
 

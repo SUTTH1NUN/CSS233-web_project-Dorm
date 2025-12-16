@@ -3,7 +3,7 @@
     --secondary-gold: #f9eeb6;
     --primary-dark: #333;
     --text-grey: #666;
-    --bg-light: #f4f6f9; /* สีพื้นหลังโทนเทาฟ้าอ่อนๆ สบายตา */
+    --bg-light: #f4f6f9;
     --sidebar-width: 260px;
 }
 
@@ -15,11 +15,11 @@ body {
 }
 
 .admin-container {
-     display: flex;
+    display: flex;
     min-height: 100vh;
 }
 
-/* --- Sidebar (เหมือน User Dashboard แต่ปรับ Detail นิดหน่อย) --- */
+/* --- Sidebar --- */
 .sidebar {
     width: var(--sidebar-width);
     background: white;
@@ -39,7 +39,7 @@ body {
     margin-bottom: 20px;
 }
 
-.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 0px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -67,22 +67,19 @@ body {
     font-size: 15px;
 }
 
-.menu-links a i {
-    width: 35px;
-    font-size: 18px;
-    text-align: center;
-}
+.menu-links a i { width: 35px; font-size: 18px; text-align: center; }
 
-/* Active State สีทอง */
+/* Active State */
 .menu-links li.active a, .menu-links a:hover {
     background-color: var(--primary-gold);
     color: white;
     box-shadow: 0 4px 10px rgba(196, 168, 8, 0.3);
 }
 
+/* --- Logout Section --- */
 .logout-section {
-    margin-top: 300px;
-    padding: 0 50px 20px;
+    margin-top: auto;
+    padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
@@ -109,31 +106,20 @@ body {
     color: var(--primary-dark);
 }
 
-.date-today {
-    color: #888;
-    margin: 5px 0 0;
-    font-size: 14px;
-}
+.date-today { color: #888; margin: 5px 0 0; font-size: 14px; }
 
-.admin-profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+.admin-profile { display: flex; align-items: center; gap: 15px; }
 
 .profile-pic {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     background: var(--primary-gold);
     color: white;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     font-size: 20px;
 }
 
-/* --- Stats Grid (การ์ดสรุปยอด) --- */
+/* --- Stats Grid --- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -154,17 +140,12 @@ body {
 .stat-card:hover { transform: translateY(-3px); }
 
 .icon-box {
-    width: 50px;
-    height: 50px;
+    width: 50px; height: 50px;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    margin-right: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-right: 20px;
 }
 
-/* สีพื้นหลัง Icon */
 .icon-box.gold { background: rgba(196, 168, 8, 0.15); color: var(--primary-gold); }
 .icon-box.blue { background: rgba(52, 152, 219, 0.15); color: #3498db; }
 .icon-box.red { background: rgba(231, 76, 60, 0.15); color: #e74c3c; }
@@ -176,10 +157,10 @@ body {
 .stat-info .text-muted { font-size: 12px; color: #aaa; }
 .stat-info .text-danger { font-size: 12px; color: #e74c3c; font-weight: 500; }
 
-/* --- Content Split (ส่วนเนื้อหาล่าง) --- */
+/* --- Content Split --- */
 .content-split {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* แบ่งซ้าย 2 ส่วน ขวา 1 ส่วน */
+    grid-template-columns: 2fr 1fr; /* ซ้ายกว้างกว่าขวาเล็กน้อย */
     gap: 20px;
 }
 
@@ -188,56 +169,105 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    overflow-x: auto; /* เผื่อตารางล้น */
 }
 
-.box-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
+.box-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .box-header h2 { font-size: 18px; margin: 0; color: #333; }
 .view-all { font-size: 14px; color: var(--primary-gold); text-decoration: none; font-weight: 500; }
 
-/* Table Style */
-.simple-table { width: 100%; border-collapse: collapse; }
-.simple-table th { text-align: left; color: #888; font-weight: 400; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-.simple-table td { padding: 15px 0; border-bottom: 1px solid #f9f9f9; color: #555; font-size: 14px; }
-
-/* Badges */
-.badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-.badge.pending { background: #fff5e6; color: #f39c12; }
-.badge.process { background: #eaf2f8; color: #3498db; }
-.badge.completed { background: #eafaf1; color: #2ecc71; }
-
-/* Payment List */
-.payment-list { list-style: none; padding: 0; margin: 0; }
-.payment-list li { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f9f9f9; }
-.payment-list li:last-child { border-bottom: none; }
-
-.pay-icon {
-    width: 40px; height: 40px; background: #f9f9f9; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: #2ecc71; margin-right: 15px;
+/* --- Table Style (Updated for Transactions) --- */
+.simple-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
-.pay-detail { flex-grow: 1; }
-.pay-detail strong { display: block; font-size: 14px; color: #333; }
-.pay-detail span { font-size: 12px; color: #999; }
-.pay-amount { font-weight: 600; color: #2ecc71; }
+.simple-table th,
+.simple-table td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+}
 
-/* Responsive */
-@media (max-width: 900px) {
+/* หัวตาราง */
+.simple-table th {
+    color: #888;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* แถวข้อมูล */
+.simple-table td {
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #f9f9f9;
+}
+
+.simple-table tr:last-child td { border-bottom: none; }
+.simple-table tbody tr:hover { background-color: #fcfcfc; }
+.simple-table td strong { color: #2c3e50; font-weight: 600; }
+
+/* --- Status Badges (Updated Colors) --- */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+    min-width: 70px;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Room Status Colors */
+.badge.available { background-color: #d1e7dd; color: #0f5132; }
+.badge.occupied { background-color: #cff4fc; color: #055160; }
+.badge.maintenance { background-color: #f8d7da; color: #842029; }
+
+/* Payment Status Colors */
+.badge.paid { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+.badge.pending { background-color: #cff4fc; color: #055160; border: 1px solid #b6effb; }
+.badge.overdue { background-color: #fff3cd; color: #664d03; border: 1px solid #ffecb5; }
+.badge.cancelled { background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+
+/* --- Responsive & Mobile Menu --- */
+
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+    color: var(--primary-dark);
+}
+
+.header-left { display: flex; align-items: center; }
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar-overlay.active { display: block; opacity: 1; }
+
+/* Tablet & Mobile */
+@media (max-width: 992px) {
+    .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
+    .menu-toggle { display: block; }
     .content-split { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 768px) {
-    .admin-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; position: relative; padding: 10px; flex-direction: row; justify-content: space-between; align-items: center;}
-    .sidebar-header { border: none; padding: 0; margin: 0; display: flex; align-items: center; }
-    .logo { width: 40px; margin: 0 10px 0 0; }
-    .sidebar-header h3 { display: none; }
-    .menu-links, .logout-section, .logo { display: none; } /* Mobile: ซ่อนเมนูไว้ก่อน */
-    .main-content { margin-left: 0; }
+    
+    .simple-table th, .simple-table td { padding: 10px; font-size: 13px; }
+    .badge { padding: 4px 8px; font-size: 10px; min-width: auto; }
 }

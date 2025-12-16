@@ -37,6 +37,7 @@ body {
     position: fixed;
     height: 100%;
     z-index: 100;
+    transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -46,7 +47,7 @@ body {
     margin-bottom: 20px;
 }
 
-.logo { width: 70px; margin-bottom: 10px; margin-left: 20px;}
+.logo { width: 70px; margin-bottom: 10px; margin-left: 0px;}
 
 .sidebar-header h3 {
     margin: 0;
@@ -80,8 +81,8 @@ body {
 }
 
 .logout-section {
-    margin-top: 300px;
-    padding: 0 50px 20px;
+    margin-top: auto; /* ดันปุ่มลงล่างสุด */
+    padding: 20px 50px;
 }
 
 .logout-section a { text-decoration: none; color: #ff5252; font-weight: 500; display: flex; align-items: center; gap: 10px;}
@@ -92,6 +93,7 @@ body {
     margin-left: var(--sidebar-width);
     flex-grow: 1;
     padding: 30px 40px;
+    transition: margin-left 0.3s ease;
 }
 
 .top-bar {
@@ -141,7 +143,7 @@ body {
     align-items: center;
 }
 
-.filter-group { display: flex; align-items: center; gap: 15px; }
+.filter-group { display: flex; align-items: center; gap: 15px; width: 100%; }
 
 .search-wrapper { position: relative; width: 300px; }
 .search-wrapper i {
@@ -178,57 +180,64 @@ body {
     background-color: var(--primary-gold);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 8px;
-    font-family: 'Sarabun';
-    transition: 0.3s;
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(196,168,8,0.2); }
-
-.btn-cancel {
-    background: #eee;
-    color: #666;
-    border: none;
     padding: 10px 25px;
     border-radius: 8px;
+    font-size: 15px;
     cursor: pointer;
-    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     transition: 0.3s;
+    white-space: nowrap;
 }
 
-.btn-cancel:hover {
-    background-color: #ddd;
+.btn-primary:hover {
+    background-color: #b09507;
     transform: translateY(-2px);
 }
 
+/* --- 5. Table Styles (จัดคอลัมน์ใหม่) --- */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
+.modern-table th {
+    text-align: left;
+    color: #888;
+    font-weight: 500;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
 
-/* --- 5. Table Styles (Updated) --- */
-.modern-table { width: 100%; border-collapse: collapse; table-layout: fixed; /* บังคับความกว้างคอลัมน์ */ }
-.modern-table th { text-align: left; color: #888; font-weight: 500; padding: 15px; border-bottom: 1px solid #eee; }
-.modern-table td { padding: 15px; border-bottom: 1px solid #f9f9f9; color: #333; vertical-align: middle; }
+.modern-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f9f9f9;
+    color: #333;
+    vertical-align: middle;
+}
 
-/* กำหนดความกว้างของแต่ละคอลัมน์ */
+/* กำหนดความกว้างคอลัมน์ (รวม 100%) */
 .modern-table th:nth-child(1) { width: 5%; text-align: center; } /* No. */
 .modern-table td:nth-child(1) { text-align: center; }
 
-.modern-table th:nth-child(2) { width: 20%; } /* Topic */
-.modern-table th:nth-child(3) { width: 30%; } /* Description (กว้างหน่อย) */
-.modern-table th:nth-child(4) { width: 15%; } /* Date */
-.modern-table th:nth-child(5) { width: 10%; } /* Status */
-.modern-table th:nth-child(6) { width: 20%; } /* Action */
+.modern-table th:nth-child(2) { width: 18%; } /* Topic */
+.modern-table th:nth-child(3) { width: 22%; } /* Description */
+.modern-table th:nth-child(4) { width: 12%; } /* Post Date */
+.modern-table th:nth-child(5) { width: 12%; } /* Visible Until */
+.modern-table th:nth-child(6) { width: 10%; } /* Status */
+.modern-table th:nth-child(7) { width: 21%; } /* Action */
 
-/* Class สำหรับตัดคำ Description ที่ยาวเกินไป */
+/* ตัดคำ */
 .text-truncate {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 0; /* จำเป็นเพื่อให้ text-overflow ทำงานใน table */
+    max-width: 0;
 }
+
 /* Status Badges */
-.badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block; }
 .badge.active { background: var(--status-active-bg); color: var(--status-active-text); }
 .badge.inactive { background: var(--status-inactive-bg); color: var(--status-inactive-text); }
 
@@ -261,7 +270,10 @@ body {
     width: 600px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s ease-out;
 }
+
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 .modal-title {
     margin-top: 0;
@@ -292,117 +304,45 @@ body {
     display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px; border-top: 1px solid #eee;
 }
 .btn-cancel { background: #eee; color: #666; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+.btn-cancel:hover { background: #ddd; }
 
-/* --- Responsive Styles --- */
-
-/* 1. ปุ่ม Menu Toggle (ซ่อนบน Desktop) */
+/* --- Responsive & Mobile --- */
 .menu-toggle {
-    display: none; /* ปกติซ่อนไว้ */
+    display: none;
     font-size: 24px;
     cursor: pointer;
     margin-right: 15px;
     color: var(--primary-dark);
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-/* 2. Overlay สำหรับมือถือ */
 .sidebar-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.5);
-    z-index: 99; /* อยู่ใต้ Sidebar แต่อยู่บน Content */
+    z-index: 99;
     opacity: 0;
     transition: opacity 0.3s;
 }
+.sidebar-overlay.active { display: block; opacity: 1; }
 
-.sidebar-overlay.active {
-    display: block;
-    opacity: 1;
-}
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-/* 3. Table Responsive (Scroll แนวนอน) */
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* --- Media Queries --- */
-
-/* Tablet & Mobile (หน้าจอเล็กกว่า 992px) */
 @media (max-width: 992px) {
-    
-    /* Sidebar: ซ่อนไปทางซ้าย */
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    /* Sidebar: เมื่อมี Class active ให้เลื่อนกลับมา */
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    /* Main Content: ขยายเต็มจอ */
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-    }
-
-    /* Show Hamburger Menu */
-    .menu-toggle {
-        display: block;
-    }
-    
-    /* Filter Group: ให้ไหลลงมา */
-    .control-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .filter-group {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    /* Input Fields: เต็มความกว้าง */
-    .search-wrapper, .date-wrapper, .custom-select {
-        width: 100%;
-    }
-    
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.active { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 20px; }
+    .menu-toggle { display: block; }
+    .control-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+    .filter-group { flex-direction: column; width: 100%; }
+    .search-wrapper, .custom-select { width: 100%; }
     .search-wrapper i { left: 15px; }
-    
-    /* Button: เต็มความกว้าง */
-    .btn-primary {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    /* Hide some text on mobile */
-    .admin-name {
-        display: none;
-    }
+    .btn-primary { width: 100%; justify-content: center; }
+    .sidebar-header h3 { display: block; }
+    .logo { margin-left: auto; margin-right: auto; }
 }
 
-/* Mobile Small (หน้าจอเล็กกว่า 480px) */
 @media (max-width: 480px) {
-    .page-title h1 {
-        font-size: 20px;
-    }
-    
-    .sub-text {
-        font-size: 12px;
-    }
-    
-    /* ปรับตารางให้ตัวหนังสือไม่ตกบรรทัด (ใช้ Scroll แทน) */
-    .modern-table th, .modern-table td {
-        white-space: nowrap;
-        padding: 10px;
-    }
+    .modern-table th, .modern-table td { white-space: nowrap; padding: 10px; }
 }

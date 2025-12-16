@@ -24,15 +24,19 @@ body {
 }
 
 
-.menu-bar{
+.menu-bar {
     background: white;
     height: 150px;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* จัดทุกอย่างให้กึ่งกลางแนวตั้ง */
     padding: 0 40px;
     box-sizing: border-box;
+    position: sticky; /* คง properties เดิมไว้ */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .left-menu, .right-menu{
@@ -51,8 +55,8 @@ body {
 }
 
 .logo img{
-    height: 135px;
-    width: 90px;
+    height: 120px;
+    width: 60px;
 }
 
 .left-menu a{
@@ -99,7 +103,16 @@ font-family: 'Times New Roman', Times, serif;
     left: 0;
     background: #C4A808;
 }
+.hamburger-menu, .mobile-menu {
+    display: none;
+}
 
+/* ================= SECTION SPACINGS ================= */
+section {
+    scroll-margin-top: 80px; 
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
 #home {
     padding-top: 0 ; 
     margin-top: 0;
@@ -135,8 +148,8 @@ font-family: 'Times New Roman', Times, serif;
 
 .image-text-overlay {
     position: absolute; /* สั่งให้ลอย */
-    top: 48%;           /* กึ่งกลางแนวตั้ง */
-    left: 44%;          /* กึ่งกลางแนวนอน */
+    top: 50%;           /* กึ่งกลางแนวตั้ง */
+    left: 50%;          /* กึ่งกลางแนวนอน */
     transform: translate(-50%, -50%); /* ขยับให้กลางเป๊ะๆ */
     text-align: center;
     width: 80%;         /* ความกว้างสูงสุดไม่เกิน 80% ของจอ */
@@ -167,7 +180,6 @@ font-family: 'Times New Roman', Times, serif;
 
 
 .full-width-image-container {
-    width: 150vw;
     position: relative;
     left: 50%;
     right: 50%;
@@ -212,10 +224,6 @@ font-family: 'Times New Roman', Times, serif;
     gap: 50px;
 }
 
-/* สลับด้านรูปภาพ (Zig-Zag) */
-.room-card.reverse {
-    flex-direction: row-reverse;
-}
 
 /* ส่วนรูปภาพห้อง */
 .room-image {
@@ -261,8 +269,7 @@ font-family: 'Times New Roman', Times, serif;
 .room-card.reverse .room-details {
     text-align: right; 
 }
-/* แต่โดยทั่วไปจัดซ้ายอ่านง่ายกว่า ผมจะบังคับจัดซ้ายใน CSS หลัก */
-.room-details { text-align: left !important; } 
+
 
 
 .room-details h3 {
@@ -327,6 +334,139 @@ font-family: 'Times New Roman', Times, serif;
 .btn-book:hover {
     background-color: #C4A808;
     color: white;
+}
+
+/* ================= ROOM AVAILABILITY (ENHANCED DESIGN) ================= */
+
+/* กล่องครอบโซนห้องว่าง */
+.room-availability {
+    background-color: #ffffff; /* พื้นหลังขาว */
+    border: 1px solid #f0f0f0; /* เส้นขอบบางๆ */
+    border-left: 5px solid #C4A808; /* แถบสีทองด้านซ้ายหนาขึ้นให้เด่น */
+    padding: 20px 25px;
+    margin: 20px 0 30px 0; /* เว้นระยะบนล่างให้หายใจสะดวก */
+    border-radius: 8px; /* มุมมน */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* เงานุ่มๆ ให้ดูลอยมีมิติ */
+    transition: transform 0.3s ease;
+}
+
+/* หัวข้อ (Available Rooms) */
+.avail-label {
+    display: flex;
+    align-items: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.avail-label i {
+    color: #C4A808; /* ไอคอนสีทอง */
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+/* กล่องรวมป้ายห้อง */
+.avail-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.room-tag {
+    display: inline-block;
+    background-color: #fff;
+    border: 1px solid #C4A808; /* ขอบทอง */
+    color: #333;
+    font-family: 'Oswald', sans-serif;
+    font-size: 15px;
+    
+    padding: 6px 16px; /* เพิ่มพื้นที่ภายในให้อ่านง่าย */
+    border-radius: 30px; /* ทำเป็นทรงมน (Capsule) */
+    cursor: default;
+    min-width: 60px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.avail-contact-box {
+    margin-top: 10px;
+}
+
+.avail-contact-box p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin: 0 0 8px 0;
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ดีไซน์ปุ่มติดต่อ (Pill Shape) */
+.contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+/* ปุ่ม Line (สีเขียว) */
+.contact-pill.line {
+    background-color: #06c755;
+    color: white;
+    border: 1px solid #06c755;
+}
+.contact-pill.line:hover {
+    background-color: #05a546;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(6, 199, 85, 0.2);
+}
+
+/* ปุ่มโทร (สีทอง) */
+.contact-pill.phone {
+    background-color: white;
+    color: #C4A808;
+    border: 1px solid #C4A808;
+}
+.contact-pill.phone:hover {
+    background-color: #C4A808;
+    color: white;
+    transform: translateY(-2px);
+}
+/* ---------------------------------------------------- */
+/* กรณีห้องเต็ม (Full / Empty) */
+/* ---------------------------------------------------- */
+
+.room-availability.full {
+    border-left-color: #e74c3c; /* แถบซ้ายเปลี่ยนเป็นสีแดง */
+    background-color: #fff5f5; /* พื้นหลังแดงจางๆ */
+}
+
+.room-availability.full .avail-label i {
+    color: #e74c3c; /* ไอคอนสีแดง */
+}
+
+.room-tag.empty {
+    border: 1px solid #e74c3c; /* ขอบเส้นประสีแดง */
+    color: #e74c3c;
+    background-color: transparent;
+    width: 100%;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: none;
 }
 
 /* ================= ROOM MODAL STYLES ================= */
@@ -458,20 +598,8 @@ font-family: 'Times New Roman', Times, serif;
     max-width: 600px; /* จำกัดความกว้างไม่ให้ห่างกันเกินไป */
 }
 
-/* --- Responsive Modal --- */
-@media screen and (max-width: 768px) {
-    .modal-room-title { font-size: 24px; }
-    .main-image-wrapper { height: 250px; }
-    .row-info { flex-direction: column; }
-    .detail-text strong { width: 100px; }
-}
 
-/* ================= SECTION SPACINGS ================= */
-section {
-    scroll-margin-top: 80px; 
-    padding-top: 80px;
-    padding-bottom: 80px;
-}
+
 
 /* ================= SERVICES SECTION (NEW DESIGN) ================= */
 #services {
@@ -553,6 +681,22 @@ section {
     max-width: 500px;
     margin: 0 auto;
 }
+#contact .content p.main{
+    font-size: 28px;
+    font-family:'Oswald', sans-serif;
+    color:#BEA413;
+    font-weight: 300;
+    margin-bottom: 15px;
+    display: block;
+}
+#contact .content p{
+    font-size: 20px;
+    font-family:'Oswald', sans-serif;
+    color:#747474;
+    font-weight: 300;
+    margin: 8px 0;
+    line-height: 1.6;
+}
 
 
 
@@ -566,41 +710,62 @@ section {
 .footer { margin-top: 0; }
 
 /* ==========================================================================
-   RESPONSIVE STYLES (วางต่อท้ายไฟล์ style-home.css)
+   RESPONSIVE STYLES 
    ========================================================================== */
 
 /* --- Tablet & Mobile (หน้าจอเล็กกว่า 1024px) --- */
 @media screen and (max-width: 1024px) {
     
-    /* 1. ปรับ Menu Bar ให้เรียงแนวตั้ง (เพราะไม่มีปุ่ม Hamburger) */
-    .menu-bar {
-        height: auto; /* ปล่อยความสูงอิสระ */
-        flex-direction: column; /* เรียงลงมาแนวตั้ง */
-        padding: 20px 10px;
-        gap: 15px;
+  
+
+    /* ซ่อนเมนู Desktop เดิม */
+    .desktop-only { display: none !important; }
+
+    /* แสดงปุ่ม Hamburger */
+    .hamburger-menu {
+        display: block;
+        font-size: 28px;
+        cursor: pointer;
+        color: #333;
+        z-index: 1002; /* ให้อยู่บนสุด */
     }
 
-    .logo {
-        order: -1; /* ย้ายโลโก้ไปบนสุด */
-        margin-bottom: 10px;
-    }
-
-    .logo img {
-        height: 100px; /* ลดขนาดโลโก้ */
-        width: auto;
-    }
-
-    /* จัดลิงก์เมนูให้เรียงสวยๆ */
-    .left-menu, .right-menu {
+    /* สไตล์กล่องเมนูมือถือ (Slide Down) */
+    .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px; /* ต่อจาก Menu bar */
+        left: 0;
         width: 100%;
-        justify-content: center;
-        flex-wrap: wrap; /* ถ้าจอเล็กมาก ให้ปัดบรรทัดใหม่ได้ */
-        gap: 15px;
+        background-color: white;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        
+        /* ซ่อนไว้ก่อน */
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+        z-index: 1001;
     }
 
-    .left-menu a, .right-menu a {
-        font-size: 16px; /* ลดขนาดตัวหนังสือเมนู */
-        padding: 5px 10px;
+    /* คลาสนี้จะถูก JS เติมเข้ามาตอนกดปุ่ม */
+    .mobile-menu.active {
+        max-height: 500px; /* เปิดลงมา */
+    }
+
+    .mobile-menu a {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #f0f0f0;
+        font-family: 'Oswald', sans-serif;
+        color: #333;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    
+    .mobile-menu a:hover {
+        background-color: #f9f9f9;
+        color: #C4A808;
     }
 
     /* 2. แก้ไขรูปภาพ Banner ที่ล้นจอ (150vw) ให้กลับมาพอดี */
@@ -608,14 +773,16 @@ section {
         width: 100vw;
         
        
-    margin-right: 35vw;
+    margin-right: 25vw;
         
-        right: -50;
+        
        
     }
 
     .full-width-image-container img.main-image {
         height: 50vh; /* ลดความสูง Banner ในมือถือ */
+        object-fit: cover;       /* เพิ่มบรรทัดนี้ เพื่อให้รูปไม่เบี้ยว */
+        object-position: center; /* เพิ่มบรรทัดนี้ เพื่อให้รูปอยู่กึ่งกลาง */
     }
 
     /* 3. ปรับขนาดตัวหนังสือบนรูปภาพ */
@@ -679,6 +846,43 @@ section {
         margin: 40px 0;
     }
     
+     .modal-room-title { font-size: 24px; }
+    .main-image-wrapper { height: 250px; }
+    .row-info { flex-direction: column; }
+    .detail-text strong { width: 100px; }
+
+    /* ปรับกล่องแจ้งเตือนให้กระชับขึ้น */
+    .room-availability.full {
+        padding: 15px; /* ลด padding ลงนิดหน่อย */
+    }
+    
+    /* ปรับข้อความเชิญชวน */
+    .avail-contact-box p {
+        font-size: 13px; /* ลดขนาดตัวหนังสือเล็กน้อย */
+        margin-bottom: 10px;
+    }
+
+    /* จัดกลุ่มปุ่มให้เรียงแนวตั้ง (Stack) */
+    .contact-buttons {
+        flex-direction: column; /* เรียงลงมา */
+        gap: 8px; /* ระยะห่างระหว่างปุ่ม */
+        width: 100%;
+    }
+
+    /* ปรับปุ่มให้กว้างเต็มจอ (Full Width) */
+    .contact-pill {
+        width: 100%; /* กว้างเต็มพื้นที่ */
+        justify-content: center; /* จัดตัวหนังสือและไอคอนให้อยู่กลางปุ่ม */
+        padding: 10px; /* เพิ่มพื้นที่กดให้ง่ายขึ้น (Touch Friendly) */
+        font-size: 15px; /* เพิ่มขนาดตัวอักษรให้ชัดเจน */
+        box-sizing: border-box; /* รวม padding ในความกว้าง */
+    }
+    
+    /* ปรับไอคอนในปุ่มให้ใหญ่ขึ้นนิดนึง */
+    .contact-pill i {
+        font-size: 18px;
+    }
+    
     /* ให้รูปภาพอยู่ด้านบนเสมอ */
     .service-img {
         width: 100%;
@@ -692,10 +896,15 @@ section {
     .service-text h2 { font-size: 32px; }
 
     /* 2. Contact Us: เรียงลงมา */
+    #contact .main-content{
+        font-size: 35px;
+    }
+
     #contact .content {
         display: flex;
         flex-direction: column;
         padding: 0 20px;
+        font-size: 10px;
     }
 
     /* 3. Login Box */
