@@ -44,7 +44,7 @@ exports.getBillingInfoByRoom = async (req, res) => {
                     (SELECT electricity_meter_current 
                      FROM payments p 
                      WHERE p.contract_id = lc.contract_id 
-                     AND p.payment_status != 'cancelled'  -- [เพิ่มบรรทัดนี้] มองข้ามบิลที่ยกเลิก
+                     AND p.payment_status != 'cancelled'
                      ORDER BY payment_id DESC LIMIT 1),
                     0
                 ) as last_elec,
@@ -52,7 +52,7 @@ exports.getBillingInfoByRoom = async (req, res) => {
                     (SELECT water_meter_current 
                      FROM payments p 
                      WHERE p.contract_id = lc.contract_id 
-                     AND p.payment_status != 'cancelled'  -- [เพิ่มบรรทัดนี้] มองข้ามบิลที่ยกเลิก
+                     AND p.payment_status != 'cancelled'
                      ORDER BY payment_id DESC LIMIT 1),
                     0
                 ) as last_water
@@ -146,7 +146,7 @@ exports.createPayment = async (req, res) => {
     }
 };
 
-// (แถม) 4. อัปเดตสถานะการชำระเงิน (เผื่อใช้ตอนกดปุ่มแก้ไขสถานะ)
+// ปุ่มอัปเดตสถานะการชำระเงิน 
 exports.updatePaymentStatus = async (req, res) => {
     const { id } = req.params; // payment_id
     const { status } = req.body; // 'paid' or 'unpaid'
@@ -171,8 +171,6 @@ exports.updatePaymentStatus = async (req, res) => {
         res.status(500).send("Server Error");
     }
 };
-
-// ... (code เดิม)
 
 // 4. ดึงข้อมูลบิลรายตัว (Get Payment by ID) - ใช้สำหรับ View/Edit
 exports.getPaymentById = async (req, res) => {
