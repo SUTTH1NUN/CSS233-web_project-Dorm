@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // กำหนด Path ปลายทางของแต่ละ Role
     const REDIRECT_PATHS = {
-        ADMIN: '/frontend/pages/admin/dashboard.html',
-        TENANT: '/frontend/pages/user/user.html'
+        ADMIN: '/pages/admin/dashboard.html',
+        TENANT: '/pages/user/user.html'
     };
 
     // --- UI Elements ---

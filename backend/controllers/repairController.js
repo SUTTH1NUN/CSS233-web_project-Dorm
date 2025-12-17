@@ -76,10 +76,10 @@ exports.updateRepairStatus = async (req, res) => {
         // ถ้าเปลี่ยนกลับเป็นสถานะอื่น ให้ลบวันที่ออก (NULL)
         const sql = `
             UPDATE repairs 
-            SET repair_status = $1, 
+            SET repair_status = $1::repair_status_enum, 
                 admin_note = $2,
                 resolved_date = CASE 
-                    WHEN $1 = 'completed' THEN CURRENT_DATE 
+                    WHEN $1::text = 'completed' THEN CURRENT_DATE 
                     ELSE NULL 
                 END
             WHERE repair_id = $3
